@@ -6,7 +6,10 @@ import SwiftUI
 struct RunningApp: App {
     let store: StoreOf<AppFeature> = .init(
         initialState: .init(),
-        reducer: AppFeature.init
+        reducer: AppFeature.init,
+        withDependencies: {
+            $0 = .preview
+        }
     )
 
     init() {
