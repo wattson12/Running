@@ -35,7 +35,6 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
 #if targetEnvironment(simulator)
                 $0 = .preview
                 $0.date = .constant(.preview)
-                $0.locale = .init(identifier: "en_AU")
 #endif
             } operation: {
                 try await timelineEntries(for: configuration, in: context)

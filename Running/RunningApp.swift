@@ -11,7 +11,6 @@ struct RunningApp: App {
 #if targetEnvironment(simulator)
             $0 = .preview
             $0.date = .constant(.preview)
-            $0.locale = .init(identifier: "en_AU")
 #endif
         }
     )
@@ -24,7 +23,6 @@ struct RunningApp: App {
         WindowGroup {
             AppView(store: store)
                 .onOpenURL { store.send(.deepLink($0)) }
-                .environment(\.locale, .init(identifier: "en_AU"))
         }
     }
 }
