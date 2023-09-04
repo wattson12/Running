@@ -1,0 +1,51 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Sam Watts on 02/09/2023.
+  
+*/
+
+"app.feature.goals" = "Goals";
+"app.feature.runs" = "Runs";
+"app.feature.debug" = "Debug";
+"app.feature.settings" = "About";
+
+"goal.period.weekly.display_name" = "Weekly";
+"goal.period.monthly.display_name" = "Monthly";
+"goal.period.yearly.display_name" = "Yearly";
+
+"goals.edit.set_goal" = "Set goal";
+"goals.edit.update_goal" = "Update goal";
+"goals.edit.button.clear" = "Clear goal";
+"goals.edit.previous_goal_format" = "Previous goal: %@";
+
+"goals.detail.chart.no_runs_overlay" = "No runs recorded for this goal";
+"goals.detail.summary.goal" = "Goal";
+"goals.detail.summary.distance" = "Distance";
+"goals.detail.summary.remaining" = "Remaining";
+
+"permissions.health_kit_unavailable.title" = "Workouts not suppported";
+"permissions.health_kit_unavailable.message" = "We use running workouts tracked in the Health app to track your running goals. This device doesn't currently support importing running workouts so we can't track your goals";
+
+"permissions.request_permissions.title" = "Permission required";
+"permissions.request_permissions.message_part_one" = "We use running workouts tracked in the Health app to track your running goals. Tap the button below and accept permissions to get started";
+"permissions.request_permissions.message_part_two" = "Workout data is only stored locally to calculate progress for your running goals and is **never** sent anywhere else";
+"permissions.request_permissions.button.title" = "Get started";
+
+"runs.empty.title" = "No runs (yet)";
+"runs.empty.message" = "Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your goals will be updated automatically";
+"runs.empty.caption" = "Missing workouts?\nCheck your permissions in the [Health](x-apple-health://) app";
+
+"runs.initial_import.title" = "Importing runs";
+"runs.initial_import.message" = "We're importing all of your running workouts tracked with the Health app. New workouts will be updated quickly, but it might take a little while the first time";
+
+"runs.list.today" = "Today";
+"runs.list.yesterday" = "Yesterday";
+
+"settings.section.acknowledgements" = "Acknowledgements";
+"settings.section.build_info.title" = "Build info";
+"settings.section.build_info.version" = "Version";
+"settings.section.build_info.build_number" = "Build number";
+"settings.section.debug.title" = "Debug";
+"settings.section.debug.show_debug_tab" = "Show debug tab";

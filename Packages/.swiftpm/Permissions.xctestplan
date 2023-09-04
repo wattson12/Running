@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "27391A4A-3055-4BA3-A97D-AE3B0C48A3F1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "Permissions",
+          "name" : "Permissions"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PermissionsTests",
+        "name" : "PermissionsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

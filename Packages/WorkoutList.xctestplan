@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "440B5FF8-0B42-4E4C-8A24-3D392EF59578",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RunListTests",
+        "name" : "RunListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

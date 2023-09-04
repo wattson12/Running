@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "6EF81304-35CF-40DC-9693-076D9925B72B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "GoalDetail",
+          "name" : "GoalDetail"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GoalDetailTests",
+        "name" : "GoalDetailTests"
+      }
+    }
+  ],
+  "version" : 1
+}

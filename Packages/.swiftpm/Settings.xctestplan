@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "3AEED968-0130-4E3B-BF6A-08BD0E571551",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "Settings",
+          "name" : "Settings"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SettingsTests",
+        "name" : "SettingsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

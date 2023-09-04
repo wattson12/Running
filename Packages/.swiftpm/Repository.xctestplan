@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "B35B1A37-CE0B-4FFD-97EB-CCAFD3B78561",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "Repository",
+          "name" : "Repository"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RepositoryTests",
+        "name" : "RepositoryTests"
+      }
+    }
+  ],
+  "version" : 1
+}

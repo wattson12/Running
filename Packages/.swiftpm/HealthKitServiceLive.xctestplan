@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "3B16DBEA-B198-4216-A4BC-32B309FF630B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "HealthKitServiceLive",
+          "name" : "HealthKitServiceLive"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "HealthKitServiceLiveTests",
+        "name" : "HealthKitServiceLiveTests"
+      }
+    }
+  ],
+  "version" : 1
+}

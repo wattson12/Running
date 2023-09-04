@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "245653BD-33F6-45CE-9926-6D823B6FD1AB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "Cache",
+          "name" : "Cache"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CacheTests",
+        "name" : "CacheTests"
+      }
+    }
+  ],
+  "version" : 1
+}

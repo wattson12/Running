@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "790F3EF1-87D6-439B-AE6B-805063FBE271",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "Model",
+          "name" : "Model"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ModelTests",
+        "name" : "ModelTests"
+      }
+    }
+  ],
+  "version" : 1
+}

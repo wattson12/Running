@@ -1,0 +1,15 @@
+xcassets:
+  inputs: Packages/Sources/Core/Resources/Colors/Colors.xcassets
+  outputs:
+    templateName: swift5
+    output: Packages/Sources/Core/Resources/Colors/Colors.swift
+    params:
+      publicAccess: true
+      
+strings:
+  inputs: Packages/Sources/Core/Resources/Strings/Localizable.strings
+  outputs:
+    templateName: structured-swift5
+    output: Packages/Sources/Core/Resources/Strings/Strings.swift
+    params:
+      publicAccess: true

@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "61E77BC8-C835-4ADA-BD91-2EBAEE200234",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "GoalList",
+          "name" : "GoalList"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GoalListTests",
+        "name" : "GoalListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

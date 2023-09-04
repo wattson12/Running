@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "408376E2-4464-4506-A92B-58DB5F97F578",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "EditGoal",
+          "name" : "EditGoal"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "EditGoalTests",
+        "name" : "EditGoalTests"
+      }
+    }
+  ],
+  "version" : 1
+}

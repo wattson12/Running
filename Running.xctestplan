@@ -1,0 +1,98 @@
+{
+  "configurations" : [
+    {
+      "id" : "A98A4BC8-9B96-40E4-ADDF-1DCA85E80814",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Running.xcodeproj",
+      "identifier" : "5BF5A3C529AB7D8D00A53ACA",
+      "name" : "Running"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "AppTests",
+        "name" : "AppTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "CacheTests",
+        "name" : "CacheTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "EditGoalTests",
+        "name" : "EditGoalTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "GoalDetailTests",
+        "name" : "GoalDetailTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "GoalListTests",
+        "name" : "GoalListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "HealthKitServiceInterfaceTests",
+        "name" : "HealthKitServiceInterfaceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "HealthKitServiceLiveTests",
+        "name" : "HealthKitServiceLiveTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "ModelTests",
+        "name" : "ModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "PermissionsTests",
+        "name" : "PermissionsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "RepositoryTests",
+        "name" : "RepositoryTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "RunListTests",
+        "name" : "RunListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

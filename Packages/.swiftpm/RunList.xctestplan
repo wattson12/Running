@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "B94921FA-8F5A-4A29-8AEC-ADD765CB87EC",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "RunList",
+          "name" : "RunList"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RunListTests",
+        "name" : "RunListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

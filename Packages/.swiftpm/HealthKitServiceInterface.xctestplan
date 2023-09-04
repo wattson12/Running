@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "3E0FF774-592B-4893-A22E-04AD70E3FF82",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "HealthKitServiceInterface",
+          "name" : "HealthKitServiceInterface"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "HealthKitServiceInterfaceTests",
+        "name" : "HealthKitServiceInterfaceTests"
+      }
+    }
+  ],
+  "version" : 1
+}
