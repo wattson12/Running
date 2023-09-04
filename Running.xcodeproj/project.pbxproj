@@ -134,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				5B9527CC2A9D3F0B004F93D9 /* GoalWidgetExtension.entitlements */,
-				5BCF9FE62A9BF3F0004A2234 /* Running.xctestplan */,
 				5BF5A3DA29AB7DFB00A53ACA /* Packages */,
 				5BF5A3C829AB7D8D00A53ACA /* Running */,
 				5BCB9AB02A9D329900F58C0F /* GoalWidget */,
@@ -155,6 +154,7 @@
 		5BF5A3C829AB7D8D00A53ACA /* Running */ = {
 			isa = PBXGroup;
 			children = (
+				5BCF9FE62A9BF3F0004A2234 /* Running.xctestplan */,
 				5BE0C1B52A97F9DF008EA113 /* Info.plist */,
 				5BCC413D29B549F200C20B40 /* Running.entitlements */,
 				5BF5A3C929AB7D8D00A53ACA /* RunningApp.swift */,
