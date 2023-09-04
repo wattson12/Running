@@ -108,6 +108,7 @@
 		5BCB9AB02A9D329900F58C0F /* GoalWidget */ = {
 			isa = PBXGroup;
 			children = (
+				5B9527CC2A9D3F0B004F93D9 /* GoalWidgetExtension.entitlements */,
 				5BCB9AB12A9D329900F58C0F /* GoalWidgetBundle.swift */,
 				5BCB9AB72A9D329A00F58C0F /* Assets.xcassets */,
 				5BCB9AB92A9D329A00F58C0F /* Info.plist */,
@@ -133,8 +134,6 @@
 		5BF5A3BD29AB7D8D00A53ACA = {
 			isa = PBXGroup;
 			children = (
-				5B9527CC2A9D3F0B004F93D9 /* GoalWidgetExtension.entitlements */,
-				5BCF9FE62A9BF3F0004A2234 /* Running.xctestplan */,
 				5BF5A3DA29AB7DFB00A53ACA /* Packages */,
 				5BF5A3C829AB7D8D00A53ACA /* Running */,
 				5BCB9AB02A9D329900F58C0F /* GoalWidget */,
@@ -155,6 +154,7 @@
 		5BF5A3C829AB7D8D00A53ACA /* Running */ = {
 			isa = PBXGroup;
 			children = (
+				5BCF9FE62A9BF3F0004A2234 /* Running.xctestplan */,
 				5BE0C1B52A97F9DF008EA113 /* Info.plist */,
 				5BCC413D29B549F200C20B40 /* Running.entitlements */,
 				5BF5A3C929AB7D8D00A53ACA /* RunningApp.swift */,
@@ -328,7 +328,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = GoalWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoalWidget/GoalWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9B4L4655ZF;
@@ -363,7 +363,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = GoalWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoalWidget/GoalWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9B4L4655ZF;
