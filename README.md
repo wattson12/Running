@@ -20,7 +20,7 @@ This is an iOS app which allows a user to:
 The app is architected using [The Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) and generally follows the "TCA Style" which includes:
 - Small frameworks (e.g. one framework per screen)
 - SPM used for framework creation with a simple Xcodeproj importing local packages
-- Controlled dependencies (HealthKit is abstracted as a dependency allowing the app to run in a preview / simulator)
+- Controlled dependencies (HealthKit is abstracted as a dependency allowing the app to run more predictably in a preview / simulator)
 - Unit tests for feature logic (including navigation)
 
 All UI is in SwiftUI 
@@ -33,3 +33,9 @@ All UI is in SwiftUI
 ### Support
 
 The app runs on iOS 17+. The main reason for this limitation is to use SwiftData as a caching layer  
+
+### Development 
+
+I work on most of the features by opening the SPM package (`xed Packages`), selecting the target for the feature I'm working on and developing via previews / tests. You can open the full app with `xed Running.xcodeproj`
+
+Running in the simulator will use preview dependency values and running on a device will use live values
