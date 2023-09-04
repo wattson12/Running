@@ -30,49 +30,57 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
     }
 
     public func timeline(for configuration: GoalWidgetIntent, in context: Context) async -> Timeline<GoalEntry> {
+        do {
+            let entries: [GoalEntry] = try await withDependencies {
+#if targetEnvironment(simulator)
+                $0 = .preview
+                $0.date = .constant(.preview)
+#endif
+            } operation: {
+                try await timelineEntries(for: configuration, in: context)
+            }
+            return Timeline(entries: entries, policy: .atEnd)
+        } catch {
+            return .init(entries: [placeholder(in: context)], policy: .atEnd)
+        }
+    }
+    
+    private func timelineEntries(for configuration: GoalWidgetIntent, in context: Context) async throws -> [GoalEntry] {
         @Dependency(\.repository.goals) var goals
         @Dependency(\.repository.runningWorkouts) var runningWorkouts
         @Dependency(\.calendar) var calendar
         @Dependency(\.repository.permissions) var permissions
+        
         var entries: [GoalEntry] = []
-
-        do {
-            let missingPermissions = try await permissions.authorizationRequestStatus() == .shouldRequest
-
-            // get current goal
-            let goal = try goals.goal(
-                in: configuration.period.model
-            )
-            let runs = try runningWorkouts.runs(within: goal)
-
-            let distance = runs.distance
-            let target = goal.target
-            let progress: Double?
-            if let target {
-                progress = distance.value / target.converted(to: distance.unit).value
-            } else {
-                progress = nil
-            }
-            entries.append(
-                .init(
-                    date: .now,
-                    period: goal.period,
-                    progress: progress,
-                    distance: distance,
-                    target: target,
-                    missingPermissions: missingPermissions
-                )
-            )
-
-            // then a reset at end of interval
-            if let endOfPeriod = Date.now.endOfWeek(calendar: calendar) {
-                return Timeline(entries: entries, policy: .after(endOfPeriod))
-            } else {
-                return Timeline(entries: entries, policy: .atEnd)
-            }
-        } catch {
-            return .init(entries: [placeholder(in: context)], policy: .atEnd)
+        
+        let missingPermissions = try await permissions.authorizationRequestStatus() == .shouldRequest
+        
+        // get current goal
+        let goal = try goals.goal(
+            in: configuration.period.model
+        )
+        let runs = try runningWorkouts.runs(within: goal)
+        
+        let distance = runs.distance
+        let target = goal.target
+        let progress: Double?
+        if let target {
+            progress = distance.value / target.converted(to: distance.unit).value
+        } else {
+            progress = nil
         }
+        entries.append(
+            .init(
+                date: .now,
+                period: goal.period,
+                progress: progress,
+                distance: distance,
+                target: target,
+                missingPermissions: missingPermissions
+            )
+        )
+        
+        return entries
     }
 }
 

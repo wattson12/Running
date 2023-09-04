@@ -12,16 +12,13 @@ extension String {
 public struct RunListFeature: Reducer {
     public struct State: Equatable {
         var sections: [RunSection] = []
-        var filteredDateRange: DateRange?
         var isInitialImport: Bool = false
         var isLoading: Bool = false
 
         public init(
-            sections: [RunSection] = [],
-            filteredDateRange: DateRange? = nil
+            sections: [RunSection] = []
         ) {
             self.sections = sections
-            self.filteredDateRange = filteredDateRange
         }
     }
 

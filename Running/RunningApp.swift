@@ -10,6 +10,7 @@ struct RunningApp: App {
         withDependencies: {
 #if targetEnvironment(simulator)
             $0 = .preview
+            $0.date = .constant(.preview)
 #endif
         }
     )

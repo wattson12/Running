@@ -35,26 +35,15 @@ extension RunListFeature.State {
     }
 
     mutating func setSections(from runs: [Run]) {
-        sections = sections(
-            from: runs,
-            range: filteredDateRange
-        )
+        sections = sections(from: runs)
     }
 
-    func sections(
-        from runs: [Run],
-        range: DateRange?
-    ) -> [RunSection] {
+    func sections(from runs: [Run]) -> [RunSection] {
         @Dependency(\.calendar) var calendar
         @Dependency(\.date) var date
         @Dependency(\.uuid) var uuid
 
-        let runs = runs
-            .filter { run in
-                guard let range else { return true }
-                return run.startDate >= range.start && run.startDate < range.end
-            }
-            .sorted(by: { $0.startDate > $1.startDate })
+        let runs = runs.sorted(by: { $0.startDate > $1.startDate })
 
         var today: [Run] = []
         var yesterday: [Run] = []

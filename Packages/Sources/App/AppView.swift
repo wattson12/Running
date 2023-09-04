@@ -5,6 +5,7 @@ import Resources
 import RunList
 import Settings
 import SwiftUI
+import DesignSystem
 
 public struct AppView: View {
     struct ViewState: Equatable {
@@ -102,6 +103,7 @@ public struct AppView: View {
                         }
                     }
                     .onAppear { viewStore.send(.onAppear) }
+                    .tint(Color(asset: Asset.blue))
                 }
             }
         )
