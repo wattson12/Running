@@ -23,7 +23,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let cacheRunCount: Int = .random(in: 5 ..< 100)
         let runs: [Cache.Run] = (0 ..< cacheRunCount).map { _ in
-            .create(id: .init(), startDate: .now, distance: 0, duration: 0)
+            .init(id: .init(), startDate: .now, distance: 0, duration: 0)
         }
 
         runs.forEach(context.insert)
@@ -70,7 +70,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let id: UUID = .init()
         let runs: [Cache.Run] = [
-            .create(
+            .init(
                 id: id,
                 startDate: .now,
                 distance: 0,
@@ -111,13 +111,13 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let id: UUID = .init()
         let runs: [Cache.Run] = [
-            .create(
+            .init(
                 id: id,
                 startDate: .now,
                 distance: 0,
                 duration: 0
             ),
-            .create(
+            .init(
                 id: .init(),
                 startDate: .now,
                 distance: 0,
@@ -173,21 +173,21 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let runs: [Cache.Run] = [
             // before range
-            .create(
+            .init(
                 id: .init(),
                 startDate: .init(timeIntervalSince1970: 0),
                 distance: 0,
                 duration: 0
             ),
             // inside range
-            .create(
+            .init(
                 id: .init(),
                 startDate: .init(timeIntervalSince1970: 947_073_600),
                 distance: 0,
                 duration: 0
             ),
             // after range
-            .create(
+            .init(
                 id: .init(),
                 startDate: .now,
                 distance: 0,

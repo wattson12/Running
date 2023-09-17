@@ -27,7 +27,7 @@ final class Goals_LiveTests: XCTestCase {
         let context = try swiftData.context()
 
         let target: Double = .random(in: 1 ..< 10000)
-        let existingGoal = Cache.Goal.create(period: "weekly", target: target)
+        let existingGoal = Cache.Goal(period: "weekly", target: target)
         context.insert(existingGoal)
         try context.save()
 
@@ -47,7 +47,7 @@ final class Goals_LiveTests: XCTestCase {
         let context = try swiftData.context()
 
         let originalTarget: Double = .random(in: 1 ..< 10000)
-        let existingGoal = Cache.Goal.create(period: "weekly", target: originalTarget)
+        let existingGoal = Cache.Goal(period: "weekly", target: originalTarget)
         context.insert(existingGoal)
         try context.save()
 

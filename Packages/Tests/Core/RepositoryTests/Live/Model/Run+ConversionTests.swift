@@ -60,7 +60,7 @@ final class Run_ConversionTests: XCTestCase {
 
         let swiftData: SwiftDataStack = .stack(inMemory: true)
         let context = try swiftData.context()
-        let cached: Cache.Run = .create(
+        let cached: Cache.Run = .init(
             id: id,
             startDate: startDate,
             distance: distance,

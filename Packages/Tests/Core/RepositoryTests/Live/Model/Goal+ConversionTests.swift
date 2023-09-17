@@ -10,7 +10,7 @@ final class Goal_ConversionTests: XCTestCase {
 
         let swiftData: SwiftDataStack = .stack(inMemory: true)
         let context = try swiftData.context()
-        let cached: Cache.Goal = .create(period: "monthly", target: target)
+        let cached: Cache.Goal = .init(period: "monthly", target: target)
         context.insert(cached)
 
         let sut: Model.Goal = .init(cached: cached)

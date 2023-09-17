@@ -46,7 +46,7 @@ extension Goals {
             if let existingGoal = matchingGoals.first {
                 return existingGoal
             } else {
-                let goal = Cache.Goal.create(
+                let goal = Cache.Goal(
                     period: period,
                     target: nil
                 )
