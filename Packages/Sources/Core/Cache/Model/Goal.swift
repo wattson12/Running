@@ -10,12 +10,4 @@ public class Goal {
         self.period = period
         self.target = target
     }
-
-    #warning("this shouldn't be needed but Xcode can't build using .init directly")
-    public static func create(
-        period: String,
-        target: Double?
-    ) -> Goal {
-        .init(period: period, target: target)
-    }
 }

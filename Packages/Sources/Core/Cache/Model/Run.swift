@@ -19,19 +19,4 @@ public class Run {
         self.distance = distance
         self.duration = duration
     }
-
-    #warning("this shouldn't be needed but Xcode can't build using .init directly")
-    public static func create(
-        id: UUID,
-        startDate: Date,
-        distance: Double,
-        duration: Double
-    ) -> Run {
-        .init(
-            id: id,
-            startDate: startDate,
-            distance: distance,
-            duration: duration
-        )
-    }
 }
