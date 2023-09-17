@@ -155,12 +155,7 @@ public struct GoalListFeature: Reducer {
             case editTapped(Goal)
         }
 
-        public enum Internal: Equatable {
-            case runsFetched(TaskResult<[Run]>)
-        }
-
         case view(View)
-        case _internal(Internal)
         case destination(PresentationAction<Destination.Action>)
     }
 
@@ -175,8 +170,6 @@ public struct GoalListFeature: Reducer {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
-            case let ._internal(action):
-                return _internal(action, state: &state)
             case let .destination(action):
                 return destination(action, state: &state)
             }
@@ -188,13 +181,7 @@ public struct GoalListFeature: Reducer {
         switch action {
         case .onAppear:
             state.refresh(goals: goals, runningWorkouts: runningWorkouts)
-            return .merge(
-                .run { send in
-                    let result = await TaskResult { try await runningWorkouts.allRunningWorkouts.remote() }
-                    await send(._internal(.runsFetched(result)))
-                },
-                .run { _ in widget.reloadAllTimelines() }
-            )
+            return .run { _ in widget.reloadAllTimelines() }
         case let .goalTapped(goal):
             if goal.target == nil {
                 state.destination = .editGoal(.init(goal: goal))
@@ -205,14 +192,6 @@ public struct GoalListFeature: Reducer {
         case let .editTapped(goal):
             state.destination = .editGoal(.init(goal: goal))
             return .none
-        }
-    }
-
-    private func _internal(_ action: Action.Internal, state: inout State) -> EffectOf<Self> {
-        switch action {
-        case .runsFetched:
-            state.refresh(goals: goals, runningWorkouts: runningWorkouts)
-            return .run { _ in widget.reloadAllTimelines() }
         }
     }
 

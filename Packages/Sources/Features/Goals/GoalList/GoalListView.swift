@@ -124,10 +124,10 @@ struct GoalListView_Previews: PreviewProvider {
         let test: LockIsolated<Int> = .init(0)
 
         NavigationStack {
-            GoalListView(
+            UpdatedGoalPreviewWrapper(
                 store: .init(
-                    initialState: .init(),
-                    reducer: GoalListFeature.init,
+                    initialState: .init(goalList: .init()),
+                    reducer: UpdatedGoalPreviewWrapperFeature.init,
                     withDependencies: {
                         $0.date = .constant(.preview)
                         $0.locale = .init(identifier: "en_AU")

@@ -57,8 +57,6 @@ final class GoalListFeatureTests: XCTestCase {
             )
             $0.yearlyRuns = runs[.yearly] ?? []
         }
-
-        await store.receive(._internal(.runsFetched(.success([]))))
     }
 
     func testGoalsPopulatedWhenSomeGoalsHaveNoRuns() async throws {
@@ -108,8 +106,6 @@ final class GoalListFeatureTests: XCTestCase {
             )
             $0.yearlyRuns = runs[.yearly] ?? []
         }
-
-        await store.receive(._internal(.runsFetched(.success([]))))
     }
 
     func testGoalsPopulatedWhenFetchingSomeGoalsFails() async throws {
@@ -160,8 +156,6 @@ final class GoalListFeatureTests: XCTestCase {
             )
             $0.yearlyRuns = runs[.yearly] ?? []
         }
-
-        await store.receive(._internal(.runsFetched(.success([]))))
     }
 
     func testDestinationIsCorrectWhenTappingGoalWithTarget() async throws {
