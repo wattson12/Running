@@ -9,6 +9,7 @@ struct LogListFeature: Reducer {
     enum Action: Equatable {
         enum View: Equatable {
             case onAppear
+            case refreshButtonTapped
         }
 
         case view(View)
@@ -28,9 +29,16 @@ struct LogListFeature: Reducer {
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            state.logs = logStore.logs()
+            refreshLogs(&state)
+            return .none
+        case .refreshButtonTapped:
+            refreshLogs(&state)
             return .none
         }
+    }
+
+    private func refreshLogs(_ state: inout State) {
+        state.logs = logStore.logs()
     }
 }
 
@@ -55,6 +63,18 @@ struct LogListView: View {
                 List(viewStore.logs) { log in
                     Text(log.actionLabel)
                 }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(
+                            action: {
+                                viewStore.send(.refreshButtonTapped)
+                            },
+                            label: {
+                                Image(systemName: "arrow.counterclockwise")
+                            }
+                        )
+                    }
+                }
                 .navigationTitle("Logs")
             }
             .onAppear { viewStore.send(.onAppear) }
@@ -66,14 +86,7 @@ struct LogListView: View {
     LogListView(
         store: .init(
             initialState: .init(),
-            reducer: LogListFeature.init,
-            withDependencies: {
-                $0.logStore._logs = {
-                    [
-                        .mock(),
-                    ]
-                }
-            }
+            reducer: { LogListFeature()._logging() }
         )
     )
 }
