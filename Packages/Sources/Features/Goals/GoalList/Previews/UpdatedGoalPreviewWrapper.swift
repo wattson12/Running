@@ -1,38 +1,31 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Watts on 17/09/2023.
-//
-
-import Foundation
 import ComposableArchitecture
-import SwiftUI
+import Foundation
 import Repository
+import SwiftUI
 
 struct UpdatedGoalPreviewWrapperFeature: Reducer {
     struct State: Equatable {
         var goalList: GoalListFeature.State
     }
-    
+
     enum Action: Equatable {
         enum View: Equatable {
             case onAppear
         }
-        
+
         enum Internal: Equatable {
             case refreshGoals
         }
-        
+
         case view(View)
         case _internal(Internal)
         case goalList(GoalListFeature.Action)
     }
-    
+
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.repository.goals) var goals
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
-    
+
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -46,8 +39,8 @@ struct UpdatedGoalPreviewWrapperFeature: Reducer {
         }
         Scope(state: \.goalList, action: /Action.goalList, child: GoalListFeature.init)
     }
-    
-    private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
+
+    private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
             return .run { send in
@@ -56,7 +49,7 @@ struct UpdatedGoalPreviewWrapperFeature: Reducer {
             }
         }
     }
-    
+
     private func _internal(_ action: Action.Internal, state: inout State) -> EffectOf<Self> {
         switch action {
         case .refreshGoals:
@@ -68,7 +61,7 @@ struct UpdatedGoalPreviewWrapperFeature: Reducer {
 
 struct UpdatedGoalPreviewWrapper: View {
     let store: StoreOf<UpdatedGoalPreviewWrapperFeature>
-    
+
     var body: some View {
         GoalListView(
             store: store.scope(

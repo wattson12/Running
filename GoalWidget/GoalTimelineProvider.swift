@@ -32,10 +32,10 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
     public func timeline(for configuration: GoalWidgetIntent, in context: Context) async -> Timeline<GoalEntry> {
         do {
             let entries: [GoalEntry] = try await withDependencies {
-#if targetEnvironment(simulator)
-                $0 = .preview
-                $0.date = .constant(.preview)
-#endif
+                #if targetEnvironment(simulator)
+                    $0 = .preview
+                    $0.date = .constant(.preview)
+                #endif
             } operation: {
                 try await timelineEntries(for: configuration, in: context)
             }
@@ -44,23 +44,23 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
             return .init(entries: [placeholder(in: context)], policy: .atEnd)
         }
     }
-    
-    private func timelineEntries(for configuration: GoalWidgetIntent, in context: Context) async throws -> [GoalEntry] {
+
+    private func timelineEntries(for configuration: GoalWidgetIntent, in _: Context) async throws -> [GoalEntry] {
         @Dependency(\.repository.goals) var goals
         @Dependency(\.repository.runningWorkouts) var runningWorkouts
         @Dependency(\.calendar) var calendar
         @Dependency(\.repository.permissions) var permissions
-        
+
         var entries: [GoalEntry] = []
-        
+
         let missingPermissions = try await permissions.authorizationRequestStatus() == .shouldRequest
-        
+
         // get current goal
         let goal = try goals.goal(
             in: configuration.period.model
         )
         let runs = try runningWorkouts.runs(within: goal)
-        
+
         let distance = runs.distance
         let target = goal.target
         let progress: Double?
@@ -79,7 +79,7 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
                 missingPermissions: missingPermissions
             )
         )
-        
+
         return entries
     }
 }

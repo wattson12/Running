@@ -71,7 +71,7 @@ extension RunningWorkouts {
                     existingRun.distance = run.distance.value
                     existingRun.duration = run.duration.value
                 } else {
-                    let cacheValue = Cache.Run.init(
+                    let cacheValue = Cache.Run(
                         id: run.id,
                         startDate: run.startDate,
                         distance: run.distance.value,

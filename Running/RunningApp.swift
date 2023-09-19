@@ -8,10 +8,10 @@ struct RunningApp: App {
         initialState: .init(),
         reducer: AppFeature.init,
         withDependencies: {
-#if targetEnvironment(simulator)
-            $0 = .preview
-            $0.date = .constant(.preview)
-#endif
+            #if targetEnvironment(simulator)
+                $0 = .preview
+                $0.date = .constant(.preview)
+            #endif
         }
     )
 
