@@ -13,7 +13,7 @@ struct LogDetailView: View {
                 VStack(alignment: .leading) {
                     Text(viewStore.action)
                     if let stateDiff = viewStore.stateDiff {
-                        Text(stateDiff)
+                        Text(stateDiff.components(separatedBy: .newlines).count.description)
                     }
                     Spacer()
                 }

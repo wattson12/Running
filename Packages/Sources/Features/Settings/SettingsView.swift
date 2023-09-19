@@ -10,6 +10,7 @@ public struct SettingsView: View {
         let acknowledgements: [Acknowledgement]
         let debugSectionVisible: Bool
         let debugTabVisible: Bool
+        let loggingDisplayed: Bool
 
         init(state: SettingsFeature.State) {
             versionNumber = state.versionNumber
@@ -17,6 +18,7 @@ public struct SettingsView: View {
             acknowledgements = state.acknowledgements.elements
             debugSectionVisible = state.debugSectionVisible
             debugTabVisible = state.debugTabVisible
+            loggingDisplayed = state.loggingDisplayed
         }
     }
 
@@ -91,13 +93,23 @@ public struct SettingsView: View {
                     }
                 }
                 .sheet(
-                    store: store.scope(
-                        state: \.$destination,
-                        action: SettingsFeature.Action.destination
+                    isPresented: viewStore.binding(
+                        get: \.loggingDisplayed,
+                        send: { .loggingDisplayed($0) }
                     ),
-                    state: /SettingsFeature.Destination.State.logging,
-                    action: SettingsFeature.Destination.Action.logging,
-                    content: LogListView.init
+                    content: {
+                        LogListView(
+                            store: .init(
+                                initialState: .init(),
+                                reducer: { LogListFeature() },
+                                withDependencies: {
+                                    #if targetEnvironment(simulator)
+                                        $0 = .preview
+                                    #endif
+                                }
+                            )
+                        )
+                    }
                 )
                 .navigationTitle(L10n.App.Feature.settings)
                 .onAppear { viewStore.send(.onAppear) }

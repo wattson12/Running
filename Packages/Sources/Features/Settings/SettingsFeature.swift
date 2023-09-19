@@ -26,6 +26,8 @@ public struct SettingsFeature: Reducer {
         var debugSectionVisible: Bool = false
         var debugTabVisible: Bool = false
 
+        var loggingDisplayed: Bool = false
+
         @PresentationState var destination: Destination.State?
 
         public init() {}
@@ -37,6 +39,7 @@ public struct SettingsFeature: Reducer {
             case hiddenAreaGestureFired
             case setDebugTabVisible(Bool)
             case showLoggingButtonTapped
+            case loggingDisplayed(Bool)
         }
 
         public enum Delegate: Equatable {
@@ -82,7 +85,11 @@ public struct SettingsFeature: Reducer {
             userDefaults.set(visible, forKey: "debug_tab_visible")
             return .send(.delegate(.setDebugTabVisibility(visible)))
         case .showLoggingButtonTapped:
-            state.destination = .logging(.init())
+            state.loggingDisplayed = true
+//            state.destination = .logging(.init())
+            return .none
+        case let .loggingDisplayed(displayed):
+            state.loggingDisplayed = displayed
             return .none
         }
     }
