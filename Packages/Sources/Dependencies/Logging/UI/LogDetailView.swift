@@ -13,12 +13,14 @@ struct LogDetailView: View {
                 VStack(alignment: .leading) {
                     Text(viewStore.action)
                     if let stateDiff = viewStore.stateDiff {
-                        Text(stateDiff.components(separatedBy: .newlines).count.description)
+                        ForEach(stateDiff.components(separatedBy: .newlines), id: \.self) { line in
+                            Text(line)
+                        }
                     }
                     Spacer()
                 }
+                .padding()
             }
-            .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .navigationTitle(viewStore.actionLabel)
         }
