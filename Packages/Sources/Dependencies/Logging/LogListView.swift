@@ -1,13 +1,13 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct LogListFeature: Reducer {
-    struct State: Equatable {
+public struct LogListFeature: Reducer {
+    public struct State: Equatable {
         var logs: [ActionLog] = []
     }
 
-    enum Action: Equatable {
-        enum View: Equatable {
+    public enum Action: Equatable {
+        public enum View: Equatable {
             case onAppear
             case refreshButtonTapped
         }
@@ -17,7 +17,7 @@ struct LogListFeature: Reducer {
 
     @Dependency(\.logStore) var logStore
 
-    var body: some ReducerOf<Self> {
+    public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case let .view(action):
@@ -42,7 +42,7 @@ struct LogListFeature: Reducer {
     }
 }
 
-struct LogListView: View {
+public struct LogListView: View {
     struct ViewState: Equatable {
         let logs: [ActionLog]
 
@@ -53,7 +53,13 @@ struct LogListView: View {
 
     let store: StoreOf<LogListFeature>
 
-    var body: some View {
+    public init(
+        store: StoreOf<LogListFeature>
+    ) {
+        self.store = store
+    }
+
+    public var body: some View {
         WithViewStore(
             store,
             observe: ViewState.init,
