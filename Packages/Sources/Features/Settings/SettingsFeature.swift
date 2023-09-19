@@ -1,8 +1,23 @@
 import ComposableArchitecture
 import DependenciesAdditions
 import Foundation
+import Logging
 
 public struct SettingsFeature: Reducer {
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case logging(LogListFeature.State)
+        }
+
+        public enum Action: Equatable {
+            case logging(LogListFeature.Action)
+        }
+
+        public var body: some ReducerOf<Self> {
+            Scope(state: /State.logging, action: /Action.logging, child: LogListFeature.init)
+        }
+    }
+
     public struct State: Equatable {
         var versionNumber: String = ""
         var buildNumber: String = ""
@@ -10,6 +25,8 @@ public struct SettingsFeature: Reducer {
 
         var debugSectionVisible: Bool = false
         var debugTabVisible: Bool = false
+
+        @PresentationState var destination: Destination.State?
 
         public init() {}
     }
@@ -19,6 +36,7 @@ public struct SettingsFeature: Reducer {
             case onAppear
             case hiddenAreaGestureFired
             case setDebugTabVisible(Bool)
+            case showLoggingButtonTapped
         }
 
         public enum Delegate: Equatable {
@@ -27,6 +45,7 @@ public struct SettingsFeature: Reducer {
 
         case view(View)
         case delegate(Delegate)
+        case destination(PresentationAction<Destination.Action>)
     }
 
     @Dependency(\.bundleInfo) var bundleInfo
@@ -41,8 +60,11 @@ public struct SettingsFeature: Reducer {
                 return view(action, state: &state)
             case .delegate:
                 return .none
+            case .destination:
+                return .none
             }
         }
+        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
@@ -59,6 +81,9 @@ public struct SettingsFeature: Reducer {
             state.debugTabVisible = visible
             userDefaults.set(visible, forKey: "debug_tab_visible")
             return .send(.delegate(.setDebugTabVisibility(visible)))
+        case .showLoggingButtonTapped:
+            state.destination = .logging(.init())
+            return .none
         }
     }
 }

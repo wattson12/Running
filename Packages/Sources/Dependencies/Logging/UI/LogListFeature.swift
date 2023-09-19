@@ -19,6 +19,14 @@ public struct LogListFeature: Reducer {
     public struct State: Equatable {
         var logs: [ActionLog] = []
         @PresentationState var destination: Destination.State?
+
+        public init(
+            logs: [ActionLog] = [],
+            destination: Destination.State? = nil
+        ) {
+            self.logs = logs
+            self.destination = destination
+        }
     }
 
     public enum Action: Equatable {
@@ -31,6 +39,8 @@ public struct LogListFeature: Reducer {
         case view(View)
         case destination(PresentationAction<Destination.Action>)
     }
+
+    public init() {}
 
     @Dependency(\.logStore) var logStore
 

@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Logging
 import Resources
 import SwiftUI
 
@@ -76,10 +77,28 @@ public struct SettingsView: View {
                                         )
                                     )
                                 }
+
+                                Button(
+                                    action: {
+                                        viewStore.send(.showLoggingButtonTapped)
+                                    },
+                                    label: {
+                                        Text("Show Logging")
+                                    }
+                                )
                             }
                         )
                     }
                 }
+                .sheet(
+                    store: store.scope(
+                        state: \.$destination,
+                        action: SettingsFeature.Action.destination
+                    ),
+                    state: /SettingsFeature.Destination.State.logging,
+                    action: SettingsFeature.Destination.Action.logging,
+                    content: LogListView.init
+                )
                 .navigationTitle(L10n.App.Feature.settings)
                 .onAppear { viewStore.send(.onAppear) }
             }
@@ -116,7 +135,7 @@ public struct SettingsView: View {
     SettingsView(
         store: .init(
             initialState: .init(),
-            reducer: SettingsFeature.init
+            reducer: { SettingsFeature()._logging() }
         )
     )
 }

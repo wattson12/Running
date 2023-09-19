@@ -230,6 +230,7 @@ let package = Package(
                 .dependencies,
                 .dependenciesAdditions,
                 .target(name: .designSystem),
+                .target(name: .logging),
             ],
             path: .feature(.settings)
         ),
