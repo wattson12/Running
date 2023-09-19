@@ -21,3 +21,21 @@ public struct ActionLog: Equatable, Identifiable {
         self.stateDiff = stateDiff
     }
 }
+
+public extension ActionLog {
+    static func mock(
+        id: UUID = .init(),
+        timestamp: Date = .now,
+        actionLabel: String = "Action.View.onAppear",
+        action: String = "Action.View.onAppear",
+        stateDiff: [String]? = nil
+    ) -> Self {
+        .init(
+            id: id,
+            timestamp: timestamp,
+            actionLabel: actionLabel,
+            action: action,
+            stateDiff: stateDiff
+        )
+    }
+}
