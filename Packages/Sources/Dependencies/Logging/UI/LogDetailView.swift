@@ -10,18 +10,21 @@ struct LogDetailView: View {
             observe: { $0 }
         ) { viewStore in
             ScrollView {
-                VStack(alignment: .leading) {
-                    Text(viewStore.action)
+                LazyVStack(alignment: .leading) {
+                    Text(viewStore.actionLabel)
+
+                    ForEach(Array(viewStore.action.components(separatedBy: .newlines).enumerated()), id: \.offset) { _, line in
+                        Text(line)
+                    }
+
                     if let stateDiff = viewStore.stateDiff {
-                        ForEach(stateDiff.components(separatedBy: .newlines), id: \.self) { line in
+                        ForEach(Array(stateDiff.components(separatedBy: .newlines).enumerated()), id: \.offset) { _, line in
                             Text(line)
                         }
                     }
-                    Spacer()
                 }
                 .padding()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
             .navigationTitle(viewStore.actionLabel)
         }
     }
