@@ -1,11 +1,11 @@
 import ComposableArchitecture
 import Foundation
 
-struct LogDetailFeature: Reducer {
-    typealias State = ActionLog
-    typealias Action = Never
+public struct LogDetailFeature: Reducer {
+    public typealias State = ActionLog
+    public typealias Action = Never
 
-    var body: some ReducerOf<Self> {
+    public var body: some ReducerOf<Self> {
         EmptyReducer()
     }
 }

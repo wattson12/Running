@@ -5,14 +5,14 @@ public struct ActionLog: Equatable, Identifiable {
     public let timestamp: Date
     public let actionLabel: String
     public let action: String
-    public let stateDiff: [String]?
+    public let stateDiff: String?
 
     public init(
         id: UUID,
         timestamp: Date,
         actionLabel: String,
         action: String,
-        stateDiff: [String]?
+        stateDiff: String?
     ) {
         self.id = id
         self.timestamp = timestamp
@@ -28,7 +28,7 @@ public extension ActionLog {
         timestamp: Date = .now,
         actionLabel: String = "Action.View.onAppear",
         action: String = "Action.View.onAppear",
-        stateDiff: [String]? = nil
+        stateDiff: String? = nil
     ) -> Self {
         .init(
             id: id,

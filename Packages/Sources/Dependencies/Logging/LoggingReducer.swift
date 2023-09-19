@@ -34,20 +34,14 @@ public struct _LoggingReducer<R: Reducer>: Reducer {
         var actionDump = ""
         CustomDump.customDump(action, to: &actionDump, indent: 4)
 
-        var stateDiffDump = ""
-        if let difference = diff(originalState, newState) {
-            stateDiffDump = difference
-        }
-
         let label = debugCaseOutput(action)
-        let diffLines = stateDiffDump.components(separatedBy: .newlines)
 
         return ActionLog(
             id: uuid(),
             timestamp: date.now,
             actionLabel: label,
             action: actionDump,
-            stateDiff: diffLines.isEmpty ? nil : diffLines
+            stateDiff: diff(originalState, newState)
         )
     }
 }

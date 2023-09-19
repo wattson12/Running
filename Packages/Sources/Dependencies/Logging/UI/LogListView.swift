@@ -26,8 +26,25 @@ public struct LogListView: View {
         ) { viewStore in
             NavigationStack {
                 List(viewStore.logs) { log in
-                    Text(log.actionLabel)
+                    Button(
+                        action: {
+                            viewStore.send(.logTapped(log))
+                        },
+                        label: {
+                            Text(log.actionLabel)
+                        }
+                    )
+                    .buttonStyle(.plain)
                 }
+                .navigationDestination(
+                    store: store.scope(
+                        state: \.$destination,
+                        action: LogListFeature.Action.destination
+                    ),
+                    state: /LogListFeature.Destination.State.detail,
+                    action: LogListFeature.Destination.Action.detail,
+                    destination: LogDetailView.init
+                )
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(

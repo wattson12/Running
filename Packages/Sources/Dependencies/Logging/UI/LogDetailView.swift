@@ -9,14 +9,14 @@ struct LogDetailView: View {
             store,
             observe: { $0 }
         ) { viewStore in
-            VStack(alignment: .leading) {
-                Text(viewStore.action)
-                if let stateDiff = viewStore.stateDiff {
-                    ForEach(stateDiff, id: \.self) { diff in
-                        Text(diff)
+            ScrollView {
+                VStack(alignment: .leading) {
+                    Text(viewStore.action)
+                    if let stateDiff = viewStore.stateDiff {
+                        Text(stateDiff)
                     }
+                    Spacer()
                 }
-                Spacer()
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -42,10 +42,10 @@ struct LogDetailView: View {
         LogDetailView(
             store: .init(
                 initialState: .mock(
-                    stateDiff: [
-                        "+ state: 12",
-                        "- state: 0",
-                    ]
+                    stateDiff: """
+                    + state: 12
+                    - state: 0
+                    """
                 ),
                 reducer: LogDetailFeature.init
             )
