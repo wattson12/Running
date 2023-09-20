@@ -71,6 +71,6 @@ public struct LogListFeature: Reducer {
     }
 
     private func refreshLogs(_ state: inout State) {
-        state.logs = logStore.logs()
+        state.logs = logStore.logs().sorted(by: { lhs, rhs in lhs.timestamp < rhs.timestamp })
     }
 }

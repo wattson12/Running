@@ -31,7 +31,7 @@ public struct LogListView: View {
                             viewStore.send(.logTapped(log))
                         },
                         label: {
-                            Text(log.actionLabel)
+                            LogListRow(log: log)
                         }
                     )
                     .buttonStyle(.plain)
