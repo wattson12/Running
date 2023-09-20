@@ -33,6 +33,7 @@ struct LogDetailView: View {
                             Button("Toggle") {
                                 viewStore.send(.view(.toggleActionExpandedTapped))
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                 )
@@ -60,6 +61,7 @@ struct LogDetailView: View {
                                 Button("Toggle") {
                                     viewStore.send(.view(.toggleDiffExpandedTapped))
                                 }
+                                .buttonStyle(.plain)
                             }
                         }
                     )
