@@ -65,10 +65,7 @@ public struct LogListFeature: Reducer {
             refreshLogs(&state)
             return .none
         case let .logTapped(log):
-            state.destination = .detail(log)
-            print("----")
-            print(log.stateDiff as Any)
-            print("----")
+            state.destination = .detail(.init(log: log))
             return .none
         }
     }

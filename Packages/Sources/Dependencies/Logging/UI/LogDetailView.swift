@@ -9,22 +9,26 @@ struct LogDetailView: View {
             store,
             observe: { $0 }
         ) { viewStore in
-            ScrollView {
-                LazyVStack(alignment: .leading) {
-                    Text(viewStore.actionLabel)
-
-                    ForEach(Array(viewStore.action.components(separatedBy: .newlines).enumerated()), id: \.offset) { _, line in
-                        Text(line)
+            List {
+                Section("Action") {
+                    ForEach(viewStore.actionLines) { line in
+                        Text(line.element)
                     }
+                    .listRowSeparator(.hidden)
+                    .listRowSpacing(0)
+                }
 
-                    if let stateDiff = viewStore.stateDiff {
-                        ForEach(Array(stateDiff.components(separatedBy: .newlines).enumerated()), id: \.offset) { _, line in
-                            Text(line)
+                if let stateDiffLines = viewStore.diffLines {
+                    Section("State") {
+                        ForEach(stateDiffLines) { line in
+                            Text(line.element)
                         }
+                        .listRowSeparator(.hidden)
                     }
                 }
-                .padding()
             }
+            .listStyle(.plain)
+            .listRowSpacing(-16)
             .navigationTitle(viewStore.actionLabel)
         }
     }
@@ -34,7 +38,7 @@ struct LogDetailView: View {
     NavigationStack {
         LogDetailView(
             store: .init(
-                initialState: .mock(),
+                initialState: .init(log: .mock()),
                 reducer: LogDetailFeature.init
             )
         )
@@ -46,11 +50,13 @@ struct LogDetailView: View {
     NavigationStack {
         LogDetailView(
             store: .init(
-                initialState: .mock(
-                    stateDiff: """
-                    + state: 12
-                    - state: 0
-                    """
+                initialState: .init(
+                    log: .mock(
+                        stateDiff: """
+                        + state: 12
+                        - state: 0
+                        """
+                    )
                 ),
                 reducer: LogDetailFeature.init
             )
