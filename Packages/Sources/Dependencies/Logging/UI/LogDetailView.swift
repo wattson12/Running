@@ -11,6 +11,25 @@ struct LogDetailView: View {
         ) { viewStore in
             List {
                 Section(
+                    content: {
+                        sectionContent(
+                            rows: [
+                                .init(
+                                    label: "label",
+                                    index: 0,
+                                    element: viewStore.actionLabel
+                                ),
+                            ]
+                        )
+                    },
+                    header: {
+                        HStack {
+                            Text("Action Label")
+                        }
+                    }
+                )
+
+                Section(
                     isExpanded: viewStore.binding(
                         get: \.actionExpanded,
                         send: { _ in
@@ -18,11 +37,7 @@ struct LogDetailView: View {
                         }
                     ),
                     content: {
-                        ForEach(viewStore.actionLines) { line in
-                            Text(line.element)
-                        }
-                        .listRowSeparator(.hidden)
-                        .listRowSpacing(0)
+                        sectionContent(rows: viewStore.actionLines)
                     },
                     header: {
                         HStack {
@@ -47,10 +62,7 @@ struct LogDetailView: View {
                             }
                         ),
                         content: {
-                            ForEach(stateDiffLines) { line in
-                                Text(line.element)
-                            }
-                            .listRowSeparator(.hidden)
+                            sectionContent(rows: stateDiffLines)
                         },
                         header: {
                             HStack {
@@ -68,9 +80,19 @@ struct LogDetailView: View {
                 }
             }
             .listStyle(.plain)
-            .listRowSpacing(-16)
+            .environment(\.defaultMinListRowHeight, 16)
             .navigationTitle(viewStore.actionLabel)
         }
+    }
+
+    @ViewBuilder private func sectionContent(rows: [LogDetailFeature.State.IndexedElement]) -> some View {
+        ForEach(rows) { row in
+            Text(row.element)
+                .frame(height: 16)
+                .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
+        }
+        .frame(height: 16)
+        .listRowSeparator(.hidden)
     }
 }
 
