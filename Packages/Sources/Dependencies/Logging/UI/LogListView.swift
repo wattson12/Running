@@ -56,11 +56,30 @@ public struct LogListView: View {
                             }
                         )
                     }
+
+                    ToolbarItem(placement: .topBarTrailing) {
+                        ShareLink(
+                            item: viewStore.logs,
+                            preview: SharePreview("Exported Logs")
+                        )
+                    }
                 }
                 .navigationTitle("Logs")
             }
             .onAppear { viewStore.send(.onAppear) }
         }
+    }
+}
+
+extension [ActionLog]: Transferable {
+    public static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(
+            exportedContentType: .json,
+            exporting: { logs in
+                try JSONEncoder().encode(logs)
+            }
+        )
+        .suggestedFileName("logs.json")
     }
 }
 

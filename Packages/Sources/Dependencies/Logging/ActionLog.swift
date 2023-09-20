@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ActionLog: Equatable, Identifiable {
+public struct ActionLog: Equatable, Identifiable, Encodable {
     public let id: UUID
     public let timestamp: Date
     public let actionLabel: String
