@@ -6,7 +6,18 @@ struct LogListRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text(log.timestamp.formatted(.dateTime.year(.twoDigits).month(.twoDigits).day(.twoDigits).hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits).second(.twoDigits)))
+                Text(
+                    log.timestamp
+                        .formatted(
+                            .dateTime.year(.twoDigits)
+                                .month(.twoDigits)
+                                .day(.twoDigits)
+                                .hour(.twoDigits(amPM: .abbreviated))
+                                .minute(.twoDigits)
+                                .second(.twoDigits)
+                                .secondFraction(.fractional(2))
+                        )
+                )
 
                 Spacer()
             }

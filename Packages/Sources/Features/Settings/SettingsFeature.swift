@@ -23,7 +23,12 @@ public struct SettingsFeature: Reducer {
         var buildNumber: String = ""
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
 
-        var debugSectionVisible: Bool = false
+        #if targetEnvironment(simulator)
+            var debugSectionVisible: Bool = true
+        #else
+            var debugSectionVisible: Bool = false
+        #endif
+
         var debugTabVisible: Bool = false
 
         var loggingDisplayed: Bool = false
@@ -86,7 +91,6 @@ public struct SettingsFeature: Reducer {
             return .send(.delegate(.setDebugTabVisibility(visible)))
         case .showLoggingButtonTapped:
             state.loggingDisplayed = true
-//            state.destination = .logging(.init())
             return .none
         case let .loggingDisplayed(displayed):
             state.loggingDisplayed = displayed
