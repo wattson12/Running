@@ -13,6 +13,7 @@ struct LogDetailView: View {
                 Section(
                     content: {
                         Text(viewStore.actionLabel)
+                            .font(.caption)
                             .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
                             .listRowSeparator(.hidden)
                     },
@@ -82,6 +83,7 @@ struct LogDetailView: View {
     @ViewBuilder private func sectionContent(rows: [LogDetailFeature.State.IndexedElement]) -> some View {
         ForEach(rows) { row in
             Text(row.element)
+                .font(.caption)
                 .foregroundStyle(foregroundColor(for: row))
                 .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
                 .lineLimit(nil)
