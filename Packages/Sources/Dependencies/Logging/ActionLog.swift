@@ -1,3 +1,4 @@
+import CoreTransferable
 import Foundation
 
 public struct ActionLog: Equatable, Identifiable, Encodable {
@@ -19,6 +20,18 @@ public struct ActionLog: Equatable, Identifiable, Encodable {
         self.actionLabel = actionLabel
         self.action = action
         self.stateDiff = stateDiff
+    }
+}
+
+extension [ActionLog]: Transferable {
+    public static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(
+            exportedContentType: .json,
+            exporting: { logs in
+                try JSONEncoder().encode(logs)
+            }
+        )
+        .suggestedFileName("logs.json")
     }
 }
 

@@ -71,18 +71,6 @@ public struct LogListView: View {
     }
 }
 
-extension [ActionLog]: Transferable {
-    public static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(
-            exportedContentType: .json,
-            exporting: { logs in
-                try JSONEncoder().encode(logs)
-            }
-        )
-        .suggestedFileName("logs.json")
-    }
-}
-
 #Preview {
     LogListView(
         store: .init(
