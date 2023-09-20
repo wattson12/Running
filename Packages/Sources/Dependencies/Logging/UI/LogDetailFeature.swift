@@ -14,6 +14,9 @@ public struct LogDetailFeature: Reducer {
         let actionLines: [IndexedElement]
         let diffLines: [IndexedElement]?
 
+        var actionExpanded: Bool = false
+        var diffExpanded: Bool = false
+
         init(log: ActionLog) {
             actionLabel = log.actionLabel
             actionLines = log.action
@@ -37,12 +40,38 @@ public struct LogDetailFeature: Reducer {
                         element: element
                     )
                 }
+
+            actionExpanded = actionLines.count < 20
+            diffExpanded = diffLines?.count ?? 0 < 20
         }
     }
 
-    public typealias Action = Never
+    public enum Action: Equatable {
+        public enum View: Equatable {
+            case toggleActionExpandedTapped
+            case toggleDiffExpandedTapped
+        }
+
+        case view(View)
+    }
 
     public var body: some ReducerOf<Self> {
-        EmptyReducer()
+        Reduce { state, action in
+            switch action {
+            case let .view(action):
+                return view(action, state: &state)
+            }
+        }
+    }
+
+    private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
+        switch action {
+        case .toggleActionExpandedTapped:
+            state.actionExpanded.toggle()
+            return .none
+        case .toggleDiffExpandedTapped:
+            state.diffExpanded.toggle()
+            return .none
+        }
     }
 }

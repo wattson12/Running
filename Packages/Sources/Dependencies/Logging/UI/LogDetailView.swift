@@ -10,21 +10,59 @@ struct LogDetailView: View {
             observe: { $0 }
         ) { viewStore in
             List {
-                Section("Action") {
-                    ForEach(viewStore.actionLines) { line in
-                        Text(line.element)
-                    }
-                    .listRowSeparator(.hidden)
-                    .listRowSpacing(0)
-                }
-
-                if let stateDiffLines = viewStore.diffLines {
-                    Section("State") {
-                        ForEach(stateDiffLines) { line in
+                Section(
+                    isExpanded: viewStore.binding(
+                        get: \.actionExpanded,
+                        send: { _ in
+                            .view(.toggleActionExpandedTapped)
+                        }
+                    ),
+                    content: {
+                        ForEach(viewStore.actionLines) { line in
                             Text(line.element)
                         }
                         .listRowSeparator(.hidden)
+                        .listRowSpacing(0)
+                    },
+                    header: {
+                        HStack {
+                            Text("Action")
+
+                            Spacer()
+
+                            Button("Toggle") {
+                                viewStore.send(.view(.toggleActionExpandedTapped))
+                            }
+                        }
                     }
+                )
+
+                if let stateDiffLines = viewStore.diffLines {
+                    Section(
+                        isExpanded: viewStore.binding(
+                            get: \.diffExpanded,
+                            send: { _ in
+                                .view(.toggleDiffExpandedTapped)
+                            }
+                        ),
+                        content: {
+                            ForEach(stateDiffLines) { line in
+                                Text(line.element)
+                            }
+                            .listRowSeparator(.hidden)
+                        },
+                        header: {
+                            HStack {
+                                Text("State")
+
+                                Spacer()
+
+                                Button("Toggle") {
+                                    viewStore.send(.view(.toggleDiffExpandedTapped))
+                                }
+                            }
+                        }
+                    )
                 }
             }
             .listStyle(.plain)
