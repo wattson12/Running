@@ -10,11 +10,9 @@ import SwiftUI
 public struct AppView: View {
     struct ViewState: Equatable {
         let tab: AppFeature.State.Tab
-        let debugTabVisible: Bool
 
         init(state: AppFeature.State) {
             tab = state.tab
-            debugTabVisible = state.debugTabVisible
         }
     }
 
@@ -86,20 +84,6 @@ public struct AppView: View {
                         }
                         .tabItem {
                             Label(L10n.App.Feature.runs, systemImage: "figure.run")
-                        }
-
-                        if viewStore.debugTabVisible {
-                            NavigationStack {
-                                DebugView(
-                                    store: store.scope(
-                                        state: \.debug,
-                                        action: AppFeature.Action.debug
-                                    )
-                                )
-                            }
-                            .tabItem {
-                                Label(L10n.App.Feature.debug, systemImage: "stethoscope.circle")
-                            }
                         }
                     }
                     .onAppear { viewStore.send(.onAppear) }

@@ -3,6 +3,16 @@ import DependenciesAdditions
 import Foundation
 import Logging
 
+public extension Bool {
+    static var debugSectionVisibleDefaultValue: Bool {
+        #if targetEnvironment(simulator)
+            return true
+        #else
+            return false
+        #endif
+    }
+}
+
 public struct SettingsFeature: Reducer {
     public struct Destination: Reducer {
         public enum State: Equatable {
@@ -23,36 +33,25 @@ public struct SettingsFeature: Reducer {
         var buildNumber: String = ""
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
 
-        #if targetEnvironment(simulator)
-            var debugSectionVisible: Bool = true
-        #else
-            var debugSectionVisible: Bool = false
-        #endif
-
-        var debugTabVisible: Bool = false
-
+        var debugSectionVisible: Bool
         var loggingDisplayed: Bool = false
 
         @PresentationState var destination: Destination.State?
 
-        public init() {}
+        public init(debugSectionVisible: Bool = .debugSectionVisibleDefaultValue) {
+            self.debugSectionVisible = debugSectionVisible
+        }
     }
 
     public enum Action: Equatable {
         public enum View: Equatable {
             case onAppear
             case hiddenAreaGestureFired
-            case setDebugTabVisible(Bool)
             case showLoggingButtonTapped
             case loggingDisplayed(Bool)
         }
 
-        public enum Delegate: Equatable {
-            case setDebugTabVisibility(Bool)
-        }
-
         case view(View)
-        case delegate(Delegate)
         case destination(PresentationAction<Destination.Action>)
     }
 
@@ -66,8 +65,6 @@ public struct SettingsFeature: Reducer {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
-            case .delegate:
-                return .none
             case .destination:
                 return .none
             }
@@ -80,15 +77,10 @@ public struct SettingsFeature: Reducer {
         case .onAppear:
             state.versionNumber = bundleInfo.shortVersion
             state.buildNumber = bundleInfo.version
-            state.debugTabVisible = userDefaults.bool(forKey: "debug_tab_visible") == true
             return .none
         case .hiddenAreaGestureFired:
             state.debugSectionVisible.toggle()
             return .none
-        case let .setDebugTabVisible(visible):
-            state.debugTabVisible = visible
-            userDefaults.set(visible, forKey: "debug_tab_visible")
-            return .send(.delegate(.setDebugTabVisibility(visible)))
         case .showLoggingButtonTapped:
             state.loggingDisplayed = true
             return .none

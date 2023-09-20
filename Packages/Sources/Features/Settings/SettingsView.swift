@@ -9,7 +9,6 @@ public struct SettingsView: View {
         let buildNumber: String
         let acknowledgements: [Acknowledgement]
         let debugSectionVisible: Bool
-        let debugTabVisible: Bool
         let loggingDisplayed: Bool
 
         init(state: SettingsFeature.State) {
@@ -17,7 +16,6 @@ public struct SettingsView: View {
             buildNumber = state.buildNumber
             acknowledgements = state.acknowledgements.elements
             debugSectionVisible = state.debugSectionVisible
-            debugTabVisible = state.debugTabVisible
             loggingDisplayed = state.loggingDisplayed
         }
     }
@@ -68,18 +66,6 @@ public struct SettingsView: View {
                                 viewStore.send(.hiddenAreaGestureFired)
                             },
                             content: {
-                                HStack {
-                                    Text(L10n.Settings.Section.Debug.showDebugTab)
-                                    Spacer()
-                                    Toggle(
-                                        "",
-                                        isOn: viewStore.binding(
-                                            get: \.debugTabVisible,
-                                            send: { .setDebugTabVisible($0) }
-                                        )
-                                    )
-                                }
-
                                 Button(
                                     action: {
                                         viewStore.send(.showLoggingButtonTapped)

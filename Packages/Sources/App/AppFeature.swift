@@ -26,7 +26,6 @@ public struct AppFeature: Reducer {
         public enum Tab: Equatable, Hashable {
             case goals
             case runs
-            case debug
         }
 
         var permissions: PermissionsFeature.State?
@@ -34,8 +33,6 @@ public struct AppFeature: Reducer {
         var tab: Tab
         var runList: RunListFeature.State
         var goalList: GoalListFeature.State
-        var debug: DebugFeature.State
-        var debugTabVisible: Bool = false
 
         @PresentationState var destination: Destination.State?
 
@@ -44,17 +41,13 @@ public struct AppFeature: Reducer {
             tab: Tab = .goals,
             runList: RunListFeature.State = .init(),
             goalList: GoalListFeature.State = .init(),
-            debug: DebugFeature.State = .init(),
-            destination: Destination.State? = nil,
-            debugTabVisible: Bool = false
+            destination: Destination.State? = nil
         ) {
             self.permissions = permissions
             self.tab = tab
             self.runList = runList
             self.goalList = goalList
-            self.debug = debug
             self.destination = destination
-            self.debugTabVisible = debugTabVisible
         }
 
         public init() {
@@ -62,7 +55,6 @@ public struct AppFeature: Reducer {
             tab = .goals
             runList = .init()
             goalList = .init()
-            debug = .init()
         }
     }
 
@@ -77,7 +69,6 @@ public struct AppFeature: Reducer {
         case permissions(PermissionsFeature.Action)
         case runList(RunListFeature.Action)
         case goalList(GoalListFeature.Action)
-        case debug(DebugFeature.Action)
         case deepLink(URL)
         case destination(PresentationAction<Destination.Action>)
     }
@@ -100,8 +91,6 @@ public struct AppFeature: Reducer {
                 return runList(action, state: &state)
             case .goalList:
                 return .none
-            case .debug:
-                return .none
             case let .deepLink(url):
                 return deepLink(url: url, state: &state)
             case let .destination(action):
@@ -122,18 +111,11 @@ public struct AppFeature: Reducer {
             action: /Action.goalList,
             child: GoalListFeature.init
         )
-
-        Scope(
-            state: \.debug,
-            action: /Action.debug,
-            child: DebugFeature.init
-        )
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            state.debugTabVisible = userDefaults.bool(forKey: "debug_tab_visible") == true
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in
@@ -191,12 +173,7 @@ public struct AppFeature: Reducer {
         }
     }
 
-    private func settings(_ action: SettingsFeature.Action, state: inout State) -> EffectOf<Self> {
-        guard case let .delegate(action) = action else { return .none }
-        switch action {
-        case let .setDebugTabVisibility(visible):
-            state.debugTabVisible = visible
-            return .none
-        }
+    private func settings(_: SettingsFeature.Action, state _: inout State) -> EffectOf<Self> {
+        .none
     }
 }
