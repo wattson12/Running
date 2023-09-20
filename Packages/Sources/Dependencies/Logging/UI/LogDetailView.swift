@@ -12,19 +12,13 @@ struct LogDetailView: View {
             List {
                 Section(
                     content: {
-                        sectionContent(
-                            rows: [
-                                .init(
-                                    label: "label",
-                                    index: 0,
-                                    element: viewStore.actionLabel
-                                ),
-                            ]
-                        )
+                        Text(viewStore.actionLabel)
+                            .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
+                            .listRowSeparator(.hidden)
                     },
                     header: {
                         HStack {
-                            Text("Action Label")
+                            Text("Action Name")
                         }
                     }
                 )
@@ -81,18 +75,29 @@ struct LogDetailView: View {
             }
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, 16)
-            .navigationTitle(viewStore.actionLabel)
+            .navigationTitle("Action")
         }
     }
 
     @ViewBuilder private func sectionContent(rows: [LogDetailFeature.State.IndexedElement]) -> some View {
         ForEach(rows) { row in
             Text(row.element)
-                .frame(height: 16)
+                .foregroundStyle(foregroundColor(for: row))
                 .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .lineLimit(nil)
         }
         .frame(height: 16)
         .listRowSeparator(.hidden)
+    }
+
+    func foregroundColor(for row: LogDetailFeature.State.IndexedElement) -> Color {
+        if row.element.hasPrefix("+") {
+            return .red
+        } else if row.element.hasPrefix("-") {
+            return .green
+        } else {
+            return .primary
+        }
     }
 }
 
