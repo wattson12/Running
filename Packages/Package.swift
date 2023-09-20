@@ -35,6 +35,7 @@ extension String {
     static let healthKitServiceInterface: Self = "HealthKitServiceInterface"
     static let healthKitServiceLive: Self = "HealthKitServiceLive"
     static let widgets: Self = "Widgets"
+    static let logging: Self = "Logging"
     
     static func dependencies(_ package: String) -> Self {
         "Sources/Dependencies/\(package)"
@@ -85,6 +86,7 @@ let package = Package(
         .library(name: .healthKitServiceInterface),
         .library(name: .healthKitServiceLive),
         .library(name: .widgets),
+        .library(name: .logging),
         .library(name: .cache),
         .library(name: .model),
         .library(name: .designSystem),
@@ -139,6 +141,14 @@ let package = Package(
                 .dependencies,
             ],
             path: .dependencies(.widgets)
+        ),
+        .target(
+            name: .logging,
+            dependencies: [
+                .composableArchitecture,
+                .dependencies
+            ],
+            path: .dependencies(.logging)
         ),
         .target(
             name: .app,
@@ -220,6 +230,7 @@ let package = Package(
                 .dependencies,
                 .dependenciesAdditions,
                 .target(name: .designSystem),
+                .target(name: .logging),
             ],
             path: .feature(.settings)
         ),

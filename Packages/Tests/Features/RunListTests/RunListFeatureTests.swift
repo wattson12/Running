@@ -11,10 +11,6 @@ final class RunListFeatureTests: XCTestCase {
     func testRunsFetchedHappyPath() async throws {
         let allRuns: [Run] = .allRuns
         let runs: [Run] = Array(allRuns.suffix(5))
-        for (index, run) in runs.enumerated() {
-            print(index, run.id)
-        }
-
         let store = TestStore(
             initialState: .init(),
             reducer: RunListFeature.init,
