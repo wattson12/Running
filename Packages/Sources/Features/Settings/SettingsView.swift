@@ -33,8 +33,14 @@ public struct SettingsView: View {
                     Section(L10n.Settings.Section.acknowledgements) {
                         ForEach(viewStore.acknowledgements) { acknowledgement in
                             Link(
-                                acknowledgement.name,
-                                destination: acknowledgement.url
+                                destination: acknowledgement.url,
+                                label: {
+                                    HStack {
+                                        Text(acknowledgement.name)
+                                        Spacer()
+                                        Image(systemName: "network")
+                                    }
+                                }
                             )
                         }
                     }
@@ -125,15 +131,28 @@ public struct SettingsView: View {
 
     @ViewBuilder func aboutSection() -> some View {
         Link(
-            "Terms & Conditions",
-            destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!
+            destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!,
+            label: {
+                HStack {
+                    Image(systemName: "doc.text")
+                    Text("Terms & Conditions")
+                    Spacer()
+                    Image(systemName: "network")
+                }
+            }
         )
 
         Link(
-            "Privacy",
-            destination: URL(string: "https://wattson12.github.io/Running/privacy/privacy.html")!
+            destination: URL(string: "https://wattson12.github.io/Running/privacy/privacy.html")!,
+            label: {
+                HStack {
+                    Image(systemName: "eye.slash")
+                    Text("Privacy")
+                    Spacer()
+                    Image(systemName: "network")
+                }
+            }
         )
-        .buttonStyle(.plain)
     }
 
     @ViewBuilder func debugSectionGestureView(action: @escaping () -> Void) -> some View {
