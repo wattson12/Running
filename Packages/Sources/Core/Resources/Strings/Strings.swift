@@ -143,8 +143,21 @@ public enum L10n {
             public enum Debug {
                 /// Show debug tab
                 public static let showDebugTab = L10n.tr("Localizable", "settings.section.debug.show_debug_tab", fallback: "Show debug tab")
+                /// Show loggging
+                public static let showLogging = L10n.tr("Localizable", "settings.section.debug.show_logging", fallback: "Show loggging")
                 /// Debug
                 public static let title = L10n.tr("Localizable", "settings.section.debug.title", fallback: "Debug")
+            }
+
+            public enum Links {
+                /// Privacy policy
+                public static let privacy = L10n.tr("Localizable", "settings.section.links.privacy", fallback: "Privacy policy")
+                /// Source code
+                public static let sourceCode = L10n.tr("Localizable", "settings.section.links.source_code", fallback: "Source code")
+                /// Terms & conditions
+                public static let terms = L10n.tr("Localizable", "settings.section.links.terms", fallback: "Terms & conditions")
+                /// Links
+                public static let title = L10n.tr("Localizable", "settings.section.links.title", fallback: "Links")
             }
         }
     }

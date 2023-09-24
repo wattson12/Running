@@ -30,11 +30,21 @@ public struct SettingsView: View {
         NavigationStack {
             WithViewStore(store, observe: ViewState.init, send: SettingsFeature.Action.view) { viewStore in
                 List {
+                    Section(L10n.Settings.Section.Links.title) {
+                        linksSection()
+                    }
+
                     Section(L10n.Settings.Section.acknowledgements) {
                         ForEach(viewStore.acknowledgements) { acknowledgement in
                             Link(
-                                acknowledgement.name,
-                                destination: acknowledgement.url
+                                destination: acknowledgement.url,
+                                label: {
+                                    HStack {
+                                        Text(acknowledgement.name)
+                                        Spacer()
+                                        Image(systemName: "network")
+                                    }
+                                }
                             )
                         }
                     }
@@ -71,7 +81,7 @@ public struct SettingsView: View {
                                         viewStore.send(.showLoggingButtonTapped)
                                     },
                                     label: {
-                                        Text("Show Logging")
+                                        Text(L10n.Settings.Section.Debug.showLogging)
                                     }
                                 )
                             }
@@ -87,7 +97,7 @@ public struct SettingsView: View {
                         LogListView(
                             store: .init(
                                 initialState: .init(),
-                                reducer: { LogListFeature() },
+                                reducer: LogListFeature.init,
                                 withDependencies: {
                                     #if targetEnvironment(simulator)
                                         $0 = .preview
@@ -97,6 +107,7 @@ public struct SettingsView: View {
                         )
                     }
                 )
+                .buttonStyle(.plain)
                 .navigationTitle(L10n.App.Feature.settings)
                 .onAppear { viewStore.send(.onAppear) }
             }
@@ -119,6 +130,41 @@ public struct SettingsView: View {
         }
     }
 
+    @ViewBuilder func linksSection() -> some View {
+        Link(
+            destination: URL(string: "https://github.com/wattson12/Running")!,
+            label: {
+                HStack {
+                    Text(L10n.Settings.Section.Links.sourceCode)
+                    Spacer()
+                    Image(systemName: "network")
+                }
+            }
+        )
+
+        Link(
+            destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!,
+            label: {
+                HStack {
+                    Text(L10n.Settings.Section.Links.terms)
+                    Spacer()
+                    Image(systemName: "network")
+                }
+            }
+        )
+
+        Link(
+            destination: URL(string: "https://wattson12.github.io/Running/privacy/privacy.html")!,
+            label: {
+                HStack {
+                    Text(L10n.Settings.Section.Links.privacy)
+                    Spacer()
+                    Image(systemName: "network")
+                }
+            }
+        )
+    }
+
     @ViewBuilder func debugSectionGestureView(action: @escaping () -> Void) -> some View {
         Color.clear
             .contentShape(Rectangle())
@@ -133,7 +179,7 @@ public struct SettingsView: View {
     SettingsView(
         store: .init(
             initialState: .init(),
-            reducer: { SettingsFeature()._logging() }
+            reducer: SettingsFeature.init
         )
     )
 }
