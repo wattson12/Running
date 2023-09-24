@@ -65,8 +65,8 @@ public struct SettingsView: View {
                         )
                     }
 
-                    Section("About") {
-                        aboutSection()
+                    Section("Links") {
+                        linksSection()
                     }
 
                     if viewStore.debugSectionVisible {
@@ -129,12 +129,22 @@ public struct SettingsView: View {
         }
     }
 
-    @ViewBuilder func aboutSection() -> some View {
+    @ViewBuilder func linksSection() -> some View {
+        Link(
+            destination: URL(string: "https://github.com/wattson12/Running")!,
+            label: {
+                HStack {
+                    Text("Source Code")
+                    Spacer()
+                    Image(systemName: "network")
+                }
+            }
+        )
+
         Link(
             destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!,
             label: {
                 HStack {
-                    Image(systemName: "doc.text")
                     Text("Terms & Conditions")
                     Spacer()
                     Image(systemName: "network")
@@ -146,7 +156,6 @@ public struct SettingsView: View {
             destination: URL(string: "https://wattson12.github.io/Running/privacy/privacy.html")!,
             label: {
                 HStack {
-                    Image(systemName: "eye.slash")
                     Text("Privacy")
                     Spacer()
                     Image(systemName: "network")
