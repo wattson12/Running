@@ -65,7 +65,7 @@ public struct SettingsView: View {
                         )
                     }
 
-                    Section("Links") {
+                    Section(L10n.Settings.Section.Links.title) {
                         linksSection()
                     }
 
@@ -81,7 +81,7 @@ public struct SettingsView: View {
                                         viewStore.send(.showLoggingButtonTapped)
                                     },
                                     label: {
-                                        Text("Show Logging")
+                                        Text(L10n.Settings.Section.Debug.showLogging)
                                     }
                                 )
                             }
@@ -134,7 +134,7 @@ public struct SettingsView: View {
             destination: URL(string: "https://github.com/wattson12/Running")!,
             label: {
                 HStack {
-                    Text("Source Code")
+                    Text(L10n.Settings.Section.Links.sourceCode)
                     Spacer()
                     Image(systemName: "network")
                 }
@@ -145,7 +145,7 @@ public struct SettingsView: View {
             destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!,
             label: {
                 HStack {
-                    Text("Terms & Conditions")
+                    Text(L10n.Settings.Section.Links.terms)
                     Spacer()
                     Image(systemName: "network")
                 }
@@ -156,7 +156,7 @@ public struct SettingsView: View {
             destination: URL(string: "https://wattson12.github.io/Running/privacy/privacy.html")!,
             label: {
                 HStack {
-                    Text("Privacy")
+                    Text(L10n.Settings.Section.Links.privacy)
                     Spacer()
                     Image(systemName: "network")
                 }
@@ -178,7 +178,7 @@ public struct SettingsView: View {
     SettingsView(
         store: .init(
             initialState: .init(),
-            reducer: { SettingsFeature()._logging() }
+            reducer: SettingsFeature.init
         )
     )
 }

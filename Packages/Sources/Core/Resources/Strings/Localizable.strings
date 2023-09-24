@@ -49,3 +49,8 @@
 "settings.section.build_info.build_number" = "Build number";
 "settings.section.debug.title" = "Debug";
 "settings.section.debug.show_debug_tab" = "Show debug tab";
+"settings.section.debug.show_logging" = "Show loggging";
+"settings.section.links.title" = "Links";
+"settings.section.links.source_code" = "Source code";
+"settings.section.links.terms" = "Terms & conditions";
+"settings.section.links.privacy" = "Privacy policy";
