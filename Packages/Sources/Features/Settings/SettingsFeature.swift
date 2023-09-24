@@ -6,7 +6,7 @@ import Logging
 public extension Bool {
     static var debugSectionVisibleDefaultValue: Bool {
         #if targetEnvironment(simulator)
-            return true
+            return false
         #else
             return false
         #endif

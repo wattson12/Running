@@ -30,6 +30,10 @@ public struct SettingsView: View {
         NavigationStack {
             WithViewStore(store, observe: ViewState.init, send: SettingsFeature.Action.view) { viewStore in
                 List {
+                    Section(L10n.Settings.Section.Links.title) {
+                        linksSection()
+                    }
+
                     Section(L10n.Settings.Section.acknowledgements) {
                         ForEach(viewStore.acknowledgements) { acknowledgement in
                             Link(
@@ -63,10 +67,6 @@ public struct SettingsView: View {
                                 )
                             }
                         )
-                    }
-
-                    Section(L10n.Settings.Section.Links.title) {
-                        linksSection()
                     }
 
                     if viewStore.debugSectionVisible {
@@ -107,6 +107,7 @@ public struct SettingsView: View {
                         )
                     }
                 )
+                .buttonStyle(.plain)
                 .navigationTitle(L10n.App.Feature.settings)
                 .onAppear { viewStore.send(.onAppear) }
             }
