@@ -59,6 +59,10 @@ public struct SettingsView: View {
                         )
                     }
 
+                    Section("About") {
+                        aboutSection()
+                    }
+
                     if viewStore.debugSectionVisible {
                         Section(
                             header: Text(L10n.Settings.Section.Debug.title),
@@ -87,7 +91,7 @@ public struct SettingsView: View {
                         LogListView(
                             store: .init(
                                 initialState: .init(),
-                                reducer: { LogListFeature() },
+                                reducer: LogListFeature.init,
                                 withDependencies: {
                                     #if targetEnvironment(simulator)
                                         $0 = .preview
@@ -117,6 +121,19 @@ public struct SettingsView: View {
             Text(state.buildNumber)
                 .font(.footnote)
         }
+    }
+
+    @ViewBuilder func aboutSection() -> some View {
+        Link(
+            "Terms & Conditions",
+            destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!
+        )
+
+        Link(
+            "Privacy",
+            destination: URL(string: "https://wattson12.github.io/Running/privacy/privacy.html")!
+        )
+        .buttonStyle(.plain)
     }
 
     @ViewBuilder func debugSectionGestureView(action: @escaping () -> Void) -> some View {
