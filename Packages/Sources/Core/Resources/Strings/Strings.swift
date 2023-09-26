@@ -81,17 +81,17 @@ public enum L10n {
 
     public enum Permissions {
         public enum HealthKitUnavailable {
-            /// We use running workouts tracked in the Health app to track your running goals. This device doesn't currently support importing running workouts so we can't track your goals
-            public static let message = L10n.tr("Localizable", "permissions.health_kit_unavailable.message", fallback: "We use running workouts tracked in the Health app to track your running goals. This device doesn't currently support importing running workouts so we can't track your goals")
+            /// We use running workouts to update your running goals. This device doesn't currently support importing workouts so we can't track your goals
+            public static let message = L10n.tr("Localizable", "permissions.health_kit_unavailable.message", fallback: "We use running workouts to update your running goals. This device doesn't currently support importing workouts so we can't track your goals")
             /// Workouts not suppported
             public static let title = L10n.tr("Localizable", "permissions.health_kit_unavailable.title", fallback: "Workouts not suppported")
         }
 
         public enum RequestPermissions {
-            /// We use running workouts tracked in the Health app to track your running goals. Tap the button below and accept permissions to get started
-            public static let messagePartOne = L10n.tr("Localizable", "permissions.request_permissions.message_part_one", fallback: "We use running workouts tracked in the Health app to track your running goals. Tap the button below and accept permissions to get started")
-            /// Workout data is only stored locally to calculate progress for your running goals and is **never** sent anywhere else
-            public static let messagePartTwo = L10n.tr("Localizable", "permissions.request_permissions.message_part_two", fallback: "Workout data is only stored locally to calculate progress for your running goals and is **never** sent anywhere else")
+            /// Running Goals uses running workouts to update your running goals. Tap the button below and accept permissions to get started
+            public static let messagePartOne = L10n.tr("Localizable", "permissions.request_permissions.message_part_one", fallback: "Running Goals uses running workouts to update your running goals. Tap the button below and accept permissions to get started")
+            /// Workout data is only stored locally to calculate progress for your goals and is **never** sent anywhere else (you can check the [source code](https://github.com/wattson12/Running) if you want to be sure)
+            public static let messagePartTwo = L10n.tr("Localizable", "permissions.request_permissions.message_part_two", fallback: "Workout data is only stored locally to calculate progress for your goals and is **never** sent anywhere else (you can check the [source code](https://github.com/wattson12/Running) if you want to be sure)")
             /// Permission required
             public static let title = L10n.tr("Localizable", "permissions.request_permissions.title", fallback: "Permission required")
             public enum Button {
