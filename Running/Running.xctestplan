@@ -40,13 +40,6 @@
     {
       "target" : {
         "containerPath" : "container:Packages",
-        "identifier" : "GoalDetailTests",
-        "name" : "GoalDetailTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Packages",
         "identifier" : "GoalListTests",
         "name" : "GoalListTests"
       }
@@ -98,6 +91,13 @@
         "containerPath" : "container:Packages",
         "identifier" : "SettingsTests",
         "name" : "SettingsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "GoalDetailTests",
+        "name" : "GoalDetailTests"
       }
     }
   ],
