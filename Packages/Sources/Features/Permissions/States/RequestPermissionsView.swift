@@ -18,12 +18,12 @@ struct RequestPermissionsView: View {
                 .font(.largeTitle)
                 .foregroundColor(.primary)
 
-            Text(L10n.Permissions.RequestPermissions.messagePartOne)
+            Text(.init(L10n.Permissions.RequestPermissions.messagePartOne))
                 .multilineTextAlignment(.center)
                 .font(.callout)
                 .foregroundColor(.primary)
 
-            Text(.init(verbatim: L10n.Permissions.RequestPermissions.messagePartTwo))
+            Text(.init(L10n.Permissions.RequestPermissions.messagePartTwo))
                 .multilineTextAlignment(.center)
                 .font(.callout)
                 .foregroundColor(.primary)
