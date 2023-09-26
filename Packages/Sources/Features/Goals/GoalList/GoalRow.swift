@@ -190,6 +190,12 @@ struct GoalRowView: View {
         formatter.unitOptions = .providedUnit
         formatter.locale = locale
         formatter.unitStyle = .medium
+
+        let numberformatter = NumberFormatter()
+        numberformatter.locale = locale
+        numberformatter.maximumFractionDigits = 2
+        formatter.numberFormatter = numberformatter
+
         return formatter.string(from: distance.converted(to: .primaryUnit(locale: locale)))
     }
 }
@@ -205,6 +211,7 @@ struct GoalRow_Previews: PreviewProvider {
             action: { print("tapped") },
             editAction: { print("tapped") }
         )
+        .environment(\.locale, .init(identifier: "en_AU"))
         .previewLayout(.fixed(width: 375, height: 200))
         .previewDisplayName("75%")
 
@@ -217,6 +224,7 @@ struct GoalRow_Previews: PreviewProvider {
             action: { print("tapped") },
             editAction: { print("tapped") }
         )
+        .environment(\.locale, .init(identifier: "en_AU"))
         .previewLayout(.fixed(width: 375, height: 200))
         .previewDisplayName("Goal Achieved")
 
@@ -226,6 +234,7 @@ struct GoalRow_Previews: PreviewProvider {
             action: { print("tapped") },
             editAction: { print("tapped") }
         )
+        .environment(\.locale, .init(identifier: "en_AU"))
         .previewLayout(.fixed(width: 375, height: 200))
         .previewDisplayName("No Goal")
 
@@ -238,6 +247,7 @@ struct GoalRow_Previews: PreviewProvider {
             action: { print("tapped") },
             editAction: { print("tapped") }
         )
+        .environment(\.locale, .init(identifier: "en_GB"))
         .previewLayout(.fixed(width: 375, height: 200))
         .previewDisplayName("75% (Imperial)")
     }

@@ -529,9 +529,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Running/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Workout data is used to show running history and calculate progress in running goals";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Workout data is used to show running history and calculate progress in running goals";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Workout data is used to show running history and calculate progress in running goals";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Workout history is used to calculate progress towards running goals";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Workout history is used to calculate progress towards running goals";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Workout history is used to calculate progress towards running goals";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -571,9 +571,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Running/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Workout data is used to show running history and calculate progress in running goals";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Workout data is used to show running history and calculate progress in running goals";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Workout data is used to show running history and calculate progress in running goals";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Workout history is used to calculate progress towards running goals";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Workout history is used to calculate progress towards running goals";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Workout history is used to calculate progress towards running goals";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
