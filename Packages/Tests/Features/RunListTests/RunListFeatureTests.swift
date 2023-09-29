@@ -9,7 +9,7 @@ import XCTest
 @MainActor
 final class RunListFeatureTests: XCTestCase {
     func testRunsFetchedHappyPath() async throws {
-        let date = Date(timeIntervalSinceReferenceDate: 717_710_431) // Sep 23
+        let date = Date(timeIntervalSinceReferenceDate: 765_123_456) // March 2025
         let allRuns: [Run] = withDependencies {
             $0.calendar = .current
             $0.date = .constant(date)
@@ -49,7 +49,7 @@ final class RunListFeatureTests: XCTestCase {
                 ),
                 .init(
                     id: .init(12),
-                    title: "September 23",
+                    title: "March 25",
                     runs: [
                         runs[2],
                         runs[1],
