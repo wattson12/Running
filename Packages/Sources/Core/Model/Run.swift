@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 
 public struct Run: Equatable, Identifiable {
@@ -35,12 +36,18 @@ public extension Run {
     }
 
     static func mock(
-        date: String,
+        offset days: Int,
         distance: Double,
         duration: Double = 30
     ) -> Run {
-        .mock(
-            startDate: .mock(date: date),
+        @Dependency(\.date) var date
+        @Dependency(\.calendar) var calendar
+
+        let startDate = calendar.date(byAdding: .day, value: days, to: date.now)!
+        print(days, startDate.formatted(.dateTime))
+
+        return .mock(
+            startDate: startDate,
             distance: .init(value: distance, unit: .kilometers),
             duration: .init(value: duration, unit: .minutes)
         )
