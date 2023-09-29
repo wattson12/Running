@@ -210,20 +210,20 @@ public extension [Run] {
         ]
     }()
 
-    static let screenshots: [Run] = {
+    static func screenshots(unit: UnitLength = .kilometers) -> [Run] {
         @Dependency(\.date) var date
         return [
-            .mock(offset: 0, distance: 5.5, pace: 5),
-            .mock(offset: -1, distance: 7.2, pace: 5),
-            .mock(offset: -2, distance: 10, pace: 5),
-            .mock(offset: -4, distance: 5, pace: 5),
-            .mock(offset: -5, distance: 8, pace: 5),
-            .mock(offset: -6, distance: 12, pace: 5),
-            .mock(offset: -9, distance: 13.1, pace: 5),
-            .mock(offset: -12, distance: 5.1, pace: 5),
-            .mock(offset: -14, distance: 7.2, pace: 5),
-            .mock(offset: -16, distance: 8.4, pace: 5),
-            .mock(offset: -18, distance: 9.0, pace: 5),
+            .mock(offset: 0, distance: 5.5, pace: 5, unit: unit),
+            .mock(offset: -1, distance: 7.2, pace: 5, unit: unit),
+            .mock(offset: -2, distance: 10, pace: 5, unit: unit),
+            .mock(offset: -4, distance: 5, pace: 5, unit: unit),
+            .mock(offset: -5, distance: 8, pace: 5, unit: unit),
+            .mock(offset: -6, distance: 12, pace: 5, unit: unit),
+            .mock(offset: -9, distance: 13.1, pace: 5, unit: unit),
+            .mock(offset: -12, distance: 5.1, pace: 5, unit: unit),
+            .mock(offset: -14, distance: 7.2, pace: 5, unit: unit),
+            .mock(offset: -16, distance: 8.4, pace: 5, unit: unit),
+            .mock(offset: -18, distance: 9.0, pace: 5, unit: unit),
         ]
-    }()
+    }
 }
