@@ -209,4 +209,21 @@ public extension [Run] {
             .mock(offset: -400, distance: 7.0, duration: 48.3),
         ]
     }()
+
+    static let screenshots: [Run] = {
+        @Dependency(\.date) var date
+        return [
+            .mock(offset: 0, distance: 5.5, pace: 5),
+            .mock(offset: -1, distance: 7.2, pace: 5),
+            .mock(offset: -2, distance: 10, pace: 5),
+            .mock(offset: -4, distance: 5, pace: 5),
+            .mock(offset: -5, distance: 8, pace: 5),
+            .mock(offset: -6, distance: 12, pace: 5),
+            .mock(offset: -9, distance: 13.1, pace: 5),
+            .mock(offset: -12, distance: 5.1, pace: 5),
+            .mock(offset: -14, distance: 7.2, pace: 5),
+            .mock(offset: -16, distance: 8.4, pace: 5),
+            .mock(offset: -18, distance: 9.0, pace: 5),
+        ]
+    }()
 }

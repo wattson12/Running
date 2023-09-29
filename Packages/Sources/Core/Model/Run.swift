@@ -49,4 +49,19 @@ public extension Run {
             duration: .init(value: duration, unit: .minutes)
         )
     }
+
+    static func mock(
+        offset days: Int,
+        distance: Double,
+        pace: Double = 5
+    ) -> Run {
+        @Dependency(\.date) var date
+        @Dependency(\.calendar) var calendar
+
+        return .mock(
+            startDate: calendar.date(byAdding: .day, value: days, to: date.now)!,
+            distance: .init(value: distance, unit: .kilometers),
+            duration: .init(value: pace * distance, unit: .minutes)
+        )
+    }
 }
