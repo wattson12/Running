@@ -36,7 +36,7 @@ private extension View {
             if let screenshotLocale = ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] {
                 environment(\.locale, .init(identifier: screenshotLocale))
             } else {
-                self
+                environment(\.locale, .init(identifier: "en_AU"))
             }
         }
     #else
