@@ -3,12 +3,8 @@ import Model
 import XCTestDynamicOverlay
 
 extension Goals {
-    static var previewValue: Goals {
-        var goals: [Goal] = [
-            .init(period: .weekly, target: .init(value: 50, unit: .kilometers)),
-            .init(period: .monthly, target: nil),
-            .init(period: .yearly, target: .init(value: 1500, unit: .kilometers)),
-        ]
+    public static func mock(goals: [Goal]) -> Goals {
+        var goals = goals
 
         return .init(
             goal: { period in
@@ -20,6 +16,14 @@ extension Goals {
             }
         )
     }
+
+    static var previewValue: Goals = .mock(
+        goals: [
+            .init(period: .weekly, target: .init(value: 50, unit: .kilometers)),
+            .init(period: .monthly, target: nil),
+            .init(period: .yearly, target: .init(value: 1500, unit: .kilometers)),
+        ]
+    )
 
     static var testValue: Goals = .init(
         goal: unimplemented("Goals.goal"),
