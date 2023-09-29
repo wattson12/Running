@@ -43,11 +43,8 @@ public extension Run {
         @Dependency(\.date) var date
         @Dependency(\.calendar) var calendar
 
-        let startDate = calendar.date(byAdding: .day, value: days, to: date.now)!
-        print(days, startDate.formatted(.dateTime))
-
         return .mock(
-            startDate: startDate,
+            startDate: calendar.date(byAdding: .day, value: days, to: date.now)!,
             distance: .init(value: distance, unit: .kilometers),
             duration: .init(value: duration, unit: .minutes)
         )
