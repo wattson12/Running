@@ -3,17 +3,17 @@ import Model
 import XCTestDynamicOverlay
 
 extension RunningWorkouts {
-    static var previewValue: RunningWorkouts {
+    public static func mock(runs: [Run]) -> RunningWorkouts {
         @Dependency(\.calendar) var calendar
         @Dependency(\.date) var date
 
         return .init(
             allRunningWorkouts: .init(
-                cache: { .allRuns },
-                remote: { .allRuns }
+                cache: { runs },
+                remote: { runs }
             ),
             runsWithinGoal: { goal in
-                let allRunningWorkouts: [Run] = .allRuns
+                let allRunningWorkouts: [Run] = runs
                 guard let range = goal.period.startAndEnd(in: calendar, now: date()) else { return [] }
                 return allRunningWorkouts
                     .filter { $0.startDate >= range.start && $0.startDate < range.end }
@@ -21,6 +21,8 @@ extension RunningWorkouts {
             }
         )
     }
+
+    static var previewValue: RunningWorkouts = .mock(runs: .allRuns)
 
     static var testValue: RunningWorkouts = .init(
         allRunningWorkouts: unimplemented(

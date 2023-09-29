@@ -33,7 +33,7 @@ struct RunListItemView_Previews: PreviewProvider {
     static var previews: some View {
         RunListItemView(
             run: .mock(
-                date: "230312",
+                offset: 0,
                 distance: 10,
                 duration: 52.23
             )
