@@ -9,17 +9,21 @@ import XCTest
 @MainActor
 final class RunListFeatureTests: XCTestCase {
     func testRunsFetchedHappyPath() async throws {
-        let allRuns: [Run] = .allRuns
-        let runs: [Run] = Array(allRuns.suffix(5))
+        let date = Date(timeIntervalSinceReferenceDate: 717_710_431) // Sep 23
+        let allRuns: [Run] = withDependencies {
+            $0.calendar = .current
+            $0.date = .constant(date)
+        } operation: {
+            .allRuns
+        }
+        let runs: [Run] = Array(allRuns.sorted(by: { $0.startDate < $1.startDate }).suffix(5))
         let store = TestStore(
             initialState: .init(),
             reducer: RunListFeature.init,
             withDependencies: {
                 $0.userDefaults = .ephemeral()
-                $0.repository.runningWorkouts._allRunningWorkouts = {
-                    .mock(value: runs)
-                }
-                $0.date = .constant(.preview)
+                $0.repository.runningWorkouts = .mock(runs: runs)
+                $0.date = .constant(date)
                 $0.calendar = .current
                 $0.uuid = .constant(.init(12))
                 $0.widget._reloadAllTimelines = {}
@@ -38,9 +42,15 @@ final class RunListFeatureTests: XCTestCase {
                 ),
                 .init(
                     id: .init(12),
-                    title: "December 22",
+                    title: "Yesterday",
                     runs: [
                         runs[3],
+                    ]
+                ),
+                .init(
+                    id: .init(12),
+                    title: "September 23",
+                    runs: [
                         runs[2],
                         runs[1],
                         runs[0],
