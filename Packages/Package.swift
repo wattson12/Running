@@ -36,6 +36,7 @@ extension String {
     static let healthKitServiceLive: Self = "HealthKitServiceLive"
     static let widgets: Self = "Widgets"
     static let logging: Self = "Logging"
+    static let featureFlags: Self = "FeatureFlags"
     
     static func dependencies(_ package: String) -> Self {
         "Sources/Dependencies/\(package)"
@@ -90,6 +91,7 @@ let package = Package(
         .library(name: .healthKitServiceLive),
         .library(name: .widgets),
         .library(name: .logging),
+        .library(name: .featureFlags),
         .library(name: .cache),
         .library(name: .model),
         .library(name: .designSystem),
@@ -164,6 +166,13 @@ let package = Package(
                 .dependencies
             ],
             path: .dependencies(.logging)
+        ),
+        .target(
+            name: .featureFlags,
+            dependencies: [
+                .dependencies
+            ],
+            path: .dependencies(.featureFlags)
         ),
         .target(
             name: .app,
