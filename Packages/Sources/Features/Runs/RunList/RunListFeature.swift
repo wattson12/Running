@@ -1,8 +1,10 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 import Foundation
 import Model
 import Repository
+import RunDetail
 import Widgets
 
 extension String {
@@ -10,21 +12,49 @@ extension String {
 }
 
 public struct RunListFeature: Reducer {
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case detail(RunDetailFeature.State)
+        }
+
+        public enum Action: Equatable {
+            case detail(RunDetailFeature.Action)
+        }
+
+        public var body: some ReducerOf<Self> {
+            Scope(state: /State.detail, action: /Action.detail, child: RunDetailFeature.init)
+        }
+    }
+
     public struct State: Equatable {
         var sections: [RunSection] = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
+        @PresentationState var destination: Destination.State?
 
         public init(
             sections: [RunSection] = []
         ) {
             self.sections = sections
         }
+
+        init(
+            sections: [RunSection] = [],
+            isInitialImport: Bool = false,
+            isLoading: Bool = false,
+            destination: Destination.State? = nil
+        ) {
+            self.sections = sections
+            self.isInitialImport = isInitialImport
+            self.isLoading = isLoading
+            self.destination = destination
+        }
     }
 
     public enum Action: Equatable {
         public enum View: Equatable {
             case onAppear
+            case runTapped(Run)
         }
 
         public enum Internal: Equatable {
@@ -38,12 +68,14 @@ public struct RunListFeature: Reducer {
         case view(View)
         case _internal(Internal)
         case delegate(Delegate)
+        case destination(PresentationAction<Destination.Action>)
     }
 
     public init() {}
 
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.widget) var widget
+    @Dependency(\.featureFlags) var featureFlags
 
     public var body: some ReducerOf<Self> {
         Reduce<State, Action> { state, action in
@@ -54,14 +86,21 @@ public struct RunListFeature: Reducer {
                 return _internal(action, state: &state)
             case .delegate:
                 return .none
+            case let .destination(action):
+                return destination(action, state: &state)
             }
         }
+        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
             return state.refresh()
+        case let .runTapped(run):
+            guard featureFlags[.showRunDetail] else { return .none }
+            state.destination = .detail(.init(run: run))
+            return .none
         }
     }
 
@@ -87,5 +126,13 @@ public struct RunListFeature: Reducer {
 
         userDefaults.set(true, forKey: .initialImportCompleted)
         state.isInitialImport = false
+    }
+
+    private func destination(_ action: PresentationAction<Destination.Action>, state _: inout State) -> EffectOf<Self> {
+        guard case let .presented(action) = action else { return .none }
+        switch action {
+        case .detail:
+            return .none
+        }
     }
 }

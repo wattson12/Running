@@ -10,13 +10,15 @@ public struct SettingsView: View {
         let acknowledgements: [Acknowledgement]
         let debugSectionVisible: Bool
         let loggingDisplayed: Bool
+        @BindingViewState var showRunDetail: Bool
 
-        init(state: SettingsFeature.State) {
+        init(state: BindingViewStore<SettingsFeature.State>) {
             versionNumber = state.versionNumber
             buildNumber = state.buildNumber
             acknowledgements = state.acknowledgements.elements
             debugSectionVisible = state.debugSectionVisible
             loggingDisplayed = state.loggingDisplayed
+            _showRunDetail = state.$showRunDetailFeatureFlag
         }
     }
 
@@ -28,7 +30,10 @@ public struct SettingsView: View {
 
     public var body: some View {
         NavigationStack {
-            WithViewStore(store, observe: ViewState.init, send: SettingsFeature.Action.view) { viewStore in
+            WithViewStore(
+                store,
+                observe: ViewState.init
+            ) { viewStore in
                 List {
                     Section(L10n.Settings.Section.Links.title) {
                         linksSection()
@@ -59,7 +64,7 @@ public struct SettingsView: View {
                         Section(
                             header: Text(L10n.Settings.Section.BuildInfo.title),
                             footer: debugSectionGestureView {
-                                viewStore.send(.hiddenAreaGestureFired)
+                                viewStore.send(.view(.hiddenAreaGestureFired))
                             },
                             content: {
                                 buildInfoSection(
@@ -71,14 +76,21 @@ public struct SettingsView: View {
 
                     if viewStore.debugSectionVisible {
                         Section(
+                            header: Text("Feature Flags"),
+                            content: {
+                                Toggle("Show run detail", isOn: viewStore.$showRunDetail)
+                            }
+                        )
+
+                        Section(
                             header: Text(L10n.Settings.Section.Debug.title),
                             footer: debugSectionGestureView {
-                                viewStore.send(.hiddenAreaGestureFired)
+                                viewStore.send(.view(.hiddenAreaGestureFired))
                             },
                             content: {
                                 Button(
                                     action: {
-                                        viewStore.send(.showLoggingButtonTapped)
+                                        viewStore.send(.view(.showLoggingButtonTapped))
                                     },
                                     label: {
                                         Text(L10n.Settings.Section.Debug.showLogging)
@@ -91,7 +103,7 @@ public struct SettingsView: View {
                 .sheet(
                     isPresented: viewStore.binding(
                         get: \.loggingDisplayed,
-                        send: { .loggingDisplayed($0) }
+                        send: { .view(.loggingDisplayed($0)) }
                     ),
                     content: {
                         LogListView(
@@ -109,7 +121,7 @@ public struct SettingsView: View {
                 )
                 .buttonStyle(.plain)
                 .navigationTitle(L10n.App.Feature.settings)
-                .onAppear { viewStore.send(.onAppear) }
+                .onAppear { viewStore.send(.view(.onAppear)) }
             }
         }
     }

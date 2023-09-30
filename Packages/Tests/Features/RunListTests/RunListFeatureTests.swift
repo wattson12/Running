@@ -95,4 +95,62 @@ final class RunListFeatureTests: XCTestCase {
 
         await fulfillment(of: [reloadTimelinesCalled])
     }
+
+    func testTappingOnRunSetsCorrectDestinationWithFeatureFlagEnabled() async throws {
+        let run: Run = .mock()
+        let store = TestStore(
+            initialState: .init(
+                sections: [
+                    RunSection(
+                        id: .init(),
+                        title: UUID().uuidString,
+                        runs: [
+                            .mock(),
+                            run,
+                            .mock(),
+                        ]
+                    ),
+                ]
+            ),
+            reducer: RunListFeature.init,
+            withDependencies: {
+                $0.featureFlags = .mock(
+                    enabled: [
+                        .showRunDetail,
+                    ]
+                )
+            }
+        )
+
+        await store.send(.view(.runTapped(run))) {
+            $0.destination = .detail(.init(run: run))
+        }
+    }
+
+    func testTappingOnRunDoesNothingWithFeatureFlagDisabled() async throws {
+        let run: Run = .mock()
+        let store = TestStore(
+            initialState: .init(
+                sections: [
+                    RunSection(
+                        id: .init(),
+                        title: UUID().uuidString,
+                        runs: [
+                            .mock(),
+                            run,
+                            .mock(),
+                        ]
+                    ),
+                ]
+            ),
+            reducer: RunListFeature.init,
+            withDependencies: {
+                $0.featureFlags = .mock(
+                    enabled: []
+                )
+            }
+        )
+
+        await store.send(.view(.runTapped(run)))
+    }
 }
