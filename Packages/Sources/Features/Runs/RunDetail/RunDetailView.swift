@@ -2,22 +2,6 @@ import ComposableArchitecture
 import Model
 import SwiftUI
 
-public struct RunDetailFeature: Reducer {
-    public struct State: Equatable {
-        let run: Run
-    }
-
-    public enum Action: Equatable {
-        public enum View: Equatable {}
-
-        case view(View)
-    }
-
-    public var body: some ReducerOf<Self> {
-        EmptyReducer()
-    }
-}
-
 public struct RunDetailView: View {
     struct ViewState: Equatable {
         let run: Run
