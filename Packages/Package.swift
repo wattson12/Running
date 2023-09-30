@@ -170,7 +170,8 @@ let package = Package(
         .target(
             name: .featureFlags,
             dependencies: [
-                .dependencies
+                .dependencies,
+                .dependenciesAdditions,
             ],
             path: .dependencies(.featureFlags)
         ),
