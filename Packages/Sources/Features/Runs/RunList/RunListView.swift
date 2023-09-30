@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Model
 import Resources
+import RunDetail
 import SwiftUI
 
 public struct RunListView: View {
@@ -62,6 +63,15 @@ public struct RunListView: View {
                             )
                         }
                     }
+                    .navigationDestination(
+                        store: store.scope(
+                            state: \.$destination,
+                            action: RunListFeature.Action.destination
+                        ),
+                        state: /RunListFeature.Destination.State.detail,
+                        action: RunListFeature.Destination.Action.detail,
+                        destination: RunDetailView.init
+                    )
                 } else if viewStore.isInitialImport {
                     InitialImportView()
                 } else if !viewStore.isLoading {
