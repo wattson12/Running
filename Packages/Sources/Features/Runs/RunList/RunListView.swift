@@ -40,7 +40,12 @@ public struct RunListView: View {
                             Section(
                                 content: {
                                     ForEach(section.runs) { run in
-                                        RunListItemView(run: run)
+                                        RunListItemView(
+                                            run: run,
+                                            tapped: {
+                                                viewStore.send(.runTapped(run))
+                                            }
+                                        )
                                     }
                                 },
                                 header: {

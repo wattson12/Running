@@ -41,6 +41,7 @@ public struct RunListFeature: Reducer {
     public enum Action: Equatable {
         public enum View: Equatable {
             case onAppear
+            case runTapped(Run)
         }
 
         public enum Internal: Equatable {
@@ -82,6 +83,9 @@ public struct RunListFeature: Reducer {
         switch action {
         case .onAppear:
             return state.refresh()
+        case let .runTapped(run):
+            state.destination = .detail(.init(run: run))
+            return .none
         }
     }
 
