@@ -1,9 +1,5 @@
 import Foundation
 
-public struct FeatureFlagKey: Equatable {
-    let rawValue: String
-}
-
 public struct FeatureFlags: Sendable {
     public var _get: @Sendable (FeatureFlagKey) -> Bool
     public var _set: @Sendable (FeatureFlagKey, Bool) -> Void
