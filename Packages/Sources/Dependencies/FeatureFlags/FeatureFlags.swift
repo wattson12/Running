@@ -16,6 +16,6 @@ public struct FeatureFlags: Sendable {
 public extension FeatureFlags {
     subscript(_ key: FeatureFlagKey) -> Bool {
         get { _get(key) }
-        set { _set(key, newValue) }
+        nonmutating set { _set(key, newValue) }
     }
 }

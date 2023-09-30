@@ -71,6 +71,9 @@ public struct SettingsFeature: Reducer {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case .binding(\.$showRunDetailFeatureFlag):
+                featureFlags[.showRunDetail] = state.showRunDetailFeatureFlag
+                return .none
             case .binding:
                 return .none
             case .destination:

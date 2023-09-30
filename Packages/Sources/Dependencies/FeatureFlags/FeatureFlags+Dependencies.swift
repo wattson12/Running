@@ -3,8 +3,8 @@ import DependenciesAdditions
 import Foundation
 import XCTestDynamicOverlay
 
-extension FeatureFlags {
-    static func userDefaults(_ defaults: UserDefaults.Dependency) -> FeatureFlags {
+public extension FeatureFlags {
+    internal static func userDefaults(_ defaults: UserDefaults.Dependency) -> FeatureFlags {
         .init(
             get: { key in
                 defaults.bool(forKey: key.rawValue) ?? false
@@ -15,9 +15,10 @@ extension FeatureFlags {
         )
     }
 
-    public static func mock(enabled: [FeatureFlagKey]) -> FeatureFlags {
-        let enabled: LockIsolated<[FeatureFlagKey]> = .init(enabled)
-        return FeatureFlags(
+    static func storage(
+        _ enabled: LockIsolated<[FeatureFlagKey]>
+    ) -> FeatureFlags {
+        FeatureFlags(
             get: { enabled.value.contains($0) },
             set: { key, value in
                 var enabledKeys = enabled.value
@@ -31,6 +32,11 @@ extension FeatureFlags {
                 enabled.setValue(immutableUpdatedValue)
             }
         )
+    }
+
+    static func mock(enabled: [FeatureFlagKey]) -> FeatureFlags {
+        let enabled: LockIsolated<[FeatureFlagKey]> = .init(enabled)
+        return .storage(enabled)
     }
 }
 
