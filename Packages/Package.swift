@@ -258,6 +258,7 @@ let package = Package(
                 .dependenciesAdditions,
                 .target(name: .designSystem),
                 .target(name: .logging),
+                .target(name: .featureFlags),
             ],
             path: .feature(.settings)
         ),

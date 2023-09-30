@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 import Foundation
 import Logging
 
@@ -36,6 +37,8 @@ public struct SettingsFeature: Reducer {
         var debugSectionVisible: Bool
         var loggingDisplayed: Bool = false
 
+        @BindingState var showRunDetailFeatureFlag: Bool = false
+
         @PresentationState var destination: Destination.State?
 
         public init(debugSectionVisible: Bool = .debugSectionVisibleDefaultValue) {
@@ -43,7 +46,7 @@ public struct SettingsFeature: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action: Equatable, BindableAction {
         public enum View: Equatable {
             case onAppear
             case hiddenAreaGestureFired
@@ -52,19 +55,24 @@ public struct SettingsFeature: Reducer {
         }
 
         case view(View)
+        case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
     }
 
     @Dependency(\.bundleInfo) var bundleInfo
     @Dependency(\.userDefaults) var userDefaults
+    @Dependency(\.featureFlags) var featureFlags
 
     public init() {}
 
     public var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case .binding:
+                return .none
             case .destination:
                 return .none
             }
@@ -77,6 +85,7 @@ public struct SettingsFeature: Reducer {
         case .onAppear:
             state.versionNumber = bundleInfo.shortVersion
             state.buildNumber = bundleInfo.version
+            state.showRunDetailFeatureFlag = featureFlags[.showRunDetail]
             return .none
         case .hiddenAreaGestureFired:
             state.debugSectionVisible.toggle()
