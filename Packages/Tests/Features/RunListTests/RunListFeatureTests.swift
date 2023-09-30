@@ -95,4 +95,28 @@ final class RunListFeatureTests: XCTestCase {
 
         await fulfillment(of: [reloadTimelinesCalled])
     }
+
+    func testTappingOnRunSetsCorrectDestination() async throws {
+        let run: Run = .mock()
+        let store = TestStore(
+            initialState: .init(
+                sections: [
+                    RunSection(
+                        id: .init(),
+                        title: UUID().uuidString,
+                        runs: [
+                            .mock(),
+                            run,
+                            .mock(),
+                        ]
+                    ),
+                ]
+            ),
+            reducer: RunListFeature.init
+        )
+
+        await store.send(.view(.runTapped(run))) {
+            $0.destination = .detail(.init(run: run))
+        }
+    }
 }

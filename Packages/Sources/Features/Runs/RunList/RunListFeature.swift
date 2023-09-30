@@ -36,6 +36,18 @@ public struct RunListFeature: Reducer {
         ) {
             self.sections = sections
         }
+
+        init(
+            sections: [RunSection] = [],
+            isInitialImport: Bool = false,
+            isLoading: Bool = false,
+            destination: Destination.State? = nil
+        ) {
+            self.sections = sections
+            self.isInitialImport = isInitialImport
+            self.isLoading = isLoading
+            self.destination = destination
+        }
     }
 
     public enum Action: Equatable {
