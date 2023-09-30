@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 import Foundation
 import Model
 import Repository
@@ -74,6 +75,7 @@ public struct RunListFeature: Reducer {
 
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.widget) var widget
+    @Dependency(\.featureFlags) var featureFlags
 
     public var body: some ReducerOf<Self> {
         Reduce<State, Action> { state, action in
@@ -96,6 +98,7 @@ public struct RunListFeature: Reducer {
         case .onAppear:
             return state.refresh()
         case let .runTapped(run):
+            guard featureFlags[.showRunDetail] else { return .none }
             state.destination = .detail(.init(run: run))
             return .none
         }

@@ -14,6 +14,24 @@ extension FeatureFlags {
             }
         )
     }
+
+    public static func mock(enabled: [FeatureFlagKey]) -> FeatureFlags {
+        let enabled: LockIsolated<[FeatureFlagKey]> = .init(enabled)
+        return FeatureFlags(
+            get: { enabled.value.contains($0) },
+            set: { key, value in
+                var enabledKeys = enabled.value
+                if value, !enabledKeys.contains(key) {
+                    enabledKeys.append(key)
+                } else if !value {
+                    enabledKeys.removeAll(where: { $0 == key })
+                }
+
+                let immutableUpdatedValue = enabledKeys
+                enabled.setValue(immutableUpdatedValue)
+            }
+        )
+    }
 }
 
 enum FeatureFlagsDependencyKey: DependencyKey {
