@@ -49,6 +49,7 @@ extension String {
     
     static let permissions: Self = "Permissions"
 
+    static let runs: Self = "Runs"
     static let runList: Self = "RunList"
     
     static let settings: Self = "Settings"
@@ -108,7 +109,7 @@ let package = Package(
                 .target(name: .designSystem),
                 .target(name: .widgets),
             ],
-            path: .feature(.runList)
+            path: .feature(.runList, in: .runs)
         ),
         .target(
             name: .model,
