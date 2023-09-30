@@ -113,6 +113,7 @@ let package = Package(
                 .target(name: .repository),
                 .target(name: .designSystem),
                 .target(name: .widgets),
+                .target(name: .featureFlags),
             ],
             path: .feature(.runList, in: .runs)
         ),
@@ -124,6 +125,7 @@ let package = Package(
                 .target(name: .model),
                 .target(name: .repository),
                 .target(name: .designSystem),
+                .target(name: .featureFlags),
             ],
             path: .feature(.runDetail, in: .runs)
         ),
