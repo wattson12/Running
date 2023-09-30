@@ -51,6 +51,7 @@ extension String {
 
     static let runs: Self = "Runs"
     static let runList: Self = "RunList"
+    static let runDetail: Self = "RunDetail"
     
     static let settings: Self = "Settings"
     
@@ -78,6 +79,7 @@ let package = Package(
         .library(name: .app),
         .library(name: .permissions),
         .library(name: .runList),
+        .library(name: .runDetail),
         .library(name: .goalList),
         .library(name: .editGoal),
         .library(name: .goalDetail),
@@ -104,12 +106,24 @@ let package = Package(
             dependencies: [
                 .composableArchitecture,
                 .dependenciesAdditions,
+                .target(name: .runDetail),
                 .target(name: .model),
                 .target(name: .repository),
                 .target(name: .designSystem),
                 .target(name: .widgets),
             ],
             path: .feature(.runList, in: .runs)
+        ),
+        .target(
+            name: .runDetail,
+            dependencies: [
+                .composableArchitecture,
+                .dependenciesAdditions,
+                .target(name: .model),
+                .target(name: .repository),
+                .target(name: .designSystem),
+            ],
+            path: .feature(.runDetail, in: .runs)
         ),
         .target(
             name: .model,
