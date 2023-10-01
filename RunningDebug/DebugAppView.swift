@@ -13,10 +13,12 @@ struct DebugAppFeature: Reducer {
     enum Action: Equatable {
         enum View: Equatable {
             case onAppear
+            case requestPermissionsButtonTapped
         }
 
         enum Internal: Equatable {
             case permissionsFetched(TaskResult<AuthorizationRequestStatus>)
+            case permissionsRequested(TaskResult<Bool>)
         }
 
         case view(View)
@@ -45,6 +47,14 @@ struct DebugAppFeature: Reducer {
                 }
                 await send(._internal(.permissionsFetched(result)))
             }
+        case .requestPermissionsButtonTapped:
+            return .run { send in
+                let result = await TaskResult {
+                    try await permissions.requestAuthorization()
+                    return true
+                }
+                await send(._internal(.permissionsRequested(result)))
+            }
         }
     }
 
@@ -60,7 +70,10 @@ struct DebugAppFeature: Reducer {
                 break
             }
             return .none
-        case let .permissionsFetched(.failure(error)):
+        case .permissionsRequested(.success):
+            state = .runs
+            return .none
+        case let .permissionsFetched(.failure(error)), let .permissionsRequested(.failure(error)):
             print(error)
             return .none
         }
@@ -78,8 +91,13 @@ struct DebugAppView: View {
                     .progressViewStyle(.circular)
                     .onAppear { store.send(.view(.onAppear)) }
             case .permissionRequired:
-                Button("Request Permissions", action: {})
-                    .buttonStyle(.borderedProminent)
+                Button(
+                    "Request Permissions",
+                    action: {
+                        store.send(.view(.requestPermissionsButtonTapped))
+                    }
+                )
+                .buttonStyle(.borderedProminent)
             case .runs:
                 Text("Show Runs")
             }
