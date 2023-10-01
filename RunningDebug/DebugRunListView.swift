@@ -5,7 +5,7 @@ import SwiftUI
 
 struct DebugRunListFeature: Reducer {
     struct State: Equatable {
-        var runs: IdentifiedArrayOf<Run> = []
+        var runs: IdentifiedArrayOf<DebugRunListItemFeature.State> = []
     }
 
     enum Action: Equatable {
@@ -18,6 +18,7 @@ struct DebugRunListFeature: Reducer {
         }
 
         case view(View)
+        case runs(Run.ID, DebugRunListItemFeature.Action)
         case _internal(Internal)
     }
 
@@ -28,10 +29,13 @@ struct DebugRunListFeature: Reducer {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case .runs:
+                return .none
             case let ._internal(action):
                 return _internal(action, state: &state)
             }
         }
+        .forEach(\.runs, action: /Action.runs, element: DebugRunListItemFeature.init)
     }
 
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
@@ -49,7 +53,10 @@ struct DebugRunListFeature: Reducer {
     private func _internal(_ action: Action.Internal, state: inout State) -> EffectOf<Self> {
         switch action {
         case let .runsFetched(.success(runs)):
-            state.runs = .init(uniqueElements: runs)
+            state.runs = .init(
+                uniqueElements: runs
+                    .map(DebugRunListItemFeature.State.init)
+            )
             return .none
         case let .runsFetched(.failure(error)):
             print(error)
@@ -62,12 +69,16 @@ struct DebugRunListView: View {
     let store: StoreOf<DebugRunListFeature>
 
     var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            List(viewStore.runs) { run in
-                Text(run.distance.formatted())
-            }
-            .onAppear { viewStore.send(.view(.onAppear)) }
+        List {
+            ForEachStore(
+                store.scope(
+                    state: \.runs,
+                    action: DebugRunListFeature.Action.runs
+                ),
+                content: DebugRunListItemView.init
+            )
         }
+        .onAppear { store.send(.view(.onAppear)) }
     }
 }
 
