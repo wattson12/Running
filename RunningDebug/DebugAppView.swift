@@ -7,7 +7,7 @@ struct DebugAppFeature: Reducer {
     enum State: Equatable {
         case initial
         case permissionRequired
-        case runs
+        case runs(DebugRunListFeature.State)
     }
 
     enum Action: Equatable {
@@ -23,6 +23,7 @@ struct DebugAppFeature: Reducer {
 
         case view(View)
         case _internal(Internal)
+        case runs(DebugRunListFeature.Action)
     }
 
     @Dependency(\.repository.permissions) var permissions
@@ -34,6 +35,8 @@ struct DebugAppFeature: Reducer {
                 return view(action, state: &state)
             case let ._internal(action):
                 return _internal(action, state: &state)
+            case .runs:
+                return .none
             }
         }
     }
@@ -65,13 +68,13 @@ struct DebugAppFeature: Reducer {
             case .shouldRequest:
                 state = .permissionRequired
             case .requested:
-                state = .runs
+                state = .runs(.init())
             case .unknown:
                 break
             }
             return .none
         case .permissionsRequested(.success):
-            state = .runs
+            state = .runs(.init())
             return .none
         case let .permissionsFetched(.failure(error)), let .permissionsRequested(.failure(error)):
             print(error)
@@ -84,23 +87,32 @@ struct DebugAppView: View {
     let store: StoreOf<DebugAppFeature>
 
     var body: some View {
-        SwitchStore(store) { state in
-            switch state {
-            case .initial:
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .onAppear { store.send(.view(.onAppear)) }
-            case .permissionRequired:
-                Button(
-                    "Request Permissions",
-                    action: {
-                        store.send(.view(.requestPermissionsButtonTapped))
-                    }
-                )
-                .buttonStyle(.borderedProminent)
-            case .runs:
-                Text("Show Runs")
+        NavigationStack {
+            SwitchStore(store) { state in
+                switch state {
+                case .initial:
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .onAppear { store.send(.view(.onAppear)) }
+                case .permissionRequired:
+                    Button(
+                        "Request Permissions",
+                        action: {
+                            store.send(.view(.requestPermissionsButtonTapped))
+                        }
+                    )
+                    .buttonStyle(.borderedProminent)
+                case .runs:
+                    IfLetStore(
+                        store.scope(
+                            state: /DebugAppFeature.State.runs,
+                            action: DebugAppFeature.Action.runs
+                        ),
+                        then: DebugRunListView.init
+                    )
+                }
             }
+            .navigationTitle("Debug")
         }
     }
 }
