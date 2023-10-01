@@ -18,6 +18,8 @@
 		5BC642572ACA0D2D004F10AC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC642562ACA0D2D004F10AC /* Preview Assets.xcassets */; };
 		5BC6425D2ACA0D73004F10AC /* Repository in Frameworks */ = {isa = PBXBuildFile; productRef = 5BC6425C2ACA0D73004F10AC /* Repository */; };
 		5BC6425F2ACA0D77004F10AC /* HealthKitServiceLive in Frameworks */ = {isa = PBXBuildFile; productRef = 5BC6425E2ACA0D77004F10AC /* HealthKitServiceLive */; };
+		5BC642612ACA0E2B004F10AC /* DebugAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC642602ACA0E2B004F10AC /* DebugAppView.swift */; };
+		5BC642642ACA0F74004F10AC /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 5BC642632ACA0F74004F10AC /* ComposableArchitecture */; };
 		5BCB9AAE2A9D329900F58C0F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BA7F6722A65C72A00B1D185 /* WidgetKit.framework */; };
 		5BCB9AAF2A9D329900F58C0F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BA7F6742A65C72A00B1D185 /* SwiftUI.framework */; };
 		5BCB9AB22A9D329900F58C0F /* GoalWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB9AB12A9D329900F58C0F /* GoalWidgetBundle.swift */; };
@@ -72,6 +74,7 @@
 		5BC642532ACA0D2D004F10AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BC642562ACA0D2D004F10AC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5BC6425B2ACA0D56004F10AC /* RunningDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunningDebug.entitlements; sourceTree = "<group>"; };
+		5BC642602ACA0E2B004F10AC /* DebugAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugAppView.swift; sourceTree = "<group>"; };
 		5BCB9AAD2A9D329800F58C0F /* GoalWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GoalWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BCB9AB12A9D329900F58C0F /* GoalWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalWidgetBundle.swift; sourceTree = "<group>"; };
 		5BCB9AB72A9D329A00F58C0F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -99,6 +102,7 @@
 			files = (
 				5BC6425D2ACA0D73004F10AC /* Repository in Frameworks */,
 				5BC6425F2ACA0D77004F10AC /* HealthKitServiceLive in Frameworks */,
+				5BC642642ACA0F74004F10AC /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +138,7 @@
 				5BC6425B2ACA0D56004F10AC /* RunningDebug.entitlements */,
 				5BC6424F2ACA0D2D004F10AC /* RunningDebugApp.swift */,
 				5BC642512ACA0D2D004F10AC /* ContentView.swift */,
+				5BC642602ACA0E2B004F10AC /* DebugAppView.swift */,
 				5BC642532ACA0D2D004F10AC /* Assets.xcassets */,
 				5BC642552ACA0D2D004F10AC /* Preview Content */,
 			);
@@ -245,6 +250,7 @@
 			packageProductDependencies = (
 				5BC6425C2ACA0D73004F10AC /* Repository */,
 				5BC6425E2ACA0D77004F10AC /* HealthKitServiceLive */,
+				5BC642632ACA0F74004F10AC /* ComposableArchitecture */,
 			);
 			productName = RunningDebug;
 			productReference = 5BC6424D2ACA0D2C004F10AC /* RunningDebug.app */;
@@ -328,6 +334,7 @@
 			);
 			mainGroup = 5BF5A3BD29AB7D8D00A53ACA;
 			packageReferences = (
+				5BC642622ACA0F74004F10AC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = 5BF5A3C729AB7D8D00A53ACA /* Products */;
 			projectDirPath = "";
@@ -377,6 +384,7 @@
 			files = (
 				5BC642522ACA0D2D004F10AC /* ContentView.swift in Sources */,
 				5BC642502ACA0D2D004F10AC /* RunningDebugApp.swift in Sources */,
+				5BC642612ACA0E2B004F10AC /* DebugAppView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +798,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		5BC642622ACA0F74004F10AC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		5B4F7DF929B9375F002BDE4B /* App */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -814,6 +833,11 @@
 		5BC6425E2ACA0D77004F10AC /* HealthKitServiceLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HealthKitServiceLive;
+		};
+		5BC642632ACA0F74004F10AC /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5BC642622ACA0F74004F10AC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
 		};
 		5BF85C752A9E92F6004391D9 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
