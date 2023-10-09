@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import HealthKitServiceInterface
 import Model
 import Repository
 import SwiftUI
@@ -15,6 +16,7 @@ struct DebugRunListFeature: Reducer {
 
         enum Internal: Equatable {
             case runsFetched(TaskResult<[Run]>)
+            case runFetched(Run)
         }
 
         case view(View)
@@ -23,6 +25,7 @@ struct DebugRunListFeature: Reducer {
     }
 
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
+    @Dependency(\.healthKit.runningWorkouts) var healthKitRunningWorkouts
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -41,11 +44,15 @@ struct DebugRunListFeature: Reducer {
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            return .run { send in
-                let result = await TaskResult {
-                    try await runningWorkouts.allRunningWorkouts.remote()
+            return .run { _ in
+                for try await run in healthKitRunningWorkouts._runningWorkouts() {
+                    print(run)
+//                    await send(._internal(.runFetched(run)))
                 }
-                await send(._internal(.runsFetched(result)))
+//                let result = await TaskResult {
+//                    try await runningWorkouts.allRunningWorkouts.remote()
+//                }
+//                await send(._internal(.runsFetched(result)))
             }
         }
     }
@@ -60,6 +67,9 @@ struct DebugRunListFeature: Reducer {
             return .none
         case let .runsFetched(.failure(error)):
             print(error)
+            return .none
+        case let .runFetched(run):
+            state.runs[id: run.id] = .init(run: run)
             return .none
         }
     }
