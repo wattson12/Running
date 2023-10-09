@@ -13,7 +13,6 @@
 		5B8774382A5CA8F40007DD66 /* HealthKitServiceLive in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8774372A5CA8F40007DD66 /* HealthKitServiceLive */; };
 		5B9BC8E02AA0D52B007AC26F /* Permissions in Frameworks */ = {isa = PBXBuildFile; productRef = 5B9BC8DF2AA0D52B007AC26F /* Permissions */; };
 		5BC642502ACA0D2D004F10AC /* RunningDebugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6424F2ACA0D2D004F10AC /* RunningDebugApp.swift */; };
-		5BC642522ACA0D2D004F10AC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC642512ACA0D2D004F10AC /* ContentView.swift */; };
 		5BC642542ACA0D2D004F10AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC642532ACA0D2D004F10AC /* Assets.xcassets */; };
 		5BC642572ACA0D2D004F10AC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC642562ACA0D2D004F10AC /* Preview Assets.xcassets */; };
 		5BC6425D2ACA0D73004F10AC /* Repository in Frameworks */ = {isa = PBXBuildFile; productRef = 5BC6425C2ACA0D73004F10AC /* Repository */; };
@@ -72,7 +71,6 @@
 		5BA7F6742A65C72A00B1D185 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		5BC6424D2ACA0D2C004F10AC /* RunningDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunningDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BC6424F2ACA0D2D004F10AC /* RunningDebugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningDebugApp.swift; sourceTree = "<group>"; };
-		5BC642512ACA0D2D004F10AC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5BC642532ACA0D2D004F10AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BC642562ACA0D2D004F10AC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5BC6425B2ACA0D56004F10AC /* RunningDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunningDebug.entitlements; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 			children = (
 				5BC6425B2ACA0D56004F10AC /* RunningDebug.entitlements */,
 				5BC6424F2ACA0D2D004F10AC /* RunningDebugApp.swift */,
-				5BC642512ACA0D2D004F10AC /* ContentView.swift */,
 				5BC642602ACA0E2B004F10AC /* DebugAppView.swift */,
 				5BC642652ACA1159004F10AC /* DebugRunListView.swift */,
 				5BC642672ACA13F1004F10AC /* DebugRunListItemView.swift */,
@@ -389,7 +386,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BC642662ACA1159004F10AC /* DebugRunListView.swift in Sources */,
-				5BC642522ACA0D2D004F10AC /* ContentView.swift in Sources */,
 				5BC642502ACA0D2D004F10AC /* RunningDebugApp.swift in Sources */,
 				5BC642682ACA13F1004F10AC /* DebugRunListItemView.swift in Sources */,
 				5BC642612ACA0E2B004F10AC /* DebugAppView.swift in Sources */,
