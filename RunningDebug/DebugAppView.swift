@@ -39,6 +39,12 @@ struct DebugAppFeature: Reducer {
                 return .none
             }
         }
+
+        Scope(
+            state: /State.runs,
+            action: /Action.runs,
+            child: DebugRunListFeature.init
+        )
     }
 
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
@@ -103,11 +109,9 @@ struct DebugAppView: View {
                     )
                     .buttonStyle(.borderedProminent)
                 case .runs:
-                    IfLetStore(
-                        store.scope(
-                            state: /DebugAppFeature.State.runs,
-                            action: DebugAppFeature.Action.runs
-                        ),
+                    CaseLet(
+                        /DebugAppFeature.State.runs,
+                        action: DebugAppFeature.Action.runs,
                         then: DebugRunListView.init
                     )
                 }
