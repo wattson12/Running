@@ -12,6 +12,7 @@ struct DebugRunListFeature: Reducer {
     enum Action: Equatable {
         enum View: Equatable {
             case onAppear
+            case cancelButtonTapped
         }
 
         enum Internal: Equatable {
@@ -46,7 +47,7 @@ struct DebugRunListFeature: Reducer {
         case .onAppear:
             return .run { _ in
                 for try await run in healthKitRunningWorkouts._runningWorkouts() {
-                    print(run)
+                    print(run.uuid, run.stats(for: .init(.distanceWalkingRunning))?.sumQuantity()?.doubleValue(for: .meter()) as Any)
 //                    await send(._internal(.runFetched(run)))
                 }
 //                let result = await TaskResult {
@@ -54,6 +55,9 @@ struct DebugRunListFeature: Reducer {
 //                }
 //                await send(._internal(.runsFetched(result)))
             }
+            .cancellable(id: "test_cancellation")
+        case .cancelButtonTapped:
+            return .cancel(id: "test_cancellation")
         }
     }
 
@@ -89,6 +93,11 @@ struct DebugRunListView: View {
             )
         }
         .onAppear { store.send(.view(.onAppear)) }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Cancel") { store.send(.view(.cancelButtonTapped)) }
+            }
+        }
     }
 }
 
