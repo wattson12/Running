@@ -2,7 +2,7 @@ import CoreLocation
 import Foundation
 import HealthKit
 
-public struct WorkoutDetail {
+public struct WorkoutDetail: Equatable {
     public let locations: [CLLocation]
     public let samples: [HKCumulativeQuantitySample]
 
@@ -31,5 +31,9 @@ public struct HealthKitRunningWorkouts: Sendable {
 public extension HealthKitRunningWorkouts {
     func allRunningWorkouts() async throws -> [WorkoutType] {
         try await _allRunningWorkouts()
+    }
+
+    func detail(for id: UUID) async throws -> WorkoutDetail {
+        try await _detail(id)
     }
 }

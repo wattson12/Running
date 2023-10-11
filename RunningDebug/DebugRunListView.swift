@@ -66,7 +66,7 @@ struct DebugRunListFeature: Reducer {
         case let .runsFetched(.success(runs)):
             state.runs = .init(
                 uniqueElements: runs
-                    .map(DebugRunListItemFeature.State.init)
+                    .map { DebugRunListItemFeature.State(run: $0) }
             )
             return .none
         case let .runsFetched(.failure(error)):
