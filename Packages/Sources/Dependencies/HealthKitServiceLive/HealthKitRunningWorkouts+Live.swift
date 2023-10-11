@@ -10,9 +10,6 @@ extension HealthKitRunningWorkouts {
             allRunningWorkouts: {
                 try await Implementation.allRunningWorkouts(in: store)
             },
-            runningWorkouts: {
-                Implementation.runningWorkouts(in: store)
-            },
             detail: { id in
                 try await Implementation.detail(in: store, id: id)
             }
@@ -48,86 +45,6 @@ extension HealthKitRunningWorkouts {
             }
         }
 
-        static func runningWorkouts(in store: HKHealthStore) -> AsyncThrowingStream<WorkoutType, Error> {
-            .init { [store] continuation in
-                let predicate = HKQuery.predicateForWorkouts(with: .running)
-
-                let queries: LockIsolated<[HKQuery]> = .init([])
-                continuation.onTermination = { [queries] test in
-                    switch test {
-                    case .finished:
-                        break
-                    case .cancelled:
-                        for query in queries.value {
-                            store.stop(query)
-                        }
-                    @unknown default:
-                        break
-                    }
-                }
-
-                let sampleQuery = HKSampleQuery(
-                    sampleType: .workoutType(),
-                    predicate: predicate,
-                    limit: HKObjectQueryNoLimit,
-                    sortDescriptors: [
-                        .init(keyPath: \HKSample.startDate, ascending: false),
-                    ],
-                    resultsHandler: { _, samples, error in
-
-                        if let error {
-                            continuation.finish(throwing: error)
-                            return
-                        }
-
-                        if let samples = samples as? [HKWorkout] {
-                            for sample in samples {
-                                continuation.yield(sample)
-
-                                let runningObjectQuery = HKQuery.predicateForObjects(from: sample)
-
-                                let routeQuery = HKAnchoredObjectQuery(type: HKSeriesType.workoutRoute(), predicate: runningObjectQuery, anchor: nil, limit: HKObjectQueryNoLimit) { _, routeSamples, _, _, _ in
-                                    guard let route = routeSamples?.first as? HKWorkoutRoute else {
-                                        return
-                                    }
-
-                                    var allLocations: [CLLocation] = []
-                                    let query = HKWorkoutRouteQuery(route: route) { _, locations, done, error in
-
-                                        if let error {
-                                            print(error)
-                                            return
-                                        }
-
-                                        guard let locations else {
-                                            print("missing samples")
-                                            return
-                                        }
-
-                                        allLocations.append(contentsOf: locations)
-
-                                        if done {
-                                            print("locations", allLocations.count)
-                                            continuation.yield(sample)
-                                        }
-                                    }
-
-                                    queries.setValue(queries.value + [query])
-                                    store.execute(query)
-                                }
-
-                                queries.setValue(queries.value + [routeQuery])
-                                store.execute(routeQuery)
-                            }
-                        }
-                    }
-                )
-
-                queries.setValue(queries.value + [sampleQuery])
-                store.execute(sampleQuery)
-            }
-        }
-
         static func detail(in store: HKHealthStore, id: UUID) async throws {
             print("fetching workout")
             let workout = try await workout(in: store, withID: id)
@@ -145,7 +62,7 @@ extension HealthKitRunningWorkouts {
             let distanceSamples = try await distanceSamples(in: store, for: workout)
             print("fetching distance samples - complete")
 
-            print("Location count", locations?.count as Any)
+            print("Location count", locations.count)
             print("distance samples count", distanceSamples.count)
         }
 
@@ -199,8 +116,8 @@ extension HealthKitRunningWorkouts {
             }
         }
 
-        private static func locations(in store: HKHealthStore, for route: HKWorkoutRoute?) async throws -> [CLLocation]? {
-            guard let route else { return nil }
+        private static func locations(in store: HKHealthStore, for route: HKWorkoutRoute?) async throws -> [CLLocation] {
+            guard let route else { return [] }
             return try await withCheckedThrowingContinuation { continuation in
                 var allLocations: [CLLocation] = []
                 let query = HKWorkoutRouteQuery(route: route) { _, locations, done, error in
