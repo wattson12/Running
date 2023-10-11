@@ -1,13 +1,27 @@
+import CoreLocation
 import Foundation
 import HealthKit
 
+public struct WorkoutDetail {
+    public let locations: [CLLocation]
+    public let samples: [HKCumulativeQuantitySample]
+
+    public init(
+        locations: [CLLocation],
+        samples: [HKCumulativeQuantitySample]
+    ) {
+        self.locations = locations
+        self.samples = samples
+    }
+}
+
 public struct HealthKitRunningWorkouts: Sendable {
     public var _allRunningWorkouts: @Sendable () async throws -> [WorkoutType]
-    public var _detail: @Sendable (UUID) async throws -> Void
+    public var _detail: @Sendable (UUID) async throws -> WorkoutDetail
 
     public init(
         allRunningWorkouts: @Sendable @escaping () async throws -> [WorkoutType],
-        detail: @Sendable @escaping (UUID) async throws -> Void
+        detail: @Sendable @escaping (UUID) async throws -> WorkoutDetail
     ) {
         _allRunningWorkouts = allRunningWorkouts
         _detail = detail

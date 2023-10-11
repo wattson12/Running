@@ -45,25 +45,16 @@ extension HealthKitRunningWorkouts {
             }
         }
 
-        static func detail(in store: HKHealthStore, id: UUID) async throws {
-            print("fetching workout")
+        static func detail(in store: HKHealthStore, id: UUID) async throws -> WorkoutDetail {
             let workout = try await workout(in: store, withID: id)
-            print("fetching workout - complete")
-
-            print("fetching route")
             let route = try await route(in: store, for: workout)
-            print("fetching route - complete")
-
-            print("fetching locations")
             let locations = try await locations(in: store, for: route)
-            print("fetching locations - complete")
-
-            print("fetching distance samples")
             let distanceSamples = try await distanceSamples(in: store, for: workout)
-            print("fetching distance samples - complete")
 
-            print("Location count", locations.count)
-            print("distance samples count", distanceSamples.count)
+            return .init(
+                locations: locations,
+                samples: distanceSamples
+            )
         }
 
         private static func workout(in store: HKHealthStore, withID id: UUID) async throws -> HKWorkout {
