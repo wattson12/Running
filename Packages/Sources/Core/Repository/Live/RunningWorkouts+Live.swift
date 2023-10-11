@@ -75,7 +75,9 @@ extension RunningWorkouts {
                         id: run.id,
                         startDate: run.startDate,
                         distance: run.distance.value,
-                        duration: run.duration.value
+                        duration: run.duration.value,
+                        locations: [], // empty until detail is fetched
+                        distanceSamples: [] // empty until detail is fetched
                     )
                     context.insert(cacheValue)
                 }
