@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import HealthKit
 import Model
 import SwiftUI
 
@@ -14,13 +15,32 @@ struct DebugRunListItemFeature: Reducer {
     enum Action: Equatable {
         enum View: Equatable {
             case onAppear
+            case tapped
         }
 
         case view(View)
     }
 
+    @Dependency(\.healthKit.runningWorkouts) var runningWorkouts
+
     var body: some ReducerOf<Self> {
-        EmptyReducer()
+        Reduce { state, action in
+            switch action {
+            case let .view(action):
+                return view(action, state: &state)
+            }
+        }
+    }
+
+    private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
+        switch action {
+        case .onAppear:
+            return .none
+        case .tapped:
+            return .run { [id = state.run.id] _ in
+                try await runningWorkouts._detail(id)
+            }
+        }
     }
 }
 
@@ -33,8 +53,15 @@ struct DebugRunListItemView: View {
             observe: \.run,
             send: DebugRunListItemFeature.Action.view
         ) { viewStore in
-            Text(viewStore.distance.formatted())
-                .onAppear { viewStore.send(.onAppear) }
+            Button(
+                action: {
+                    viewStore.send(.tapped)
+                },
+                label: {
+                    Text(viewStore.distance.formatted())
+                }
+            )
+            .onAppear { viewStore.send(.onAppear) }
         }
     }
 }

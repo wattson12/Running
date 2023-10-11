@@ -45,15 +45,15 @@ struct DebugRunListFeature: Reducer {
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            return .run { _ in
-                for try await run in healthKitRunningWorkouts._runningWorkouts() {
-                    print(run.uuid, run.stats(for: .init(.distanceWalkingRunning))?.sumQuantity()?.doubleValue(for: .meter()) as Any)
-//                    await send(._internal(.runFetched(run)))
-                }
-//                let result = await TaskResult {
-//                    try await runningWorkouts.allRunningWorkouts.remote()
+            return .run { send in
+//                for try await run in healthKitRunningWorkouts._runningWorkouts() {
+//                    print(run.uuid, run.stats(for: .init(.distanceWalkingRunning))?.sumQuantity()?.doubleValue(for: .meter()) as Any)
+                ////                    await send(._internal(.runFetched(run)))
 //                }
-//                await send(._internal(.runsFetched(result)))
+                let result = await TaskResult {
+                    try await runningWorkouts.allRunningWorkouts.remote()
+                }
+                await send(._internal(.runsFetched(result)))
             }
             .cancellable(id: "test_cancellation")
         case .cancelButtonTapped:

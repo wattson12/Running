@@ -5,11 +5,13 @@ import XCTestDynamicOverlay
 extension HealthKitRunningWorkouts {
     static var previewValue: HealthKitRunningWorkouts = .init(
         allRunningWorkouts: { [] },
-        runningWorkouts: { .never }
+        runningWorkouts: { .never },
+        detail: { _ in }
     )
 
     static var testValue: HealthKitRunningWorkouts = .init(
         allRunningWorkouts: unimplemented("HealthKitRunningWorkouts.allRunningWorkouts", placeholder: []),
-        runningWorkouts: unimplemented()
+        runningWorkouts: unimplemented(),
+        detail: unimplemented()
     )
 }
