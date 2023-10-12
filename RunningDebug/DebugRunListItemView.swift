@@ -50,6 +50,7 @@ struct DebugRunListItemFeature: Reducer {
         case .onAppear:
             return .none
         case .cachedButtonTapped:
+            guard !state.isLoading else { return .none }
             state.isLoading = true
             return .run { [id = state.run.id] send in
                 print("fetching")

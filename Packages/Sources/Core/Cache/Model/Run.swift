@@ -2,21 +2,21 @@ import Foundation
 import SwiftData
 
 @Model
-public class Location {
-    @Model
-    public class Coordinate {
-        public let latitude: Double
-        public let longitude: Double
+public class Coordinate {
+    public let latitude: Double
+    public let longitude: Double
 
-        public init(
-            latitude: Double,
-            longitude: Double
-        ) {
-            self.latitude = latitude
-            self.longitude = longitude
-        }
+    public init(
+        latitude: Double,
+        longitude: Double
+    ) {
+        self.latitude = latitude
+        self.longitude = longitude
     }
+}
 
+@Model
+public class Location {
     public let coordinate: Coordinate
     public let altitude: Double
     public let timestamp: Date

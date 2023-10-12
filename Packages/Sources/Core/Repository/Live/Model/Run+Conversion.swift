@@ -30,9 +30,7 @@ extension Model.Run {
             distance: .init(value: cached.distance, unit: .meters),
             duration: .init(value: cached.duration, unit: .seconds),
             locations: cached.locations.map { location in
-                print("mapping location")
-                return Model.Location(coordinate: .init(latitude: 0, longitude: 0), altitude: .init(value: 0, unit: .meters), timestamp: .now)
-                return Model.Location(
+                Model.Location(
                     coordinate: .init(
                         latitude: location.coordinate.latitude,
                         longitude: location.coordinate.longitude
@@ -42,9 +40,7 @@ extension Model.Run {
                 )
             },
             distanceSamples: cached.distanceSamples.map { sample in
-                print("mapping sample")
-                return .init(startDate: .now, distance: .init(value: 0, unit: .meters))
-                return Model.DistanceSample(
+                Model.DistanceSample(
                     startDate: sample.startDate,
                     distance: .init(value: sample.distance, unit: .meters)
                 )
