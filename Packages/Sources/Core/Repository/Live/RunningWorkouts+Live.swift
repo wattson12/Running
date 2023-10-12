@@ -60,11 +60,14 @@ extension RunningWorkouts {
             }
         }
 
+        @MainActor
         static func runDetail(
             id: Model.Run.ID,
             swiftData: SwiftDataStack,
             healthKitRunningWorkouts: HealthKitRunningWorkouts
         ) async throws -> Model.Run {
+            let remoteDetail = try await healthKitRunningWorkouts.detail(for: id)
+
             let context = try swiftData.context()
 
             let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
@@ -73,10 +76,6 @@ extension RunningWorkouts {
                 // should always have a run matching the ID
                 throw NSError(domain: #fileID, code: #line)
             }
-
-            print("existing", run.locations.count, run.distanceSamples.count)
-
-            let remoteDetail = try await healthKitRunningWorkouts.detail(for: id)
 
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
                 .init(
