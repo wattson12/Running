@@ -77,6 +77,8 @@ extension RunningWorkouts {
                 throw NSError(domain: #fileID, code: #line)
             }
 
+            print("existing", run.locations.count, run.distanceSamples.count)
+
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
                 .init(
                     coordinate: .init(
@@ -104,6 +106,7 @@ extension RunningWorkouts {
             return .init(cached: run)
         }
 
+        @MainActor
         static func remoteRunningWorkouts(
             swiftData: SwiftDataStack,
             healthKitRunningWorkouts: HealthKitRunningWorkouts
@@ -118,6 +121,9 @@ extension RunningWorkouts {
                 let runID = run.id
                 let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == runID }))
                 if let existingRun = runsMatchingID.first {
+                    if existingRun.locations.count != 0 {
+                        print("returning existing run", existingRun.locations.count)
+                    }
                     existingRun.startDate = run.startDate
                     existingRun.distance = run.distance.value
                     existingRun.duration = run.duration.value
@@ -142,6 +148,7 @@ extension RunningWorkouts {
                     }
                 )
             )
+            print("__delete", runsNotInResponse.count)
             runsNotInResponse.forEach(context.delete)
 
             try context.save()

@@ -103,7 +103,15 @@ struct DebugRunListItemView: View {
             send: DebugRunListItemFeature.Action.view
         ) { viewStore in
             HStack {
-                Text(viewStore.run.distance.formatted())
+                VStack(alignment: .leading) {
+                    Text(viewStore.run.distance.formatted())
+
+                    HStack {
+                        Text(viewStore.run.locations.count.description)
+                        Text(viewStore.run.distanceSamples.count.description)
+                    }
+                    .font(.caption2)
+                }
 
                 Spacer()
 

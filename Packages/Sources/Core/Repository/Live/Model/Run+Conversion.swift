@@ -24,6 +24,7 @@ extension Model.Run {
 
 extension Model.Run {
     init(cached: Cache.Run) {
+        print("from cache", cached.locations.count, cached.distanceSamples.count)
         self.init(
             id: cached.id,
             startDate: cached.startDate,
