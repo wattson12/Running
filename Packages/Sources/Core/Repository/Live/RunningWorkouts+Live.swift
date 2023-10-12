@@ -60,51 +60,21 @@ extension RunningWorkouts {
             }
         }
 
-        @MainActor
         static func runDetail(
             id: Model.Run.ID,
             swiftData: SwiftDataStack,
             healthKitRunningWorkouts: HealthKitRunningWorkouts
         ) async throws -> Model.Run {
             let context = try swiftData.context()
-//            context.container.deleteAllData()
-//            throw NSError(domain: #fileID, code: #line)
 
             let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
-            print("__debug", "count", runsMatchingID.count)
 
             guard let run = runsMatchingID.first else {
                 // should always have a run matching the ID
                 throw NSError(domain: #fileID, code: #line)
             }
 
-//            print(run.locations.isEmpty, run.distanceSamples.isEmpty)
-//            throw NSError(domain: #fileID, code: #line)
-
-//
-            // if run already has detail
-//            if /*!run.locations.isEmpty, */!run.distanceSamples.isEmpty {
-//                print("__existing")
-//                return .init(cached: run)
-//            }
-//
-            ////            throw NSError(domain: #fileID, code: #line)
-//
-            print(Thread.current)
-            print("about to fetch remote")
             let remoteDetail = try await healthKitRunningWorkouts.detail(for: id)
-            print("fetched remote")
-            print(Thread.current)
-
-//            throw NSError(domain: #fileID, code: #line)
-
-//            let context2 = try swiftData.context()
-//
-//            let runsMatchingID2 = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
-//            guard let run2 = runsMatchingID2.first else {
-//                // should always have a run matching the ID
-//                throw NSError(domain: #fileID, code: #line)
-//            }
 
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
                 .init(
@@ -128,8 +98,6 @@ extension RunningWorkouts {
             samples.forEach { context.insert($0) }
             run.distanceSamples = samples
 
-            print("__changes", context.hasChanges)
-            print("__changes", context.changedModelsArray)
             try context.save()
 
             return .init(cached: run)

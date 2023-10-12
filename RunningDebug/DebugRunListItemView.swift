@@ -53,7 +53,6 @@ struct DebugRunListItemFeature: Reducer {
             guard !state.isLoading else { return .none }
             state.isLoading = true
             return .run { [id = state.run.id] send in
-                print("fetching")
                 let result = await TaskResult {
                     try await repository.detail(for: id)
                 }

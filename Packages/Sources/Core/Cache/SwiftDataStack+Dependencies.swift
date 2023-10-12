@@ -7,7 +7,6 @@ public extension SwiftDataStack {
     static func stack(inMemory: Bool) -> SwiftDataStack {
         .init(
             context: {
-                print("__debug", "creating context", Thread.main)
                 let container = try ModelContainer(
                     for: Run.self, Goal.self, Location.self, Coordinate.self, DistanceSample.self,
                     configurations: ModelConfiguration(
@@ -15,11 +14,7 @@ public extension SwiftDataStack {
                         cloudKitDatabase: .none
                     )
                 )
-                let context = ModelContext(container)
-                print("__auto", context.autosaveEnabled)
-                context.autosaveEnabled = true
-                print("__auto", context.autosaveEnabled)
-                return context
+                return ModelContext(container)
             }
         )
     }
