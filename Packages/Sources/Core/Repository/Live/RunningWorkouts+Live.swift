@@ -74,6 +74,8 @@ extension RunningWorkouts {
                 throw NSError(domain: #fileID, code: #line)
             }
 
+            print("existing", run.locations.count, run.distanceSamples.count)
+
             let remoteDetail = try await healthKitRunningWorkouts.detail(for: id)
 
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
