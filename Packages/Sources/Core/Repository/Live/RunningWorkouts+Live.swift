@@ -119,8 +119,13 @@ extension RunningWorkouts {
 
             var runsNeedingUpdate: [Model.Run.ID: Cache.Run] = [:]
             for run in runs {
-                let runID = run.id
-                let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == runID }))
+                let runsMatchingID = try context.fetch(
+                    .init(
+                        predicate: #Predicate<Cache.Run> { [id = run.id] run in
+                            run.id == id
+                        }
+                    )
+                )
                 if let existingRun = runsMatchingID.first {
                     existingRun.startDate = run.startDate
                     existingRun.distance = run.distance.value
@@ -132,8 +137,9 @@ extension RunningWorkouts {
                         startDate: run.startDate,
                         distance: run.distance.value,
                         duration: run.duration.value,
-                        locations: [], // empty until detail is fetched
-                        distanceSamples: [] // empty until detail is fetched
+                        // locations and distanceSamples are empty until detail is fetched
+                        locations: [],
+                        distanceSamples: []
                     )
                     context.insert(cacheValue)
                 }
