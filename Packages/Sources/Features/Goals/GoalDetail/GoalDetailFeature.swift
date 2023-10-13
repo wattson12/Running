@@ -105,7 +105,9 @@ public struct GoalDetailFeature: Reducer {
                     id: uuid(),
                     startDate: currentDate,
                     distance: distance,
-                    duration: duration
+                    duration: duration,
+                    locations: [],
+                    distanceSamples: []
                 )
             )
 

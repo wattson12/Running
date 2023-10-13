@@ -64,7 +64,9 @@ final class Run_ConversionTests: XCTestCase {
             id: id,
             startDate: startDate,
             distance: distance,
-            duration: duration
+            duration: duration,
+            locations: [],
+            distanceSamples: []
         )
         context.insert(cached)
 
