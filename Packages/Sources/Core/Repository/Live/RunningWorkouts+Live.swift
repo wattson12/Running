@@ -77,8 +77,6 @@ extension RunningWorkouts {
                 throw NSError(domain: #fileID, code: #line)
             }
 
-            print("existing", run.locations.count, run.distanceSamples.count)
-
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
                 .init(
                     coordinate: .init(
