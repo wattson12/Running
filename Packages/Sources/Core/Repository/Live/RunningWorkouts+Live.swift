@@ -117,16 +117,15 @@ extension RunningWorkouts {
 
             let context = try swiftData.context()
 
+            var runsNeedingUpdate: [Model.Run.ID: Cache.Run] = [:]
             for run in runs {
                 let runID = run.id
                 let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == runID }))
                 if let existingRun = runsMatchingID.first {
-                    if existingRun.locations.count != 0 {
-                        print("returning existing run", existingRun.locations.count)
-                    }
                     existingRun.startDate = run.startDate
                     existingRun.distance = run.distance.value
                     existingRun.duration = run.duration.value
+                    runsNeedingUpdate[existingRun.id] = existingRun
                 } else {
                     let cacheValue = Cache.Run(
                         id: run.id,
@@ -148,12 +147,14 @@ extension RunningWorkouts {
                     }
                 )
             )
-            print("__delete", runsNotInResponse.count)
             runsNotInResponse.forEach(context.delete)
 
             try context.save()
 
-            return runs
+            return runs.map { run in
+                guard let updatedRunEntity = runsNeedingUpdate[run.id] else { return run }
+                return .init(cached: updatedRunEntity)
+            }
         }
 
         static func runsWithinGoal(
