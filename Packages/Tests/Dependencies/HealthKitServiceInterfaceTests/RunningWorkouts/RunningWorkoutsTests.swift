@@ -1,5 +1,6 @@
 @testable import HealthKitServiceInterface
 import XCTest
+import XCTestDynamicOverlay
 
 final class RunningWorkoutsTests: XCTestCase {
     func testAllRunningWorkoutsPublicHelper() async throws {
@@ -14,7 +15,10 @@ final class RunningWorkoutsTests: XCTestCase {
             ),
         ]
 
-        let sut: HealthKitRunningWorkouts = .init(allRunningWorkouts: { workouts })
+        let sut: HealthKitRunningWorkouts = .init(
+            allRunningWorkouts: { workouts },
+            detail: unimplemented()
+        )
 
         let allRunningWorkouts = try await sut.allRunningWorkouts()
         let allMockRunningWorkouts = allRunningWorkouts.compactMap { $0 as? MockWorkoutType }

@@ -1,3 +1,5 @@
+import ConcurrencyExtras
+import CoreLocation
 import Foundation
 import HealthKit
 import HealthKitServiceInterface
@@ -7,6 +9,9 @@ extension HealthKitRunningWorkouts {
         .init(
             allRunningWorkouts: {
                 try await Implementation.allRunningWorkouts(in: store)
+            },
+            detail: { id in
+                try await Implementation.detail(in: store, id: id)
             }
         )
     }
@@ -37,6 +42,124 @@ extension HealthKitRunningWorkouts {
                 )
 
                 store.execute(sampleQuery)
+            }
+        }
+
+        static func detail(in store: HKHealthStore, id: UUID) async throws -> WorkoutDetail {
+            let workout = try await workout(in: store, withID: id)
+            let route = try await route(in: store, for: workout)
+            let locations = try await locations(in: store, for: route)
+            let distanceSamples = try await distanceSamples(in: store, for: workout)
+
+            return .init(
+                locations: locations,
+                samples: distanceSamples
+            )
+        }
+
+        private static func workout(in store: HKHealthStore, withID id: UUID) async throws -> HKWorkout {
+            try await withCheckedThrowingContinuation { [store] (continuation: CheckedContinuation<HKWorkout, Error>) in
+                let query = HKQuery.predicateForObject(with: id)
+
+                let sampleQuery = HKSampleQuery(
+                    sampleType: .workoutType(),
+                    predicate: query,
+                    limit: 1,
+                    sortDescriptors: [
+                        .init(keyPath: \HKSample.startDate, ascending: false),
+                    ],
+                    resultsHandler: { _, samples, error in
+
+                        if let error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+
+                        let samples = samples as? [HKWorkout]
+
+                        guard let first = samples?.first else {
+                            continuation.resume(throwing: NSError(domain: #fileID, code: #line))
+                            return
+                        }
+
+                        continuation.resume(returning: first)
+                    }
+                )
+
+                store.execute(sampleQuery)
+            }
+        }
+
+        private static func route(in store: HKHealthStore, for workout: HKWorkout) async throws -> HKWorkoutRoute? {
+            try await withCheckedThrowingContinuation { [store] (continuation: CheckedContinuation<HKWorkoutRoute?, Error>) in
+                let runningObjectQuery = HKQuery.predicateForObjects(from: workout)
+
+                let routeQuery = HKAnchoredObjectQuery(type: HKSeriesType.workoutRoute(), predicate: runningObjectQuery, anchor: nil, limit: HKObjectQueryNoLimit) { _, samples, _, _, _ in
+                    guard let first = samples?.first as? HKWorkoutRoute else {
+                        continuation.resume(returning: nil)
+                        return
+                    }
+
+                    continuation.resume(returning: first)
+                }
+
+                store.execute(routeQuery)
+            }
+        }
+
+        private static func locations(in store: HKHealthStore, for route: HKWorkoutRoute?) async throws -> [CLLocation] {
+            guard let route else { return [] }
+            return try await withCheckedThrowingContinuation { continuation in
+                var allLocations: [CLLocation] = []
+                let query = HKWorkoutRouteQuery(route: route) { _, locations, done, error in
+
+                    if let error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+
+                    guard let locations else {
+                        continuation.resume(throwing: NSError(domain: #fileID, code: #line))
+                        return
+                    }
+
+                    allLocations.append(contentsOf: locations)
+
+                    if done {
+                        continuation.resume(returning: allLocations)
+                    }
+                }
+
+                store.execute(query)
+            }
+        }
+
+        private static func distanceSamples(in store: HKHealthStore, for workout: HKWorkout) async throws -> [HKCumulativeQuantitySample] {
+            try await withCheckedThrowingContinuation { continuation in
+
+                let query = HKSampleQuery(
+                    sampleType: HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+                    predicate: HKQuery.predicateForObjects(from: workout),
+                    limit: HKObjectQueryNoLimit,
+                    sortDescriptors: [
+                        .init(keyPath: \HKSample.startDate, ascending: false),
+                    ],
+                    resultsHandler: { _, samples, error in
+                        guard error == nil else {
+                            continuation.resume(throwing: error ?? NSError(domain: #fileID, code: #line))
+                            return
+                        }
+
+                        guard let samples = samples as? [HKCumulativeQuantitySample] else {
+                            continuation.resume(throwing: NSError(domain: #fileID, code: #line))
+                            return
+                        }
+
+                        continuation.resume(returning: samples)
+                    }
+                )
+
+                store.execute(query)
             }
         }
     }

@@ -12,6 +12,9 @@ extension RunningWorkouts {
                 cache: { runs },
                 remote: { runs }
             ),
+            runDetail: { _ in
+                .mock()
+            },
             runsWithinGoal: { goal in
                 let allRunningWorkouts: [Run] = runs
                 guard let range = goal.period.startAndEnd(in: calendar, now: date()) else { return [] }
@@ -29,6 +32,7 @@ extension RunningWorkouts {
             "RunningWorkouts.allRunningWorkouts",
             placeholder: .init(cache: { nil }, remote: { [] })
         ),
+        runDetail: unimplemented("RunningWorkouts.runDetail", placeholder: .mock()),
         runsWithinGoal: unimplemented("RunningWorkouts.runsWithinGoal", placeholder: [])
     )
 }

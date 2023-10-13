@@ -23,7 +23,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let cacheRunCount: Int = .random(in: 5 ..< 100)
         let runs: [Cache.Run] = (0 ..< cacheRunCount).map { _ in
-            .init(id: .init(), startDate: .now, distance: 0, duration: 0)
+            .init(id: .init(), startDate: .now, distance: 0, duration: 0, locations: [], distanceSamples: [])
         }
 
         runs.forEach(context.insert)
@@ -74,7 +74,9 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 id: id,
                 startDate: .now,
                 distance: 0,
-                duration: 0
+                duration: 0,
+                locations: [],
+                distanceSamples: []
             ),
         ]
         runs.forEach(context.insert)
@@ -115,13 +117,17 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 id: id,
                 startDate: .now,
                 distance: 0,
-                duration: 0
+                duration: 0,
+                locations: [],
+                distanceSamples: []
             ),
             .init(
                 id: .init(),
                 startDate: .now,
                 distance: 0,
-                duration: 0
+                duration: 0,
+                locations: [],
+                distanceSamples: []
             ),
         ]
         runs.forEach(context.insert)
@@ -177,21 +183,27 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 id: .init(),
                 startDate: .init(timeIntervalSince1970: 0),
                 distance: 0,
-                duration: 0
+                duration: 0,
+                locations: [],
+                distanceSamples: []
             ),
             // inside range
             .init(
                 id: .init(),
                 startDate: .init(timeIntervalSince1970: 947_073_600),
                 distance: 0,
-                duration: 0
+                duration: 0,
+                locations: [],
+                distanceSamples: []
             ),
             // after range
             .init(
                 id: .init(),
                 startDate: .now,
                 distance: 0,
-                duration: 0
+                duration: 0,
+                locations: [],
+                distanceSamples: []
             ),
         ]
         runs.forEach(context.insert)

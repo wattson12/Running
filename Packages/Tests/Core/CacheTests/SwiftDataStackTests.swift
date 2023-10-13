@@ -8,7 +8,7 @@ final class SwiftDataStackTests: XCTestCase {
         let context = try sut.context()
 
         let entities = context.container.schema.entitiesByName
-        XCTAssertEqual(entities.keys.sorted(), ["Goal", "Run"])
+        XCTAssertEqual(entities.keys.sorted(), ["Coordinate", "DistanceSample", "Goal", "Location", "Run"])
 
         let configuration = try XCTUnwrap(context.container.configurations.first)
         XCTAssertEqual(configuration.isStoredInMemoryOnly, false)
@@ -20,7 +20,7 @@ final class SwiftDataStackTests: XCTestCase {
         let context = try sut.context()
 
         let entities = context.container.schema.entitiesByName
-        XCTAssertEqual(entities.keys.sorted(), ["Goal", "Run"])
+        XCTAssertEqual(entities.keys.sorted(), ["Coordinate", "DistanceSample", "Goal", "Location", "Run"])
 
         let configuration = try XCTUnwrap(context.container.configurations.first)
         XCTAssertEqual(configuration.isStoredInMemoryOnly, true)
