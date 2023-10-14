@@ -50,6 +50,8 @@ final class Run_ConversionTests: XCTestCase {
         XCTAssertEqual(sut.startDate, workout.startDate)
         XCTAssertEqual(sut.distance, .init(value: meters, unit: .meters))
         XCTAssertEqual(sut.duration, .init(value: workout.duration, unit: .seconds))
+        XCTAssert(sut.locations.isEmpty)
+        XCTAssert(sut.distanceSamples.isEmpty)
     }
 
     func testConversionFromCachedRun() throws {
@@ -65,8 +67,22 @@ final class Run_ConversionTests: XCTestCase {
             startDate: startDate,
             distance: distance,
             duration: duration,
-            locations: [],
-            distanceSamples: []
+            locations: [
+                .init(
+                    coordinate: .init(
+                        latitude: .random(in: -90 ... 90),
+                        longitude: .random(in: -90 ... 90)
+                    ),
+                    altitude: .random(in: 1 ..< 1000),
+                    timestamp: .now
+                ),
+            ],
+            distanceSamples: [
+                .init(
+                    startDate: .now,
+                    distance: .random(in: 1 ..< 1000)
+                ),
+            ]
         )
         context.insert(cached)
 
@@ -75,5 +91,17 @@ final class Run_ConversionTests: XCTestCase {
         XCTAssertEqual(sut.startDate, startDate)
         XCTAssertEqual(sut.distance, .init(value: distance, unit: .meters))
         XCTAssertEqual(sut.duration, .init(value: duration, unit: .seconds))
+
+        XCTAssertEqual(sut.locations.count, 1)
+        let location = try XCTUnwrap(sut.locations.first)
+        XCTAssertEqual(location.coordinate.latitude, cached.locations.first?.coordinate.latitude)
+        XCTAssertEqual(location.coordinate.longitude, cached.locations.first?.coordinate.longitude)
+        XCTAssertEqual(location.altitude.converted(to: .meters).value, cached.locations.first?.altitude)
+        XCTAssertEqual(location.timestamp, cached.locations.first?.timestamp)
+
+        XCTAssertEqual(sut.distanceSamples.count, 1)
+        let sample = try XCTUnwrap(sut.distanceSamples.first)
+        XCTAssertEqual(sample.distance.converted(to: .meters).value, cached.distanceSamples.first?.distance)
+        XCTAssertEqual(sample.startDate, cached.distanceSamples.first?.startDate)
     }
 }
