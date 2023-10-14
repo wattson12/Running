@@ -11,6 +11,7 @@ extension Model.Run {
 
         let distance = distanceQuantity.doubleValue(for: .meter())
 
+        #warning("test locations / distance samples are empty")
         self.init(
             id: model.uuid,
             startDate: model.startDate,
@@ -24,6 +25,7 @@ extension Model.Run {
 
 extension Model.Run {
     init(cached: Cache.Run) {
+        #warning("test location / distance sample conversion (and move to separate init)")
         self.init(
             id: cached.id,
             startDate: cached.startDate,

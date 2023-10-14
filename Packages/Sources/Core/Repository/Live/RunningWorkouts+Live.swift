@@ -61,50 +61,6 @@ extension RunningWorkouts {
         }
 
         @MainActor
-        static func runDetail(
-            id: Model.Run.ID,
-            swiftData: SwiftDataStack,
-            healthKitRunningWorkouts: HealthKitRunningWorkouts
-        ) async throws -> Model.Run {
-            let remoteDetail = try await healthKitRunningWorkouts.detail(for: id)
-
-            let context = try swiftData.context()
-
-            let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
-
-            guard let run = runsMatchingID.first else {
-                // should always have a run matching the ID
-                throw NSError(domain: #fileID, code: #line)
-            }
-
-            let locations: [Cache.Location] = remoteDetail.locations.map { location in
-                .init(
-                    coordinate: .init(
-                        latitude: location.coordinate.latitude,
-                        longitude: location.coordinate.longitude
-                    ),
-                    altitude: location.altitude,
-                    timestamp: location.timestamp
-                )
-            }
-            locations.forEach { context.insert($0) }
-            run.locations = locations
-
-            let samples: [Cache.DistanceSample] = remoteDetail.samples.map { sample in
-                .init(
-                    startDate: sample.startDate,
-                    distance: sample.sumQuantity.doubleValue(for: .meter())
-                )
-            }
-            samples.forEach { context.insert($0) }
-            run.distanceSamples = samples
-
-            try context.save()
-
-            return .init(cached: run)
-        }
-
-        @MainActor
         static func remoteRunningWorkouts(
             swiftData: SwiftDataStack,
             healthKitRunningWorkouts: HealthKitRunningWorkouts
@@ -115,6 +71,7 @@ extension RunningWorkouts {
 
             let context = try swiftData.context()
 
+            #warning("check existing runs are updated")
             var runsNeedingUpdate: [Model.Run.ID: Cache.Run] = [:]
             for run in runs {
                 let runsMatchingID = try context.fetch(
@@ -130,6 +87,7 @@ extension RunningWorkouts {
                     existingRun.duration = run.duration.value
                     runsNeedingUpdate[existingRun.id] = existingRun
                 } else {
+                    #warning("test new values have empty locations / distance samples")
                     let cacheValue = Cache.Run(
                         id: run.id,
                         startDate: run.startDate,
@@ -161,6 +119,55 @@ extension RunningWorkouts {
             }
         }
 
+        @MainActor
+        static func runDetail(
+            id: Model.Run.ID,
+            swiftData: SwiftDataStack,
+            healthKitRunningWorkouts: HealthKitRunningWorkouts
+        ) async throws -> Model.Run {
+            let remoteDetail = try await healthKitRunningWorkouts.detail(for: id)
+
+            let context = try swiftData.context()
+
+            let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
+
+            guard let run = runsMatchingID.first else {
+                #warning("test failure on invalid ID (and add better error)")
+                // should always have a run matching the ID
+                throw NSError(domain: #fileID, code: #line)
+            }
+
+            let locations: [Cache.Location] = remoteDetail.locations.map { location in
+                .init(
+                    coordinate: .init(
+                        latitude: location.coordinate.latitude,
+                        longitude: location.coordinate.longitude
+                    ),
+                    altitude: location.altitude,
+                    timestamp: location.timestamp
+                )
+            }
+            locations.forEach { context.insert($0) }
+            run.locations = locations
+
+            let samples: [Cache.DistanceSample] = remoteDetail.samples.map { sample in
+                .init(
+                    startDate: sample.startDate,
+                    distance: sample.sumQuantity.doubleValue(for: .meter())
+                )
+            }
+            samples.forEach { context.insert($0) }
+            run.distanceSamples = samples
+
+            #warning("check these are saved")
+            try context.save()
+
+            #warning("check that detail is correct given workout detail + existing run")
+            return .init(cached: run)
+        }
+
+        #warning("remove this and instead add an optional predicate / date range to the allRunningWorkouts function")
+        // this could be an extension with the same signature which uses the date range
         static func runsWithinGoal(
             goal: Model.Goal,
             swiftData: SwiftDataStack,

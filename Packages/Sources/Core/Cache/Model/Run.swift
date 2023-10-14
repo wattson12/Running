@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 
+#warning("move to separate file")
 @Model
 public class Coordinate {
     public let latitude: Double
@@ -15,6 +16,7 @@ public class Coordinate {
     }
 }
 
+#warning("move to separate file")
 @Model
 public class Location {
     public let coordinate: Coordinate
@@ -32,6 +34,7 @@ public class Location {
     }
 }
 
+#warning("move to separate file")
 @Model
 public class DistanceSample {
     public let startDate: Date
