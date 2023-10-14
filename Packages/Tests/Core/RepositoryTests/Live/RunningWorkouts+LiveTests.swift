@@ -75,6 +75,67 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
+                locations: [
+                    .init(
+                        coordinate: .init(
+                            latitude: .random(in: -90 ... 90),
+                            longitude: .random(in: -90 ... 90)
+                        ),
+                        altitude: .random(in: 1 ..< 10000),
+                        timestamp: .now
+                    ),
+                ],
+                distanceSamples: [
+                    .init(
+                        startDate: .now,
+                        distance: .random(in: 1 ..< 10)
+                    ),
+                ]
+            ),
+        ]
+        runs.forEach(context.insert)
+        try context.save()
+
+        let duration: Double = .random(in: 1 ..< 100)
+        let distance: Double = .random(in: 1 ..< 100)
+        let healthKitRuns: [MockWorkoutType] = [
+            .init(
+                uuid: id,
+                duration: duration,
+                distance: distance
+            ),
+        ]
+
+        let sut: RunningWorkouts = withDependencies {
+            $0.swiftData._context = { context }
+            $0.healthKit.runningWorkouts._allRunningWorkouts = { healthKitRuns }
+        } operation: {
+            .live()
+        }
+
+        let allRuns = try await sut.allRunningWorkouts.remote()
+
+        let fetchedRuns = try context.fetch(FetchDescriptor<Cache.Run>())
+        let updatedRun = try XCTUnwrap(fetchedRuns.first)
+        XCTAssertEqual(updatedRun.distance, distance * 1000)
+        XCTAssertEqual(updatedRun.duration, duration * 60)
+
+        let firstRun = try XCTUnwrap(allRuns.first)
+        XCTAssertEqual(firstRun.locations.count, 1)
+        XCTAssertEqual(firstRun.distanceSamples.count, 1)
+    }
+
+    func testFetchingRemoteRunsUpdatesValuesForExistingRunWithoutLocationOrDistanceSamples() async throws {
+        let swiftData: SwiftDataStack = .stack(inMemory: true)
+        let context = try swiftData.context()
+
+        let id: UUID = .init()
+        let runs: [Cache.Run] = [
+            .init(
+                id: id,
+                startDate: .now,
+                distance: 0,
+                duration: 0,
                 locations: [],
                 distanceSamples: []
             ),
@@ -99,12 +160,16 @@ final class RunningWorkouts_LiveTests: XCTestCase {
             .live()
         }
 
-        _ = try await sut.allRunningWorkouts.remote()
+        let allRuns = try await sut.allRunningWorkouts.remote()
 
         let fetchedRuns = try context.fetch(FetchDescriptor<Cache.Run>())
         let updatedRun = try XCTUnwrap(fetchedRuns.first)
         XCTAssertEqual(updatedRun.distance, distance * 1000)
         XCTAssertEqual(updatedRun.duration, duration * 60)
+
+        let firstRun = try XCTUnwrap(allRuns.first)
+        XCTAssertEqual(firstRun.locations.count, 0)
+        XCTAssertEqual(firstRun.distanceSamples.count, 0)
     }
 
     func testFetchingRemoteRunsDeletesRunsInCacheButNotInResponse() async throws {

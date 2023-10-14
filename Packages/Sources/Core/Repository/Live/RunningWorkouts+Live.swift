@@ -71,7 +71,6 @@ extension RunningWorkouts {
 
             let context = try swiftData.context()
 
-            #warning("check existing runs are updated")
             var runsNeedingUpdate: [Model.Run.ID: Cache.Run] = [:]
             for run in runs {
                 let runsMatchingID = try context.fetch(
@@ -87,7 +86,6 @@ extension RunningWorkouts {
                     existingRun.duration = run.duration.value
                     runsNeedingUpdate[existingRun.id] = existingRun
                 } else {
-                    #warning("test new values have empty locations / distance samples")
                     let cacheValue = Cache.Run(
                         id: run.id,
                         startDate: run.startDate,
