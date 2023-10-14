@@ -130,7 +130,7 @@ extension RunningWorkouts {
             let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
 
             guard let run = runsMatchingID.first else {
-                #warning("test failure on invalid ID (and add better error)")
+                #warning("add better error")
                 // should always have a run matching the ID
                 throw NSError(domain: #fileID, code: #line)
             }

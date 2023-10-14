@@ -288,4 +288,48 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         let remoteRuns = try sut.runs(within: goal)
         XCTAssertEqual(remoteRuns.count, 1)
     }
+
+    func testRunDetailThrowsHealthKitErrorWhenDetailFails() async throws {
+        let healthKitError = NSError(domain: #fileID, code: #line)
+
+        let sut: RunningWorkouts = withDependencies {
+            $0.healthKit.runningWorkouts._detail = { _ in throw healthKitError }
+        } operation: {
+            .live()
+        }
+
+        do {
+            let detail = try await sut.detail(for: .init())
+            XCTFail("Unexpected success: \(detail)")
+        } catch {
+            XCTAssertEqual(error as NSError, healthKitError)
+        }
+    }
+
+    func testRunDetailThrowsCorrectErrorWhenRunDoesntExistInCache() async throws {
+        let sut: RunningWorkouts = withDependencies {
+            $0.swiftData = .stack(inMemory: true)
+            $0.healthKit.runningWorkouts._detail = { _ in
+                .init(
+                    locations: [],
+                    samples: []
+                )
+            }
+        } operation: {
+            .live()
+        }
+
+        do {
+            let detail = try await sut.detail(for: .init())
+            XCTFail("Unexpected success: \(detail)")
+        } catch {}
+    }
+
+    func testRemoteDetailsAreUpdatedOnExistingCacheValue() {
+        XCTFail()
+    }
+
+    func testDetailRunReturnedUsesCorrectCombinationOfCacheAndRemoteRun() {
+        XCTFail()
+    }
 }
