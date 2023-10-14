@@ -385,4 +385,68 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(run.distanceSamples.first?.distance.converted(to: .meters).value, samples.first?.sumQuantity.doubleValue(for: .meter()))
         XCTAssertEqual(run.distanceSamples.first?.startDate, samples.first?.startDate)
     }
+
+    func testRemoteDetailsAreSavedToContext() async throws {
+        let swiftData: SwiftDataStack = .stack(inMemory: true)
+        let context = try swiftData.context()
+
+        let id: UUID = .init()
+        let runs: [Cache.Run] = [
+            .init(
+                id: id,
+                startDate: .now,
+                distance: 0,
+                duration: 0,
+                locations: [],
+                distanceSamples: []
+            ),
+        ]
+        runs.forEach(context.insert)
+        try context.save()
+
+        let locationCount: Int = .random(in: 1 ..< 1000)
+        let locations: [CLLocation] = (0 ..< locationCount).map { _ in
+            .init(
+                coordinate: .init(
+                    latitude: .random(in: -90 ... 90),
+                    longitude: .random(in: -90 ... 90)
+                ),
+                altitude: .random(in: 1 ..< 1000),
+                horizontalAccuracy: 1,
+                verticalAccuracy: 1,
+                timestamp: .now
+            )
+        }
+        let sampleCount: Int = .random(in: 1 ..< 1000)
+        let samples: [HKCumulativeQuantitySample] = (0 ..< sampleCount).map { _ in
+            .init(
+                type: .init(.distanceWalkingRunning),
+                quantity: .init(
+                    unit: .meter(),
+                    doubleValue: .random(in: 1 ..< 100)
+                ),
+                start: .now,
+                end: .now.addingTimeInterval(1)
+            )
+        }
+
+        let remoteDetail: WorkoutDetail = .init(
+            locations: locations,
+            samples: samples
+        )
+
+        let sut: RunningWorkouts = withDependencies {
+            $0.swiftData._context = { context }
+            $0.healthKit.runningWorkouts._detail = { _ in remoteDetail }
+        } operation: {
+            .live()
+        }
+
+        let _ = try await sut.detail(for: id)
+
+        let savedRuns = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
+        let savedRun = try XCTUnwrap(savedRuns.first)
+        XCTAssertEqual(savedRun.locations.count, locationCount)
+        XCTAssertEqual(savedRun.distanceSamples.count, sampleCount)
+    }
 }

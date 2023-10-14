@@ -130,9 +130,8 @@ extension RunningWorkouts {
             let runsMatchingID = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
 
             guard let run = runsMatchingID.first else {
-                #warning("add better error")
                 // should always have a run matching the ID
-                throw NSError(domain: #fileID, code: #line)
+                throw RepositoryError(message: "Unable to find existing run with ID: \(id)")
             }
 
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
@@ -157,10 +156,8 @@ extension RunningWorkouts {
             samples.forEach { context.insert($0) }
             run.distanceSamples = samples
 
-            #warning("check these are saved")
             try context.save()
 
-            #warning("check that detail is correct given workout detail + existing run")
             return .init(cached: run)
         }
 
