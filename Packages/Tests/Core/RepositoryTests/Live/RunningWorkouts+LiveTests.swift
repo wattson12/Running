@@ -227,16 +227,16 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         let swiftData: SwiftDataStack = .stack(inMemory: true)
         let context = try swiftData.context()
 
-        let sut: RunningWorkouts = withDependencies {
+        let goal: Model.Goal = .mock(period: .weekly)
+        let remoteRuns: [Model.Run] = try withDependencies {
             $0.swiftData._context = { context }
             $0.date = .constant(.now)
             $0.calendar = .current
         } operation: {
-            .live()
+            let sut: RunningWorkouts = .live()
+            return try sut.runs(within: goal)
         }
 
-        let goal: Model.Goal = .mock(period: .weekly)
-        let remoteRuns = try sut.runs(within: goal)
         XCTAssert(remoteRuns.isEmpty)
     }
 
@@ -278,16 +278,16 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let dateForRange: Date = .init(timeIntervalSince1970: 947_246_400)
 
-        let sut: RunningWorkouts = withDependencies {
+        let goal: Model.Goal = .mock(period: .weekly)
+        let remoteRuns: [Model.Run] = try withDependencies {
             $0.swiftData._context = { context }
             $0.date = .constant(dateForRange)
             $0.calendar = .current
         } operation: {
-            .live()
+            let sut: RunningWorkouts = .live()
+            return try sut.runs(within: goal)
         }
 
-        let goal: Model.Goal = .mock(period: .weekly)
-        let remoteRuns = try sut.runs(within: goal)
         XCTAssertEqual(remoteRuns.count, 1)
     }
 

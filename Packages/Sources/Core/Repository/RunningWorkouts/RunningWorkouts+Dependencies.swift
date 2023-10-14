@@ -14,13 +14,6 @@ extension RunningWorkouts {
             ),
             runDetail: { _ in
                 .mock()
-            },
-            runsWithinGoal: { goal in
-                let allRunningWorkouts: [Run] = runs
-                guard let range = goal.period.startAndEnd(in: calendar, now: date()) else { return [] }
-                return allRunningWorkouts
-                    .filter { $0.startDate >= range.start && $0.startDate < range.end }
-                    .sorted(by: { $0.startDate < $1.startDate })
             }
         )
     }
@@ -32,7 +25,6 @@ extension RunningWorkouts {
             "RunningWorkouts.allRunningWorkouts",
             placeholder: .init(cache: { nil }, remote: { [] })
         ),
-        runDetail: unimplemented("RunningWorkouts.runDetail", placeholder: .mock()),
-        runsWithinGoal: unimplemented("RunningWorkouts.runsWithinGoal", placeholder: [])
+        runDetail: unimplemented("RunningWorkouts.runDetail", placeholder: .mock())
     )
 }
