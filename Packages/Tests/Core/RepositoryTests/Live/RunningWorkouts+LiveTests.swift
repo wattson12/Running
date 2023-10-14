@@ -1,5 +1,7 @@
 import Cache
+import CoreLocation
 import Dependencies
+import HealthKit
 import HealthKitServiceInterface
 import Model
 @testable import Repository
@@ -325,11 +327,62 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         } catch {}
     }
 
-    func testRemoteDetailsAreUpdatedOnExistingCacheValue() {
-        XCTFail()
-    }
+    func testRemoteDetailsAreUpdatedOnExistingCacheValue() async throws {
+        let swiftData: SwiftDataStack = .stack(inMemory: true)
+        let context = try swiftData.context()
 
-    func testDetailRunReturnedUsesCorrectCombinationOfCacheAndRemoteRun() {
-        XCTFail()
+        let id: UUID = .init()
+        let runs: [Cache.Run] = [
+            .init(
+                id: id,
+                startDate: .now,
+                distance: 0,
+                duration: 0,
+                locations: [],
+                distanceSamples: []
+            ),
+        ]
+        runs.forEach(context.insert)
+        try context.save()
+
+        let locations: [CLLocation] = [
+            .init(
+                coordinate: .init(
+                    latitude: .random(in: -90 ... 90),
+                    longitude: .random(in: -90 ... 90)
+                ),
+                altitude: .random(in: 1 ..< 1000),
+                horizontalAccuracy: 1,
+                verticalAccuracy: 1,
+                timestamp: .now
+            ),
+        ]
+        let samples: [HKCumulativeQuantitySample] = [
+            .init(type: .init(.distanceWalkingRunning), quantity: .init(unit: .meter(), doubleValue: .random(in: 1 ..< 100)), start: .now, end: .now.addingTimeInterval(1)),
+        ]
+
+        let remoteDetail: WorkoutDetail = .init(
+            locations: locations,
+            samples: samples
+        )
+
+        let sut: RunningWorkouts = withDependencies {
+            $0.swiftData._context = { context }
+            $0.healthKit.runningWorkouts._detail = { _ in remoteDetail }
+        } operation: {
+            .live()
+        }
+
+        let run = try await sut.detail(for: id)
+
+        XCTAssertEqual(run.locations.count, 1)
+        XCTAssertEqual(run.locations.first?.coordinate.latitude, locations.first?.coordinate.latitude)
+        XCTAssertEqual(run.locations.first?.coordinate.longitude, locations.first?.coordinate.longitude)
+        XCTAssertEqual(run.locations.first?.altitude.converted(to: .meters).value, locations.first?.altitude)
+        XCTAssertEqual(run.locations.first?.timestamp, locations.first?.timestamp)
+
+        XCTAssertEqual(run.distanceSamples.count, 1)
+        XCTAssertEqual(run.distanceSamples.first?.distance.converted(to: .meters).value, samples.first?.sumQuantity.doubleValue(for: .meter()))
+        XCTAssertEqual(run.distanceSamples.first?.startDate, samples.first?.startDate)
     }
 }
