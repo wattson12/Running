@@ -29,22 +29,10 @@ extension Model.Run {
             startDate: cached.startDate,
             distance: .init(value: cached.distance, unit: .meters),
             duration: .init(value: cached.duration, unit: .seconds),
-            locations: cached.locations.map { location in
-                Model.Location(
-                    coordinate: .init(
-                        latitude: location.coordinate.latitude,
-                        longitude: location.coordinate.longitude
-                    ),
-                    altitude: .init(value: location.altitude, unit: .meters),
-                    timestamp: location.timestamp
-                )
-            },
-            distanceSamples: cached.distanceSamples.map { sample in
-                Model.DistanceSample(
-                    startDate: sample.startDate,
-                    distance: .init(value: sample.distance, unit: .meters)
-                )
-            }
+            locations: cached.locations
+                .map(Model.Location.init(cached:)),
+            distanceSamples: cached.distanceSamples
+                .map(Model.DistanceSample.init(cached:))
         )
     }
 }
