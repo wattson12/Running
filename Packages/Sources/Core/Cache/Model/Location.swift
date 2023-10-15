@@ -3,9 +3,9 @@ import SwiftData
 
 @Model
 public class Location {
-    public let coordinate: Coordinate
-    public let altitude: Double
-    public let timestamp: Date
+    public var coordinate: Coordinate
+    public var altitude: Double
+    public var timestamp: Date
 
     public init(
         coordinate: Coordinate,

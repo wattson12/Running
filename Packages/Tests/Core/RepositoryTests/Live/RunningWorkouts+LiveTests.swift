@@ -25,7 +25,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let cacheRunCount: Int = .random(in: 5 ..< 100)
         let runs: [Cache.Run] = (0 ..< cacheRunCount).map { _ in
-            .init(id: .init(), startDate: .now, distance: 0, duration: 0, locations: [], distanceSamples: [])
+            .init(id: .init(), startDate: .now, distance: 0, duration: 0, detail: nil)
         }
 
         runs.forEach(context.insert)
@@ -77,22 +77,24 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [
-                    .init(
-                        coordinate: .init(
-                            latitude: .random(in: -90 ... 90),
-                            longitude: .random(in: -90 ... 90)
+                detail: .init(
+                    locations: [
+                        .init(
+                            coordinate: .init(
+                                latitude: .random(in: -90 ... 90),
+                                longitude: .random(in: -90 ... 90)
+                            ),
+                            altitude: .random(in: 1 ..< 10000),
+                            timestamp: .now
                         ),
-                        altitude: .random(in: 1 ..< 10000),
-                        timestamp: .now
-                    ),
-                ],
-                distanceSamples: [
-                    .init(
-                        startDate: .now,
-                        distance: .random(in: 1 ..< 10)
-                    ),
-                ]
+                    ],
+                    distanceSamples: [
+                        .init(
+                            startDate: .now,
+                            distance: .random(in: 1 ..< 10)
+                        ),
+                    ]
+                )
             ),
         ]
         runs.forEach(context.insert)
@@ -123,8 +125,8 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(updatedRun.duration, duration * 60)
 
         let firstRun = try XCTUnwrap(allRuns.first)
-        XCTAssertEqual(firstRun.locations.count, 1)
-        XCTAssertEqual(firstRun.distanceSamples.count, 1)
+        XCTAssertEqual(firstRun.detail?.locations.count, 1)
+        XCTAssertEqual(firstRun.detail?.distanceSamples.count, 1)
     }
 
     func testFetchingRemoteRunsUpdatesValuesForExistingRunWithoutLocationOrDistanceSamples() async throws {
@@ -138,8 +140,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
         ]
         runs.forEach(context.insert)
@@ -170,8 +171,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(updatedRun.duration, duration * 60)
 
         let firstRun = try XCTUnwrap(allRuns.first)
-        XCTAssertEqual(firstRun.locations.count, 0)
-        XCTAssertEqual(firstRun.distanceSamples.count, 0)
+        XCTAssertNil(firstRun.detail)
     }
 
     func testFetchingRemoteRunsDeletesRunsInCacheButNotInResponse() async throws {
@@ -185,16 +185,14 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
             .init(
                 id: .init(),
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
         ]
         runs.forEach(context.insert)
@@ -251,8 +249,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .init(timeIntervalSince1970: 0),
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
             // inside range
             .init(
@@ -260,8 +257,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .init(timeIntervalSince1970: 947_073_600),
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
             // after range
             .init(
@@ -269,8 +265,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
         ]
         runs.forEach(context.insert)
@@ -338,8 +333,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
         ]
         runs.forEach(context.insert)
@@ -375,15 +369,15 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let run = try await sut.detail(for: id)
 
-        XCTAssertEqual(run.locations.count, 1)
-        XCTAssertEqual(run.locations.first?.coordinate.latitude, locations.first?.coordinate.latitude)
-        XCTAssertEqual(run.locations.first?.coordinate.longitude, locations.first?.coordinate.longitude)
-        XCTAssertEqual(run.locations.first?.altitude.converted(to: .meters).value, locations.first?.altitude)
-        XCTAssertEqual(run.locations.first?.timestamp, locations.first?.timestamp)
+        XCTAssertEqual(run.detail?.locations.count, 1)
+        XCTAssertEqual(run.detail?.locations.first?.coordinate.latitude, locations.first?.coordinate.latitude)
+        XCTAssertEqual(run.detail?.locations.first?.coordinate.longitude, locations.first?.coordinate.longitude)
+        XCTAssertEqual(run.detail?.locations.first?.altitude.converted(to: .meters).value, locations.first?.altitude)
+        XCTAssertEqual(run.detail?.locations.first?.timestamp, locations.first?.timestamp)
 
-        XCTAssertEqual(run.distanceSamples.count, 1)
-        XCTAssertEqual(run.distanceSamples.first?.distance.converted(to: .meters).value, samples.first?.sumQuantity.doubleValue(for: .meter()))
-        XCTAssertEqual(run.distanceSamples.first?.startDate, samples.first?.startDate)
+        XCTAssertEqual(run.detail?.distanceSamples.count, 1)
+        XCTAssertEqual(run.detail?.distanceSamples.first?.distance.converted(to: .meters).value, samples.first?.sumQuantity.doubleValue(for: .meter()))
+        XCTAssertEqual(run.detail?.distanceSamples.first?.startDate, samples.first?.startDate)
     }
 
     func testRemoteDetailsAreSavedToContext() async throws {
@@ -397,8 +391,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 startDate: .now,
                 distance: 0,
                 duration: 0,
-                locations: [],
-                distanceSamples: []
+                detail: nil
             ),
         ]
         runs.forEach(context.insert)
@@ -446,7 +439,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let savedRuns = try context.fetch(.init(predicate: #Predicate<Cache.Run> { $0.id == id }))
         let savedRun = try XCTUnwrap(savedRuns.first)
-        XCTAssertEqual(savedRun.locations.count, locationCount)
-        XCTAssertEqual(savedRun.distanceSamples.count, sampleCount)
+        XCTAssertEqual(savedRun.detail?.locations.count, locationCount)
+        XCTAssertEqual(savedRun.detail?.distanceSamples.count, sampleCount)
     }
 }

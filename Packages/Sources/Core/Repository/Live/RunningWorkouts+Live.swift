@@ -83,9 +83,7 @@ extension RunningWorkouts {
                         startDate: run.startDate,
                         distance: run.distance.value,
                         duration: run.duration.value,
-                        // locations and distanceSamples are empty until detail is fetched
-                        locations: [],
-                        distanceSamples: []
+                        detail: nil
                     )
                     context.insert(cacheValue)
                 }
@@ -136,8 +134,6 @@ extension RunningWorkouts {
                     timestamp: location.timestamp
                 )
             }
-            locations.forEach { context.insert($0) }
-            run.locations = locations
 
             let samples: [Cache.DistanceSample] = remoteDetail.samples.map { sample in
                 .init(
@@ -145,8 +141,11 @@ extension RunningWorkouts {
                     distance: sample.sumQuantity.doubleValue(for: .meter())
                 )
             }
-            samples.forEach { context.insert($0) }
-            run.distanceSamples = samples
+
+            run.detail = .init(
+                locations: locations,
+                distanceSamples: samples
+            )
 
             try context.save()
 
