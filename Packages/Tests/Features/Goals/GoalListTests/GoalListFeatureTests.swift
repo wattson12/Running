@@ -28,6 +28,9 @@ final class GoalListFeatureTests: XCTestCase {
                     )
                 }
 
+                $0.repository.runningWorkouts._runsWithinGoal = {
+                    runs[$0.period] ?? []
+                }
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
 
                 $0.widget._reloadAllTimelines = {}
@@ -74,6 +77,9 @@ final class GoalListFeatureTests: XCTestCase {
                     )
                 }
 
+                $0.repository.runningWorkouts._runsWithinGoal = {
+                    runs[$0.period] ?? []
+                }
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
 
                 $0.widget._reloadAllTimelines = {}
@@ -121,6 +127,14 @@ final class GoalListFeatureTests: XCTestCase {
                 }
 
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
+                $0.repository.runningWorkouts._runsWithinGoal = {
+                    if let runs = runs[$0.period] {
+                        return runs
+                    } else {
+                        throw failure
+                    }
+                }
+
                 $0.widget._reloadAllTimelines = {}
             }
         )
