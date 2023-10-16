@@ -60,7 +60,10 @@ public struct GoalDetailFeature: Reducer {
             }
 
             return .run { [goal = state.goal] send in
-                let result = await TaskResult { try runningWorkouts.runs(within: goal) }
+                let result = await TaskResult {
+                    _ = try await runningWorkouts.allRunningWorkouts.remote()
+                    return try runningWorkouts.runs(within: goal)
+                }
                 await send(._internal(.runsFetched(result)))
             }
         }

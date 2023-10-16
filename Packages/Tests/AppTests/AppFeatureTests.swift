@@ -12,6 +12,11 @@ final class AppFeatureTests: XCTestCase {
             initialState: .init(),
             reducer: AppFeature.init,
             withDependencies: {
+                $0.calendar = .current
+                $0.calendar.timeZone = .init(secondsFromGMT: 0)!
+                $0.date = .constant(.now)
+                $0.uuid = .incrementing
+
                 $0.userDefaults = .ephemeral()
 
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
@@ -39,6 +44,11 @@ final class AppFeatureTests: XCTestCase {
             initialState: .init(),
             reducer: AppFeature.init,
             withDependencies: {
+                $0.calendar = .current
+                $0.calendar.timeZone = .init(secondsFromGMT: 0)!
+                $0.date = .constant(.now)
+                $0.uuid = .incrementing
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.goals._goal = { period in
                     .mock(period: period, target: .init(value: 1, unit: .kilometers))
                 }

@@ -8,6 +8,7 @@ import Model
 import SwiftData
 import XCTest
 
+@MainActor
 final class RunningWorkouts_LiveTests: XCTestCase {
     func testCachedRunningWorkoutsReturnsNilWhenThereAreNoRuns() {
         let sut: RunningWorkouts = withDependencies {
@@ -80,10 +81,8 @@ final class RunningWorkouts_LiveTests: XCTestCase {
                 detail: .init(
                     locations: [
                         .init(
-                            coordinate: .init(
-                                latitude: .random(in: -90 ... 90),
-                                longitude: .random(in: -90 ... 90)
-                            ),
+                            latitude: .random(in: -90 ... 90),
+                            longitude: .random(in: -90 ... 90),
                             altitude: .random(in: 1 ..< 10000),
                             timestamp: .now
                         ),

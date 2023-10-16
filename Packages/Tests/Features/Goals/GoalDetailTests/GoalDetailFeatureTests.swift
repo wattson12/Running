@@ -9,26 +9,31 @@ final class GoalDetailFeatureTests: XCTestCase {
     func testNonEmptyRunsWithinGoalFlow() async throws {
         let now: Date = .init(timeIntervalSince1970: 1_000_000)
 
+        let goal: Goal = .mock(
+            period: .weekly,
+            target: .init(value: 100, unit: .kilometers)
+        )
+        let range = try XCTUnwrap(goal.period.startAndEnd(in: .current, now: now))
+        let midPoint = Date(timeIntervalSince1970: (range.start.timeIntervalSince1970 + range.end.timeIntervalSince1970) / 2)
+
         let runs: [Run] = [
-            .mock(),
-            .mock(),
-            .mock(),
-            .mock(),
-            .mock(),
+            .mock(startDate: midPoint),
+            .mock(startDate: midPoint),
+            .mock(startDate: midPoint),
+            .mock(startDate: midPoint),
+            .mock(startDate: midPoint),
         ]
 
         let store = TestStore(
             initialState: .init(
-                goal: .mock(
-                    period: .weekly,
-                    target: .init(value: 100, unit: .kilometers)
-                )
+                goal: goal
             ),
             reducer: GoalDetailFeature.init,
             withDependencies: {
                 $0.calendar = .current
                 $0.date = .constant(now)
                 $0.uuid = .incrementing
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: runs) }
             }
         )
 
@@ -56,6 +61,12 @@ final class GoalDetailFeatureTests: XCTestCase {
                 $0.calendar = .current
                 $0.date = .constant(now)
                 $0.uuid = .incrementing
+                $0.repository.runningWorkouts._allRunningWorkouts = {
+                    .init(
+                        cache: { nil },
+                        remote: { throw failure }
+                    )
+                }
             }
         )
 
@@ -81,6 +92,12 @@ final class GoalDetailFeatureTests: XCTestCase {
                 $0.calendar.timeZone = .init(secondsFromGMT: 0)!
                 $0.date = .constant(now)
                 $0.uuid = .incrementing
+                $0.repository.runningWorkouts._allRunningWorkouts = {
+                    .init(
+                        cache: { [] },
+                        remote: { [] }
+                    )
+                }
             }
         )
 

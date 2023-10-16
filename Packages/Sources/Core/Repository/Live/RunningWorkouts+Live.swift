@@ -126,10 +126,8 @@ extension RunningWorkouts {
 
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
                 .init(
-                    coordinate: .init(
-                        latitude: location.coordinate.latitude,
-                        longitude: location.coordinate.longitude
-                    ),
+                    latitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude,
                     altitude: location.altitude,
                     timestamp: location.timestamp
                 )
