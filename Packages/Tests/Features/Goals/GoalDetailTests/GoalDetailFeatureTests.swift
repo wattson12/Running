@@ -9,31 +9,28 @@ final class GoalDetailFeatureTests: XCTestCase {
     func testNonEmptyRunsWithinGoalFlow() async throws {
         let now: Date = .init(timeIntervalSince1970: 1_000_000)
 
-        let goal: Goal = .mock(
-            period: .weekly,
-            target: .init(value: 100, unit: .kilometers)
-        )
-        let range = try XCTUnwrap(goal.period.startAndEnd(in: .current, now: now))
-        let midPoint = Date(timeIntervalSince1970: (range.start.timeIntervalSince1970 + range.end.timeIntervalSince1970) / 2)
-
         let runs: [Run] = [
-            .mock(startDate: midPoint),
-            .mock(startDate: midPoint),
-            .mock(startDate: midPoint),
-            .mock(startDate: midPoint),
-            .mock(startDate: midPoint),
+            .mock(),
+            .mock(),
+            .mock(),
+            .mock(),
+            .mock(),
         ]
 
         let store = TestStore(
             initialState: .init(
-                goal: goal
+                goal: .mock(
+                    period: .weekly,
+                    target: .init(value: 100, unit: .kilometers)
+                )
             ),
             reducer: GoalDetailFeature.init,
             withDependencies: {
                 $0.calendar = .current
                 $0.date = .constant(now)
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
+                $0.repository.runningWorkouts._runsWithinGoal = { _ in runs }
                 $0.uuid = .incrementing
-                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: runs) }
             }
         )
 
@@ -60,13 +57,11 @@ final class GoalDetailFeatureTests: XCTestCase {
             withDependencies: {
                 $0.calendar = .current
                 $0.date = .constant(now)
-                $0.uuid = .incrementing
-                $0.repository.runningWorkouts._allRunningWorkouts = {
-                    .init(
-                        cache: { nil },
-                        remote: { throw failure }
-                    )
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
+                $0.repository.runningWorkouts._runsWithinGoal = { _ in
+                    throw failure
                 }
+                $0.uuid = .incrementing
             }
         )
 
@@ -91,13 +86,9 @@ final class GoalDetailFeatureTests: XCTestCase {
                 $0.calendar = .current
                 $0.calendar.timeZone = .init(secondsFromGMT: 0)!
                 $0.date = .constant(now)
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
+                $0.repository.runningWorkouts._runsWithinGoal = { _ in [] }
                 $0.uuid = .incrementing
-                $0.repository.runningWorkouts._allRunningWorkouts = {
-                    .init(
-                        cache: { [] },
-                        remote: { [] }
-                    )
-                }
             }
         )
 
