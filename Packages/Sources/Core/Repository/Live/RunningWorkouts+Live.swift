@@ -32,6 +32,14 @@ extension RunningWorkouts {
                     swiftData: swiftData,
                     healthKitRunningWorkouts: healthKitRunningWorkouts
                 )
+            },
+            runsWithinGoal: { goal in
+                try Implementation.runsWithinGoal(
+                    goal: goal,
+                    swiftData: swiftData,
+                    calendar: calendar,
+                    date: date.now
+                )
             }
         )
     }
@@ -148,6 +156,31 @@ extension RunningWorkouts {
             try context.save()
 
             return .init(cached: run)
+        }
+
+        #warning("remove this and instead add an optional predicate / date range to the allRunningWorkouts function")
+        // this could be an extension with the same signature which uses the date range
+        static func runsWithinGoal(
+            goal: Model.Goal,
+            swiftData: SwiftDataStack,
+            calendar: Calendar,
+            date: Date
+        ) throws -> [Model.Run] {
+            guard let dates = goal.period.startAndEnd(in: calendar, now: date) else {
+                throw RunningWorkoutsError.validation("Unable to create date range from goal: \(goal)")
+            }
+            let start = dates.start
+            let end = dates.end
+
+            let context = try swiftData.context()
+            let descriptor: FetchDescriptor<Cache.Run> = FetchDescriptor(
+                predicate: #Predicate<Cache.Run> {
+                    $0.startDate >= start && $0.startDate < end
+                },
+                sortBy: [.init(\.startDate, order: .forward)]
+            )
+
+            return try context.fetch(descriptor).map(Run.init(cached:))
         }
     }
 }
