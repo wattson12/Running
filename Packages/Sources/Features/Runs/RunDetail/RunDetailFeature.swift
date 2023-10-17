@@ -47,7 +47,7 @@ public struct RunDetailFeature: Reducer {
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            state.isLoading = true
+            state.isLoading = state.run.detail == nil
             return .run { [id = state.run.id] send in
                 let result = await TaskResult { try await runningWorkouts.detail(for: id) }
                 await send(._internal(.runDetailFetched(result)))

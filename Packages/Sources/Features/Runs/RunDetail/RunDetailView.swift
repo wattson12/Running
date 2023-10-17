@@ -45,7 +45,25 @@ public struct RunDetailView: View {
 }
 
 #Preview("Loading") {
-    let run: Run = .mock()
+    let run: Run = .mock(detail: nil)
+    return NavigationStack {
+        RunDetailView(
+            store: .init(
+                initialState: .init(run: run),
+                reducer: RunDetailFeature.init,
+                withDependencies: {
+                    $0.repository.runningWorkouts._runDetail = { _ in
+                        try await Task.sleep(for: .seconds(1))
+                        return run
+                    }
+                }
+            )
+        )
+    }
+}
+
+#Preview("Detail Already Fetched") {
+    let run: Run = .mock(detail: .mock())
     return NavigationStack {
         RunDetailView(
             store: .init(

@@ -14,3 +14,15 @@ public extension Run {
         }
     }
 }
+
+public extension Run.Detail {
+    static func mock(
+        locations: [Location] = [],
+        distanceSamples: [DistanceSample] = []
+    ) -> Run.Detail {
+        .init(
+            locations: locations,
+            distanceSamples: distanceSamples
+        )
+    }
+}
