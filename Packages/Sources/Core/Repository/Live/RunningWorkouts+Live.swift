@@ -32,6 +32,14 @@ extension RunningWorkouts {
                     swiftData: swiftData,
                     healthKitRunningWorkouts: healthKitRunningWorkouts
                 )
+            },
+            runsWithinGoal: { goal in
+                try Implementation.runsWithinGoal(
+                    goal: goal,
+                    swiftData: swiftData,
+                    calendar: calendar,
+                    date: date.now
+                )
             }
         )
     }
@@ -83,9 +91,7 @@ extension RunningWorkouts {
                         startDate: run.startDate,
                         distance: run.distance.value,
                         duration: run.duration.value,
-                        // locations and distanceSamples are empty until detail is fetched
-                        locations: [],
-                        distanceSamples: []
+                        detail: nil
                     )
                     context.insert(cacheValue)
                 }
@@ -128,16 +134,12 @@ extension RunningWorkouts {
 
             let locations: [Cache.Location] = remoteDetail.locations.map { location in
                 .init(
-                    coordinate: .init(
-                        latitude: location.coordinate.latitude,
-                        longitude: location.coordinate.longitude
-                    ),
+                    latitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude,
                     altitude: location.altitude,
                     timestamp: location.timestamp
                 )
             }
-            locations.forEach { context.insert($0) }
-            run.locations = locations
 
             let samples: [Cache.DistanceSample] = remoteDetail.samples.map { sample in
                 .init(
@@ -145,12 +147,40 @@ extension RunningWorkouts {
                     distance: sample.sumQuantity.doubleValue(for: .meter())
                 )
             }
-            samples.forEach { context.insert($0) }
-            run.distanceSamples = samples
+
+            run.detail = .init(
+                locations: locations,
+                distanceSamples: samples
+            )
 
             try context.save()
 
             return .init(cached: run)
+        }
+
+        #warning("remove this and instead add an optional predicate / date range to the allRunningWorkouts function")
+        // this could be an extension with the same signature which uses the date range
+        static func runsWithinGoal(
+            goal: Model.Goal,
+            swiftData: SwiftDataStack,
+            calendar: Calendar,
+            date: Date
+        ) throws -> [Model.Run] {
+            guard let dates = goal.period.startAndEnd(in: calendar, now: date) else {
+                throw RunningWorkoutsError.validation("Unable to create date range from goal: \(goal)")
+            }
+            let start = dates.start
+            let end = dates.end
+
+            let context = try swiftData.context()
+            let descriptor: FetchDescriptor<Cache.Run> = FetchDescriptor(
+                predicate: #Predicate<Cache.Run> {
+                    $0.startDate >= start && $0.startDate < end
+                },
+                sortBy: [.init(\.startDate, order: .forward)]
+            )
+
+            return try context.fetch(descriptor).map(Run.init(cached:))
         }
     }
 }

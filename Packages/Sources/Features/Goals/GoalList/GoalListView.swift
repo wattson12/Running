@@ -121,8 +121,6 @@ struct GoalListView_Previews: PreviewProvider {
         }
         .environment(\.locale, .init(identifier: "en_AU"))
 
-        let test: LockIsolated<Int> = .init(0)
-
         NavigationStack {
             UpdatedGoalPreviewWrapper(
                 store: .init(
@@ -131,28 +129,6 @@ struct GoalListView_Previews: PreviewProvider {
                     withDependencies: {
                         $0.date = .constant(.preview)
                         $0.locale = .init(identifier: "en_AU")
-
-                        $0.repository.runningWorkouts._runsWithinGoal = { goal in
-                            guard goal.period == .yearly else { return [] }
-                            test.withValue { $0 += 1 }
-
-                            if test.value == 1 {
-                                return [
-                                    .mock(
-                                        distance: .init(value: 100, unit: .kilometers)
-                                    ),
-                                ]
-                            } else {
-                                return [
-                                    .mock(
-                                        distance: .init(value: 500, unit: .kilometers)
-                                    ),
-                                    .mock(
-                                        distance: .init(value: 500, unit: .kilometers)
-                                    ),
-                                ]
-                            }
-                        }
 
                         $0.repository.runningWorkouts._allRunningWorkouts = {
                             .mock(value: [], delay: 2)

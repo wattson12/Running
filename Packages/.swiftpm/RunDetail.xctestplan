@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "6DCC7833-CB37-4E6D-A565-0F593603B6A8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "RunDetail",
+          "name" : "RunDetail"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RunDetailTests",
+        "name" : "RunDetailTests"
+      }
+    }
+  ],
+  "version" : 1
+}

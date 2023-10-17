@@ -28,6 +28,7 @@ final class GoalDetailFeatureTests: XCTestCase {
             withDependencies: {
                 $0.calendar = .current
                 $0.date = .constant(now)
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _ in runs }
                 $0.uuid = .incrementing
             }
@@ -56,6 +57,7 @@ final class GoalDetailFeatureTests: XCTestCase {
             withDependencies: {
                 $0.calendar = .current
                 $0.date = .constant(now)
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _ in
                     throw failure
                 }
@@ -84,6 +86,7 @@ final class GoalDetailFeatureTests: XCTestCase {
                 $0.calendar = .current
                 $0.calendar.timeZone = .init(secondsFromGMT: 0)!
                 $0.date = .constant(now)
+                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _ in [] }
                 $0.uuid = .incrementing
             }

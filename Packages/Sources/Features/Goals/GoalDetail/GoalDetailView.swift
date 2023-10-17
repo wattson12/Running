@@ -153,7 +153,6 @@ struct GoalDetailView_Previews: PreviewProvider {
                     withDependencies: {
                         $0.date = .constant(.preview)
                         $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
-                        $0.repository.runningWorkouts._runsWithinGoal = { _ in [] }
                     }
                 )
             )

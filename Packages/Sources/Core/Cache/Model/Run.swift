@@ -7,22 +7,19 @@ public class Run {
     public var startDate: Date
     public var distance: Double
     public var duration: Double
-    public var locations: [Location]
-    public var distanceSamples: [DistanceSample]
+    public var detail: RunDetail?
 
     public init(
         id: UUID,
         startDate: Date,
         distance: Double,
         duration: Double,
-        locations: [Location],
-        distanceSamples: [DistanceSample]
+        detail: RunDetail?
     ) {
         self.id = id
         self.startDate = startDate
         self.distance = distance
         self.duration = duration
-        self.locations = locations
-        self.distanceSamples = distanceSamples
+        self.detail = detail
     }
 }

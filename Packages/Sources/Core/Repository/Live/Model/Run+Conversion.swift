@@ -16,8 +16,7 @@ extension Model.Run {
             startDate: model.startDate,
             distance: .init(value: distance, unit: .meters),
             duration: .init(value: model.duration, unit: .seconds),
-            locations: [],
-            distanceSamples: []
+            detail: nil
         )
     }
 }
@@ -29,10 +28,12 @@ extension Model.Run {
             startDate: cached.startDate,
             distance: .init(value: cached.distance, unit: .meters),
             duration: .init(value: cached.duration, unit: .seconds),
-            locations: cached.locations
-                .map(Model.Location.init(cached:)),
-            distanceSamples: cached.distanceSamples
-                .map(Model.DistanceSample.init(cached:))
+            detail: cached.detail.map { detail in
+                .init(
+                    locations: detail.locations.map(Model.Location.init(cached:)),
+                    distanceSamples: detail.distanceSamples.map(Model.DistanceSample.init(cached:))
+                )
+            }
         )
     }
 }

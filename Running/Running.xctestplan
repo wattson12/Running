@@ -99,6 +99,13 @@
         "identifier" : "GoalDetailTests",
         "name" : "GoalDetailTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "RunDetailTests",
+        "name" : "RunDetailTests"
+      }
     }
   ],
   "version" : 1

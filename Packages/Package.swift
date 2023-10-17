@@ -336,6 +336,11 @@ let package = Package(
             path: .featureTests(.runList)
         ),
         .testTarget(
+            name: .runDetail.tests,
+            dependencies: [.byName(name: .runDetail)],
+            path: .featureTests(.runDetail)
+        ),
+        .testTarget(
             name: .settings.tests,
             dependencies: [.byName(name: .settings)],
             path: .featureTests(.settings)

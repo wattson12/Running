@@ -8,7 +8,7 @@ public extension SwiftDataStack {
         .init(
             context: {
                 let container = try ModelContainer(
-                    for: Run.self, Goal.self,
+                    for: Run.self, RunDetail.self, Goal.self,
                     configurations: ModelConfiguration(
                         isStoredInMemoryOnly: inMemory,
                         cloudKitDatabase: .none

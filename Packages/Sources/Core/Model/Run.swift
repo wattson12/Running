@@ -48,23 +48,20 @@ public struct Run: Equatable, Hashable, Identifiable {
     public var startDate: Date
     public var distance: Measurement<UnitLength>
     public var duration: Measurement<UnitDuration>
-    public var locations: [Location]
-    public var distanceSamples: [DistanceSample]
+    public var detail: Detail?
 
     public init(
         id: UUID,
         startDate: Date,
         distance: Measurement<UnitLength>,
         duration: Measurement<UnitDuration>,
-        locations: [Location],
-        distanceSamples: [DistanceSample]
+        detail: Detail?
     ) {
         self.id = id
         self.startDate = startDate
         self.distance = distance
         self.duration = duration
-        self.locations = locations
-        self.distanceSamples = distanceSamples
+        self.detail = detail
     }
 }
 
@@ -74,16 +71,14 @@ public extension Run {
         startDate: Date = Date(timeIntervalSinceNow: .random(in: 1 ..< 1_000_000)),
         distance: Measurement<UnitLength> = .init(value: .random(in: 1 ..< 50), unit: .kilometers),
         duration: Measurement<UnitDuration> = .init(value: 30, unit: .minutes),
-        locations: [Location] = [],
-        distanceSamples: [DistanceSample] = []
+        detail: Detail? = nil
     ) -> Self {
         .init(
             id: id,
             startDate: startDate,
             distance: distance,
             duration: duration,
-            locations: locations,
-            distanceSamples: distanceSamples
+            detail: detail
         )
     }
 
