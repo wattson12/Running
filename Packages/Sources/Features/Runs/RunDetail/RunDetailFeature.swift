@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Foundation
 import Model
+import Repository
 
 public struct RunDetailFeature: Reducer {
     public struct State: Equatable {
@@ -30,6 +31,8 @@ public struct RunDetailFeature: Reducer {
 
     public init() {}
 
+    @Dependency(\.repository.runningWorkouts) var runningWorkouts
+
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -41,10 +44,14 @@ public struct RunDetailFeature: Reducer {
         }
     }
 
-    private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
+    private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            return .none
+            state.isLoading = true
+            return .run { [id = state.run.id] send in
+                let result = await TaskResult { try await runningWorkouts.detail(for: id) }
+                await send(._internal(.runDetailFetched(result)))
+            }
         }
     }
 

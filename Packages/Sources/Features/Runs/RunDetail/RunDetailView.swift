@@ -28,30 +28,36 @@ public struct RunDetailView: View {
             observe: ViewState.init,
             send: RunDetailFeature.Action.view
         ) { viewStore in
-            Text("Placeholder Run Detail View")
-            Text(viewStore.run.distance.formatted())
+            VStack {
+                Text(viewStore.run.distance.formatted())
 
-            if viewStore.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
+                if viewStore.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
+
+                Spacer()
             }
+            .onAppear { viewStore.send(.onAppear) }
+            .navigationTitle("Run")
         }
     }
 }
 
-#Preview {
-    RunDetailView(
-        store: .init(
-            initialState: .init(
-                run: .mock()
-            ),
-            reducer: RunDetailFeature.init,
-            withDependencies: {
-                $0.repository.runningWorkouts._runDetail = { _ in
-                    try await Task.sleep(for: .seconds(1))
-                    return .mock()
+#Preview("Loading") {
+    let run: Run = .mock()
+    return NavigationStack {
+        RunDetailView(
+            store: .init(
+                initialState: .init(run: run),
+                reducer: RunDetailFeature.init,
+                withDependencies: {
+                    $0.repository.runningWorkouts._runDetail = { _ in
+                        try await Task.sleep(for: .seconds(1))
+                        return run
+                    }
                 }
-            }
+            )
         )
-    )
+    }
 }
