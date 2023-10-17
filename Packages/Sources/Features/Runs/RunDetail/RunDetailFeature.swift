@@ -14,6 +14,14 @@ public struct RunDetailFeature: Reducer {
             self.run = run
             isLoading = false
         }
+
+        init(
+            run: Run,
+            isLoading: Bool
+        ) {
+            self.run = run
+            self.isLoading = isLoading
+        }
     }
 
     public enum Action: Equatable {
