@@ -1,13 +1,16 @@
 import ComposableArchitecture
 import Model
+import Repository
 import SwiftUI
 
 public struct RunDetailView: View {
     struct ViewState: Equatable {
         let run: Run
+        let isLoading: Bool
 
         init(state: RunDetailFeature.State) {
             run = state.run
+            isLoading = state.isLoading
         }
     }
 
@@ -27,6 +30,11 @@ public struct RunDetailView: View {
         ) { viewStore in
             Text("Placeholder Run Detail View")
             Text(viewStore.run.distance.formatted())
+
+            if viewStore.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
         }
     }
 }
@@ -37,7 +45,13 @@ public struct RunDetailView: View {
             initialState: .init(
                 run: .mock()
             ),
-            reducer: RunDetailFeature.init
+            reducer: RunDetailFeature.init,
+            withDependencies: {
+                $0.repository.runningWorkouts._runDetail = { _ in
+                    try await Task.sleep(for: .seconds(1))
+                    return .mock()
+                }
+            }
         )
     )
 }
