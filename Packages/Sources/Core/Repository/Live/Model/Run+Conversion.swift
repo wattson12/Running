@@ -30,7 +30,9 @@ extension Model.Run {
             duration: .init(value: cached.duration, unit: .seconds),
             detail: cached.detail.map { detail in
                 .init(
-                    locations: detail.locations.map(Model.Location.init(cached:)),
+                    locations: detail.locations
+                        .sorted(by: { $0.timestamp < $1.timestamp })
+                        .map(Model.Location.init(cached:)),
                     distanceSamples: detail.distanceSamples.map(Model.DistanceSample.init(cached:))
                 )
             }

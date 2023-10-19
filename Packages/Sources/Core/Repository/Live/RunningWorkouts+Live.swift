@@ -132,14 +132,17 @@ extension RunningWorkouts {
                 throw RepositoryError(message: "Unable to find existing run with ID: \(id)")
             }
 
-            let locations: [Cache.Location] = remoteDetail.locations.map { location in
-                .init(
-                    latitude: location.coordinate.latitude,
-                    longitude: location.coordinate.longitude,
-                    altitude: location.altitude,
-                    timestamp: location.timestamp
-                )
-            }
+            let locations: [Cache.Location] = remoteDetail
+                .locations
+                .sorted(by: { $0.timestamp < $1.timestamp })
+                .map { location in
+                    .init(
+                        latitude: location.coordinate.latitude,
+                        longitude: location.coordinate.longitude,
+                        altitude: location.altitude,
+                        timestamp: location.timestamp
+                    )
+                }
 
             let samples: [Cache.DistanceSample] = remoteDetail.samples.map { sample in
                 .init(
