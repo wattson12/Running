@@ -51,14 +51,15 @@ public struct RunDetailView: View {
 
 #Preview("Loading") {
     let run: Run = .mock(detail: nil)
-    let runWithDetail: Run = .mock(detail: .mock(locations: .loop))
+    var runWithDetail = run
+    runWithDetail.detail = .mock(locations: .loop)
     return NavigationStack {
         RunDetailView(
             store: .init(
                 initialState: .init(run: run),
                 reducer: RunDetailFeature.init,
                 withDependencies: {
-                    $0.repository.runningWorkouts._runDetail = { _ in
+                    $0.repository.runningWorkouts._runDetail = { [runWithDetail] _ in
                         try await Task.sleep(for: .seconds(1))
                         return runWithDetail
                     }
