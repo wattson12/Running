@@ -1,6 +1,6 @@
 import Foundation
 
-extension [Location] {
+public extension [Location] {
     static let loop: [Location] = [
         .init(coordinate: .init(latitude: 51.48195, longitude: -0.11246), altitude: .init(value: 0.0, unit: .meters), timestamp: .init(timeIntervalSinceReferenceDate: 719_436_386.817602)),
         .init(coordinate: .init(latitude: 51.48198, longitude: -0.11251), altitude: .init(value: 0.0, unit: .meters), timestamp: .init(timeIntervalSinceReferenceDate: 719_436_399.0903293)),
