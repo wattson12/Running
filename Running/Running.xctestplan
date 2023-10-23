@@ -26,13 +26,6 @@
     {
       "target" : {
         "containerPath" : "container:Packages",
-        "identifier" : "CacheTests",
-        "name" : "CacheTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Packages",
         "identifier" : "EditGoalTests",
         "name" : "EditGoalTests"
       }

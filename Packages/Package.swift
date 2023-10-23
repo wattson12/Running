@@ -286,11 +286,6 @@ let package = Package(
             dependencies: [.byName(name: .app)]
         ),
         .testTarget(
-            name: .cache.tests,
-            dependencies: [.byName(name: .cache)],
-            path: .coreTests(.cache)
-        ),
-        .testTarget(
             name: .model.tests,
             dependencies: [.byName(name: .model)],
             path: .coreTests(.model)

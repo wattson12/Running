@@ -13,3 +13,11 @@ strings:
     output: Packages/Sources/Core/Resources/Strings/Strings.swift
     params:
       publicAccess: true
+      
+coredata:
+  inputs: Packages/Sources/Core/Cache/Running.xcdatamodeld/
+  outputs:
+    templateName: swift5
+    output: Packages/Sources/Core/Cache/Generated/CoreData.swift
+    params:
+      publicAccess: true

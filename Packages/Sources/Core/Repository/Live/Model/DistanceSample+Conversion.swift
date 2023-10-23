@@ -3,10 +3,10 @@ import Foundation
 import Model
 
 extension Model.DistanceSample {
-    init(cached: Cache.DistanceSample) {
+    init(entity: Cache.DistanceSampleEntity) {
         self.init(
-            startDate: cached.startDate,
-            distance: .init(value: cached.distance, unit: .meters)
+            startDate: entity.startDate,
+            distance: .init(value: entity.distance, unit: .meters)
         )
     }
 }
