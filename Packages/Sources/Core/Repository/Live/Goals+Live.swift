@@ -1,4 +1,5 @@
 import Cache
+import CoreData
 import Dependencies
 import Foundation
 import Model
@@ -7,15 +8,14 @@ import SwiftData
 extension Goals {
     static func live() -> Self {
         @Dependency(\.swiftData) var swiftData
+        @Dependency(\.coreData) var coreData
 
         return .init(
             goal: { period in
-                let context = try swiftData.context()
-
-                return try .init(
-                    cached: Implementation.goal(
+                try .init(
+                    entity: Implementation.goal(
                         period: period.rawValue,
-                        in: context
+                        coreData: coreData
                     )
                 )
             },
@@ -53,6 +53,24 @@ extension Goals {
                 context.insert(goal)
                 try context.save()
                 return goal
+            }
+        }
+
+        static func goal(period: String, coreData: CoreDataStack) throws -> Cache.GoalEntity {
+            try coreData.performWork { context in
+                let fetchRequest = Cache.GoalEntity.makeFetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "period == %@", period)
+                let matchingGoals = try context.fetch(fetchRequest)
+
+                if let existingGoal = matchingGoals.first {
+                    return existingGoal
+                } else {
+                    let goal = Cache.GoalEntity(context: context)
+                    goal.period = period
+                    goal.target = nil
+                    try context.save()
+                    return goal
+                }
             }
         }
     }
