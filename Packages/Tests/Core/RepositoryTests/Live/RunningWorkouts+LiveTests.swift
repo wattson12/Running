@@ -425,13 +425,15 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let _ = try await sut.detail(for: id)
 
-        let savedRuns = try coreData.performWork { context in
+        try coreData.performWork { context in
             let fetchRequest = RunEntity.makeFetchRequest()
             fetchRequest.predicate = .init(format: "id == %@", id.uuidString)
-            return try context.fetch(fetchRequest)
+
+            let savedRuns = try context.fetch(fetchRequest)
+
+            let savedRun = try XCTUnwrap(savedRuns.first)
+            XCTAssertEqual(savedRun.detail?.locations.count, locationCount)
+            XCTAssertEqual(savedRun.detail?.distanceSamples.count, sampleCount)
         }
-        let savedRun = try XCTUnwrap(savedRuns.first)
-        XCTAssertEqual(savedRun.detail?.locations.count, locationCount)
-        XCTAssertEqual(savedRun.detail?.distanceSamples.count, sampleCount)
     }
 }

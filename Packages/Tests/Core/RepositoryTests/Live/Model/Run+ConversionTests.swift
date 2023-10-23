@@ -61,48 +61,47 @@ final class Run_ConversionTests: XCTestCase {
 
         let coreData: CoreDataStack = .stack(inMemory: true)
 
-        let cached = try coreData.performWork { context in
+        try coreData.performWork { context in
             let cached = RunEntity(context: context)
             cached.id = id
             cached.startDate = startDate
             cached.distance = distance
             cached.duration = duration
 
-            let location = LocationEntity(context: context)
-            location.latitude = 0
-            location.longitude = 0
-            location.altitude = .random(in: 1 ..< 1000)
-            location.timestamp = .now
+            let locationEntity = LocationEntity(context: context)
+            locationEntity.latitude = 0
+            locationEntity.longitude = 0
+            locationEntity.altitude = .random(in: 1 ..< 1000)
+            locationEntity.timestamp = .now
 
             let distanceSample = DistanceSampleEntity(context: context)
             distanceSample.startDate = .now
             distanceSample.distance = 1
 
             let runDetail = RunDetailEntity(context: context)
-            runDetail.locations = Set([location])
+            runDetail.locations = Set([locationEntity])
             runDetail.distanceSamples = Set([distanceSample])
 
             cached.detail = runDetail
-            return cached
+
+            let sut: Model.Run = .init(entity: cached)
+            XCTAssertEqual(sut.id, id)
+            XCTAssertEqual(sut.startDate, startDate)
+            XCTAssertEqual(sut.distance, .init(value: distance, unit: .meters))
+            XCTAssertEqual(sut.duration, .init(value: duration, unit: .seconds))
+
+            let detail = try XCTUnwrap(sut.detail)
+            XCTAssertEqual(detail.locations.count, 1)
+            let location = try XCTUnwrap(detail.locations.first)
+            XCTAssertEqual(location.coordinate.latitude, cached.detail?.locations.first?.latitude)
+            XCTAssertEqual(location.coordinate.longitude, cached.detail?.locations.first?.longitude)
+            XCTAssertEqual(location.altitude.converted(to: .meters).value, cached.detail?.locations.first?.altitude)
+            XCTAssertEqual(location.timestamp, cached.detail?.locations.first?.timestamp)
+
+            XCTAssertEqual(detail.distanceSamples.count, 1)
+            let sample = try XCTUnwrap(detail.distanceSamples.first)
+            XCTAssertEqual(sample.distance.converted(to: .meters).value, cached.detail?.distanceSamples.first?.distance)
+            XCTAssertEqual(sample.startDate, cached.detail?.distanceSamples.first?.startDate)
         }
-
-        let sut: Model.Run = .init(entity: cached)
-        XCTAssertEqual(sut.id, id)
-        XCTAssertEqual(sut.startDate, startDate)
-        XCTAssertEqual(sut.distance, .init(value: distance, unit: .meters))
-        XCTAssertEqual(sut.duration, .init(value: duration, unit: .seconds))
-
-        let detail = try XCTUnwrap(sut.detail)
-        XCTAssertEqual(detail.locations.count, 1)
-        let location = try XCTUnwrap(detail.locations.first)
-        XCTAssertEqual(location.coordinate.latitude, cached.detail?.locations.first?.latitude)
-        XCTAssertEqual(location.coordinate.longitude, cached.detail?.locations.first?.longitude)
-        XCTAssertEqual(location.altitude.converted(to: .meters).value, cached.detail?.locations.first?.altitude)
-        XCTAssertEqual(location.timestamp, cached.detail?.locations.first?.timestamp)
-
-        XCTAssertEqual(detail.distanceSamples.count, 1)
-        let sample = try XCTUnwrap(detail.distanceSamples.first)
-        XCTAssertEqual(sample.distance.converted(to: .meters).value, cached.detail?.distanceSamples.first?.distance)
-        XCTAssertEqual(sample.startDate, cached.detail?.distanceSamples.first?.startDate)
     }
 }

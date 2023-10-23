@@ -10,16 +10,14 @@ final class Goal_ConversionTests: XCTestCase {
 
         let coreData: CoreDataStack = .stack(inMemory: true)
 
-        let cached = try coreData.performWork { context in
+        try coreData.performWork { context in
             let goal = GoalEntity(context: context)
             goal.period = "monthly"
             goal.target = target
 
-            return goal
+            let sut: Model.Goal = .init(entity: goal)
+            XCTAssertEqual(sut.period, .monthly)
+            XCTAssertEqual(sut.target, .init(value: target, unit: .meters))
         }
-
-        let sut: Model.Goal = .init(entity: cached)
-        XCTAssertEqual(sut.period, .monthly)
-        XCTAssertEqual(sut.target, .init(value: target, unit: .meters))
     }
 }
