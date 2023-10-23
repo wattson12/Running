@@ -8,12 +8,17 @@ final class Goal_ConversionTests: XCTestCase {
     func testConversionFromCacheToModelGoal() throws {
         let target: Double = .random(in: 1 ..< 10000)
 
-        let swiftData: SwiftDataStack = .stack(inMemory: true)
-        let context = try swiftData.context()
-        let cached: Cache.Goal = .init(period: "monthly", target: target)
-        context.insert(cached)
+        let coreData: CoreDataStack = .stack(inMemory: true)
 
-        let sut: Model.Goal = .init(cached: cached)
+        let cached = try coreData.performWork { context in
+            let goal = GoalEntity(context: context)
+            goal.period = "monthly"
+            goal.target = target
+
+            return goal
+        }
+
+        let sut: Model.Goal = .init(entity: cached)
         XCTAssertEqual(sut.period, .monthly)
         XCTAssertEqual(sut.target, .init(value: target, unit: .meters))
     }

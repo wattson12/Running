@@ -59,32 +59,34 @@ final class Run_ConversionTests: XCTestCase {
         let distance: Double = .random(in: 1 ..< 10000)
         let duration: Double = .random(in: 1 ..< 10000)
 
-        let swiftData: SwiftDataStack = .stack(inMemory: true)
-        let context = try swiftData.context()
+        let coreData: CoreDataStack = .stack(inMemory: true)
 
-        let cached: Cache.Run = .init(
-            id: id,
-            startDate: startDate,
-            distance: distance,
-            duration: duration,
-            detail: .init(
-                locations: [
-                    .init(
-                        latitude: 0,
-                        longitude: 0,
-                        altitude: .random(in: 1 ..< 1000),
-                        timestamp: .now
-                    ),
-                ],
-                distanceSamples: [
-                    .init(startDate: .now, distance: 1),
-                ]
-            )
-        )
+        let cached = try coreData.performWork { context in
+            let cached = RunEntity(context: context)
+            cached.id = id
+            cached.startDate = startDate
+            cached.distance = distance
+            cached.duration = duration
 
-        context.insert(cached)
+            let location = LocationEntity(context: context)
+            location.latitude = 0
+            location.longitude = 0
+            location.altitude = .random(in: 1 ..< 1000)
+            location.timestamp = .now
 
-        let sut: Model.Run = .init(cached: cached)
+            let distanceSample = DistanceSampleEntity(context: context)
+            distanceSample.startDate = .now
+            distanceSample.distance = 1
+
+            let runDetail = RunDetailEntity(context: context)
+            runDetail.locations = Set([location])
+            runDetail.distanceSamples = Set([distanceSample])
+
+            cached.detail = runDetail
+            return cached
+        }
+
+        let sut: Model.Run = .init(entity: cached)
         XCTAssertEqual(sut.id, id)
         XCTAssertEqual(sut.startDate, startDate)
         XCTAssertEqual(sut.distance, .init(value: distance, unit: .meters))
