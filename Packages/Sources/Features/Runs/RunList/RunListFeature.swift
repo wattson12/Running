@@ -27,24 +27,24 @@ public struct RunListFeature: Reducer {
     }
 
     public struct State: Equatable {
-        var sections: [RunSection] = []
+        var runs: [Run] = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
         @PresentationState var destination: Destination.State?
 
         public init(
-            sections: [RunSection] = []
+            runs: [Run] = []
         ) {
-            self.sections = sections
+            self.runs = runs
         }
 
         init(
-            sections: [RunSection] = [],
+            runs: [Run] = [],
             isInitialImport: Bool = false,
             isLoading: Bool = false,
             destination: Destination.State? = nil
         ) {
-            self.sections = sections
+            self.runs = runs
             self.isInitialImport = isInitialImport
             self.isLoading = isLoading
             self.destination = destination
@@ -109,7 +109,7 @@ public struct RunListFeature: Reducer {
         case let .runsFetched(.success(runs)):
             clearInitialImportFlag(state: &state)
             state.isLoading = false
-            state.setSections(from: runs)
+            state.runs = runs
             return .merge(
                 .run { _ in widget.reloadAllTimelines() },
                 .send(.delegate(.runsRefreshed))
