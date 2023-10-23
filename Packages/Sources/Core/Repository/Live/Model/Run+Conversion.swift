@@ -38,4 +38,21 @@ extension Model.Run {
             }
         )
     }
+
+    init(entity: Cache.RunEntity) {
+        self.init(
+            id: entity.id,
+            startDate: entity.startDate,
+            distance: .init(value: entity.distance, unit: .meters),
+            duration: .init(value: entity.duration, unit: .seconds),
+            detail: entity.detail.map { detail in
+                .init(
+                    locations: detail.locations
+                        .sorted(by: { $0.timestamp! < $1.timestamp! })
+                        .map(Model.Location.init(entity:)),
+                    distanceSamples: detail.distanceSamples.map(Model.DistanceSample.init(entity:))
+                )
+            }
+        )
+    }
 }

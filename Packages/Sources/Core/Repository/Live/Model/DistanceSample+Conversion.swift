@@ -9,4 +9,11 @@ extension Model.DistanceSample {
             distance: .init(value: cached.distance, unit: .meters)
         )
     }
+
+    init(entity: Cache.DistanceSampleEntity) {
+        self.init(
+            startDate: entity.startDate,
+            distance: .init(value: entity.distance, unit: .meters)
+        )
+    }
 }
