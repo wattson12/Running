@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 
+@available(*, deprecated, message: "Use CoreDataStack instead")
 public struct SwiftDataStack {
     public var _context: () throws -> ModelContext
 
@@ -12,6 +13,7 @@ public struct SwiftDataStack {
 }
 
 public extension SwiftDataStack {
+    @available(*, deprecated, message: "Use CoreDataStack instead")
     func context() throws -> ModelContext {
         try _context()
     }

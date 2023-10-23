@@ -4,6 +4,7 @@ import SwiftData
 import XCTestDynamicOverlay
 
 public extension SwiftDataStack {
+    @available(*, deprecated, message: "Use CoreDataStack instead")
     static func stack(inMemory: Bool) -> SwiftDataStack {
         .init(
             context: {
@@ -29,6 +30,7 @@ enum SwiftDataStackDependencyKey: DependencyKey {
 }
 
 public extension DependencyValues {
+    @available(*, deprecated, message: "Use CoreDataStack instead")
     var swiftData: SwiftDataStack {
         get { self[SwiftDataStackDependencyKey.self] }
         set { self[SwiftDataStackDependencyKey.self] = newValue }
