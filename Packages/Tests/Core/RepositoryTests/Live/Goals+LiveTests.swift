@@ -7,12 +7,10 @@ import XCTest
 
 final class Goals_LiveTests: XCTestCase {
     func testGoalInPeriodWhenGoalDoesNotExist() throws {
-        let swiftData: SwiftDataStack = .stack(inMemory: true)
-        let context = try swiftData.context()
-        try context.delete(model: Cache.Goal.self)
+        let coreData: CoreDataStack = .stack(inMemory: true)
 
         let sut: Goals = withDependencies {
-            $0.swiftData = swiftData
+            $0.coreData = coreData
         } operation: {
             .live()
         }
@@ -23,16 +21,19 @@ final class Goals_LiveTests: XCTestCase {
     }
 
     func testGoalInPeriodWhenGoalExists() throws {
-        let swiftData: SwiftDataStack = .stack(inMemory: true)
-        let context = try swiftData.context()
+        let coreData: CoreDataStack = .stack(inMemory: true)
 
         let target: Double = .random(in: 1 ..< 10000)
-        let existingGoal = Cache.Goal(period: "weekly", target: target)
-        context.insert(existingGoal)
-        try context.save()
+
+        try coreData.performWork { context in
+            let existingGoal = Cache.GoalEntity(context: context)
+            existingGoal.period = "weekly"
+            existingGoal.target = target
+            try context.save()
+        }
 
         let sut: Goals = withDependencies {
-            $0.swiftData._context = { context }
+            $0.coreData = coreData
         } operation: {
             .live()
         }
@@ -43,16 +44,18 @@ final class Goals_LiveTests: XCTestCase {
     }
 
     func testUpdateGoalSetsNewTargetValueCorrectly() throws {
-        let swiftData: SwiftDataStack = .stack(inMemory: true)
-        let context = try swiftData.context()
+        let coreData: CoreDataStack = .stack(inMemory: true)
 
-        let originalTarget: Double = .random(in: 1 ..< 10000)
-        let existingGoal = Cache.Goal(period: "weekly", target: originalTarget)
-        context.insert(existingGoal)
-        try context.save()
+        try coreData.performWork { context in
+            let originalTarget: Double = .random(in: 1 ..< 10000)
+            let existingGoal = Cache.GoalEntity(context: context)
+            existingGoal.period = "weekly"
+            existingGoal.target = originalTarget
+            try context.save()
+        }
 
         let sut: Goals = withDependencies {
-            $0.swiftData._context = { context }
+            $0.coreData = coreData
         } operation: {
             .live()
         }

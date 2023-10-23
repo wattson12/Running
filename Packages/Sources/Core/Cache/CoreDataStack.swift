@@ -40,7 +40,7 @@ public struct CoreDataStack {
     }
 }
 
-extension CoreDataStack {
+public extension CoreDataStack {
     static func stack(inMemory: Bool) -> Self {
         let container: NSPersistentContainer = .container(inMemory: inMemory)
         return .init(
