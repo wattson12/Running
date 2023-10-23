@@ -44,7 +44,11 @@ public extension CoreDataStack {
     static func stack(inMemory: Bool) -> Self {
         let container: NSPersistentContainer = .container(inMemory: inMemory)
         return .init(
-            newContext: { container.newBackgroundContext() }
+            newContext: {
+                let context = container.newBackgroundContext()
+                context.automaticallyMergesChangesFromParent = true
+                return context
+            }
         )
     }
 }
