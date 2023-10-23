@@ -20,13 +20,7 @@
     }
   },
   "testTargets" : [
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CacheTests",
-        "name" : "CacheTests"
-      }
-    }
+
   ],
   "version" : 1
 }

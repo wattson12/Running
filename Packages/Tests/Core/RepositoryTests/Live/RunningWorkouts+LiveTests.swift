@@ -120,16 +120,17 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let allRuns = try await sut.allRunningWorkouts.remote()
 
-        let fetchedRuns = try coreData.performWork { context in
-            try context.fetch(Cache.RunEntity.makeFetchRequest())
-        }
-        let updatedRun = try XCTUnwrap(fetchedRuns.first)
-        XCTAssertEqual(updatedRun.distance, distance * 1000)
-        XCTAssertEqual(updatedRun.duration, duration * 60)
+        try coreData.performWork { context in
+            let fetchedRuns = try context.fetch(Cache.RunEntity.makeFetchRequest())
 
-        let firstRun = try XCTUnwrap(allRuns.first)
-        XCTAssertEqual(firstRun.detail?.locations.count, 1)
-        XCTAssertEqual(firstRun.detail?.distanceSamples.count, 1)
+            let updatedRun = try XCTUnwrap(fetchedRuns.first)
+            XCTAssertEqual(updatedRun.distance, distance * 1000)
+            XCTAssertEqual(updatedRun.duration, duration * 60)
+
+            let firstRun = try XCTUnwrap(allRuns.first)
+            XCTAssertEqual(firstRun.detail?.locations.count, 1)
+            XCTAssertEqual(firstRun.detail?.distanceSamples.count, 1)
+        }
     }
 
     func testFetchingRemoteRunsUpdatesValuesForExistingRunWithoutLocationOrDistanceSamples() async throws {
