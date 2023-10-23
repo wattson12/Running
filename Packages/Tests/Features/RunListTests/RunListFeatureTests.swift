@@ -32,31 +32,7 @@ final class RunListFeatureTests: XCTestCase {
 
         // fetch runs and setup sections on appearance
         await store.send(.view(.onAppear)) {
-            $0.sections = [
-                .init(
-                    id: .init(12),
-                    title: "Today",
-                    runs: [
-                        runs[4],
-                    ]
-                ),
-                .init(
-                    id: .init(12),
-                    title: "Yesterday",
-                    runs: [
-                        runs[3],
-                    ]
-                ),
-                .init(
-                    id: .init(12),
-                    title: "March 25",
-                    runs: [
-                        runs[2],
-                        runs[1],
-                        runs[0],
-                    ]
-                ),
-            ]
+            $0.runs = runs
             $0.isLoading = true
         }
 
@@ -100,16 +76,10 @@ final class RunListFeatureTests: XCTestCase {
         let run: Run = .mock()
         let store = TestStore(
             initialState: .init(
-                sections: [
-                    RunSection(
-                        id: .init(),
-                        title: UUID().uuidString,
-                        runs: [
-                            .mock(),
-                            run,
-                            .mock(),
-                        ]
-                    ),
+                runs: [
+                    .mock(),
+                    run,
+                    .mock(),
                 ]
             ),
             reducer: RunListFeature.init,
@@ -131,16 +101,10 @@ final class RunListFeatureTests: XCTestCase {
         let run: Run = .mock()
         let store = TestStore(
             initialState: .init(
-                sections: [
-                    RunSection(
-                        id: .init(),
-                        title: UUID().uuidString,
-                        runs: [
-                            .mock(),
-                            run,
-                            .mock(),
-                        ]
-                    ),
+                runs: [
+                    .mock(),
+                    run,
+                    .mock(),
                 ]
             ),
             reducer: RunListFeature.init,

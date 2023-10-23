@@ -6,12 +6,12 @@ import SwiftUI
 
 public struct RunListView: View {
     struct ViewState: Equatable {
-        let sections: [RunSection]
+        let runs: [Run]
         let isLoading: Bool
         let isInitialImport: Bool
 
         init(state: RunListFeature.State) {
-            sections = state.sections
+            runs = state.runs
             isLoading = state.isLoading
             isInitialImport = state.isInitialImport
         }
@@ -34,36 +34,13 @@ public struct RunListView: View {
             send: RunListFeature.Action.view
         ) { viewStore in
             VStack {
-                if !viewStore.sections.isEmpty {
+                if !viewStore.runs.isEmpty {
                     List {
-                        ForEach(viewStore.sections) { section in
-                            Section(
-                                content: {
-                                    ForEach(section.runs) { run in
-                                        RunListItemView(
-                                            run: run,
-                                            tapped: {
-                                                viewStore.send(.runTapped(run))
-                                            }
-                                        )
-                                    }
-                                },
-                                header: {
-                                    HStack {
-                                        Text(section.title)
-                                            .font(.title2)
-                                            .foregroundColor(.primary)
-                                            .textCase(nil)
-
-                                        Spacer()
-
-                                        if section.runs.count > 1 {
-                                            Text(section.distance.fullValue(locale: locale))
-                                                .font(.caption2)
-                                                .foregroundColor(.secondary)
-                                                .textCase(nil)
-                                        }
-                                    }
+                        ForEach(viewStore.runs) { run in
+                            RunListItemView(
+                                run: run,
+                                tapped: {
+                                    viewStore.send(.runTapped(run))
                                 }
                             )
                         }
