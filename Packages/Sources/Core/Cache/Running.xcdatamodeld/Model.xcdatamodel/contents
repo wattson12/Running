@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="22G91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
-    <entity name="DistanceSampleEntity" representedClassName="DistanceSampleEntity" syncable="YES">
+    <entity name="DistanceSampleEntity" representedClassName="Cache.DistanceSampleEntity" syncable="YES">
         <attribute name="distance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="startDate" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="runDetail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RunDetailEntity" inverseName="distanceSamples" inverseEntity="RunDetailEntity"/>
     </entity>
-    <entity name="GoalEntity" representedClassName="GoalEntity" syncable="YES">
+    <entity name="GoalEntity" representedClassName="Cache.GoalEntity" syncable="YES">
         <attribute name="period" attributeType="String"/>
         <attribute name="target" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="LocationEntity" representedClassName="LocationEntity" syncable="YES">
+    <entity name="LocationEntity" representedClassName="Cache.LocationEntity" syncable="YES">
         <attribute name="altitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="runDetail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RunDetailEntity" inverseName="locations" inverseEntity="RunDetailEntity"/>
     </entity>
-    <entity name="RunDetailEntity" representedClassName="RunDetailEntity" syncable="YES">
+    <entity name="RunDetailEntity" representedClassName="Cache.RunDetailEntity" syncable="YES">
         <relationship name="distanceSamples" toMany="YES" deletionRule="Nullify" destinationEntity="DistanceSampleEntity" inverseName="runDetail" inverseEntity="DistanceSampleEntity"/>
         <relationship name="locations" toMany="YES" deletionRule="Nullify" destinationEntity="LocationEntity" inverseName="runDetail" inverseEntity="LocationEntity"/>
         <relationship name="run" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RunEntity" inverseName="detail" inverseEntity="RunEntity"/>
     </entity>
-    <entity name="RunEntity" representedClassName="RunEntity" syncable="YES">
+    <entity name="RunEntity" representedClassName="Cache.RunEntity" syncable="YES">
         <attribute name="distance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="duration" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
