@@ -7,8 +7,7 @@ extension Model.Location {
         self.init(
             coordinate: .init(latitude: entity.latitude, longitude: entity.longitude),
             altitude: .init(value: entity.altitude, unit: .meters),
-            timestamp: entity.timestamp!
+            timestamp: entity.timestamp
         )
-        #warning("timestamp shouldnt be optional")
     }
 }

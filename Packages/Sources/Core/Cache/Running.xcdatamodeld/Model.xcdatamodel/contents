@@ -13,7 +13,7 @@
         <attribute name="altitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="runDetail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RunDetailEntity" inverseName="locations" inverseEntity="RunDetailEntity"/>
     </entity>
     <entity name="RunDetailEntity" representedClassName="Cache.RunDetailEntity" syncable="YES">

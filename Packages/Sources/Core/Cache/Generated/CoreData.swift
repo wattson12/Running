@@ -101,7 +101,7 @@ public final class LocationEntity: NSManagedObject {
     @NSManaged public var altitude: Double
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
-    @NSManaged public var timestamp: Date?
+    @NSManaged public var timestamp: Date
     @NSManaged public var runDetail: RunDetailEntity?
     // swiftlint:enable discouraged_optional_boolean discouraged_optional_collection implicit_getter
 }
