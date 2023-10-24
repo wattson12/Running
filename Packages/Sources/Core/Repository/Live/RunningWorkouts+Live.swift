@@ -51,7 +51,7 @@ extension RunningWorkouts {
                 return try coreData.performWork { context in
                     let fetchRequest = Cache.RunEntity.makeFetchRequest()
                     fetchRequest.sortDescriptors = [
-                        .init(keyPath: \Cache.RunEntity.startDate, ascending: true),
+                        .init(keyPath: \Cache.RunEntity.startDate, ascending: false),
                     ]
                     let runs = try context.fetch(fetchRequest)
                     return runs.isEmpty ? nil : runs.map(Model.Run.init(entity:))
@@ -173,7 +173,7 @@ extension RunningWorkouts {
                 let fetchRequest = RunEntity.makeFetchRequest()
                 fetchRequest.predicate = .init(format: "startDate >= %@ && startDate < %@", start as NSDate, end as NSDate)
                 fetchRequest.sortDescriptors = [
-                    .init(keyPath: \RunEntity.startDate, ascending: true),
+                    .init(keyPath: \RunEntity.startDate, ascending: false),
                 ]
 
                 return try context.fetch(fetchRequest).map(Run.init(entity:))
