@@ -9,6 +9,10 @@ extension NSPersistentContainer {
             fatalError("Error loading model from bundle")
         }
 
+        guard let fileContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.io.samwatts.runningstats") else {
+            fatalError("Shared file container could not be created.")
+        }
+
         guard let mom = NSManagedObjectModel(contentsOf: modelURL) else {
             fatalError("Error initializing mom from: \(modelURL)")
         }
@@ -17,6 +21,9 @@ extension NSPersistentContainer {
 
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        } else {
+            let storeURL = fileContainer.appendingPathComponent("Running.sqlite")
+            container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: storeURL)]
         }
 
         container.loadPersistentStores(completionHandler: { _, error in
