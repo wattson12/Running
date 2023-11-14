@@ -6,8 +6,10 @@ import Model
 import Repository
 import Widgets
 
-public struct GoalListFeature: Reducer {
-    public struct Destination: Reducer {
+@Reducer
+public struct GoalListFeature {
+    @Reducer
+    public struct Destination {
         public enum State: Equatable {
             case editGoal(EditGoalFeature.State)
             case detail(GoalDetailFeature.State)
@@ -174,7 +176,7 @@ public struct GoalListFeature: Reducer {
                 return destination(action, state: &state)
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) { Destination() }
+        .ifLet(\.$destination, action: \.destination) { Destination() }
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {

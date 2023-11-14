@@ -2,7 +2,8 @@ import ComposableArchitecture
 import Foundation
 import Model
 
-public struct GoalDetailFeature: Reducer {
+@Reducer
+public struct GoalDetailFeature {
     public struct State: Equatable {
         let goal: Goal
         var runs: [Run]?
@@ -20,10 +21,12 @@ public struct GoalDetailFeature: Reducer {
     }
 
     public enum Action: Equatable {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
         }
 
+        @CasePathable
         public enum Internal: Equatable {
             case runsFetched(TaskResult<[Run]>)
         }

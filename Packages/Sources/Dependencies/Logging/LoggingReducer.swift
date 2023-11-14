@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import Foundation
 
-public struct _LoggingReducer<R: Reducer>: Reducer {
+@Reducer
+public struct _LoggingReducer<R: Reducer> {
     let base: R
 
     public init(base: R) {

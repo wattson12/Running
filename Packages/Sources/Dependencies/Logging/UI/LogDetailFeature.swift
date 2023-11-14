@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import Foundation
 
-public struct LogDetailFeature: Reducer {
+@Reducer
+public struct LogDetailFeature {
     public struct State: Equatable {
         struct IndexedElement: Equatable, Identifiable {
             let label: String

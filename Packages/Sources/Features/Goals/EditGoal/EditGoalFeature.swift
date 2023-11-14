@@ -3,7 +3,8 @@ import Foundation
 import Model
 import Repository
 
-public struct EditGoalFeature: Reducer {
+@Reducer
+public struct EditGoalFeature {
     public struct State: Equatable {
         let period: Goal.Period
         let initialGoal: Goal

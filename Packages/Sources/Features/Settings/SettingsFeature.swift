@@ -14,8 +14,10 @@ public extension Bool {
     }
 }
 
-public struct SettingsFeature: Reducer {
-    public struct Destination: Reducer {
+@Reducer
+public struct SettingsFeature {
+    @Reducer
+    public struct Destination {
         public enum State: Equatable {
             case logging(LogListFeature.State)
         }
@@ -80,7 +82,7 @@ public struct SettingsFeature: Reducer {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
+        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {

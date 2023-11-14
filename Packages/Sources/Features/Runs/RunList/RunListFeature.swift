@@ -11,8 +11,10 @@ extension String {
     static let initialImportCompleted: Self = "initial_import_completed"
 }
 
-public struct RunListFeature: Reducer {
-    public struct Destination: Reducer {
+@Reducer
+public struct RunListFeature {
+    @Reducer
+    public struct Destination {
         public enum State: Equatable {
             case detail(RunDetailFeature.State)
         }
@@ -90,7 +92,7 @@ public struct RunListFeature: Reducer {
                 return destination(action, state: &state)
             }
         }
-        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
+        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {

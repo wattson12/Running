@@ -3,7 +3,8 @@ import Foundation
 import Repository
 import SwiftUI
 
-struct UpdatedGoalPreviewWrapperFeature: Reducer {
+@Reducer
+struct UpdatedGoalPreviewWrapperFeature {
     struct State: Equatable {
         var goalList: GoalListFeature.State
     }
