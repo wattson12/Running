@@ -2,7 +2,8 @@ import ComposableArchitecture
 import Foundation
 import Model
 
-public struct GoalDetailFeature: Reducer {
+@Reducer
+public struct GoalDetailFeature {
     public struct State: Equatable {
         let goal: Goal
         var runs: [Run]?

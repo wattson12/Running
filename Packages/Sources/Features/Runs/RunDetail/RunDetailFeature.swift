@@ -3,7 +3,8 @@ import Foundation
 import Model
 import Repository
 
-public struct RunDetailFeature: Reducer {
+@Reducer
+public struct RunDetailFeature {
     public struct State: Equatable {
         var run: Run
         var isLoading: Bool

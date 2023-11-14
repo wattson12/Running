@@ -7,8 +7,10 @@ import Repository
 import RunList
 import Settings
 
-public struct AppFeature: Reducer {
-    public struct Destination: Reducer {
+@Reducer
+public struct AppFeature {
+    @Reducer
+    public struct Destination {
         public enum State: Equatable {
             case settings(SettingsFeature.State)
         }
@@ -97,8 +99,8 @@ public struct AppFeature: Reducer {
                 return destination(action, state: &state)
             }
         }
-        .ifLet(\.permissions, action: /Action.permissions) { PermissionsFeature() }
-        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
+        .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
+        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
 
         Scope(
             state: \.runList,

@@ -2,7 +2,8 @@ import ComposableArchitecture
 import Foundation
 import Model
 
-public struct PermissionsFeature: Reducer {
+@Reducer
+public struct PermissionsFeature {
     public struct Empty: Equatable {
         init(_ _: Void) {}
     }
