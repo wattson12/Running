@@ -21,10 +21,12 @@ public struct GoalDetailFeature {
     }
 
     public enum Action: Equatable {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
         }
 
+        @CasePathable
         public enum Internal: Equatable {
             case runsFetched(TaskResult<[Run]>)
         }

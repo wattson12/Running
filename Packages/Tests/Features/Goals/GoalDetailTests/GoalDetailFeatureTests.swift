@@ -39,7 +39,7 @@ final class GoalDetailFeatureTests: XCTestCase {
             $0.runs = runs
         }
 
-        await store.receive(._internal(.runsFetched(.success(runs))))
+        await store.receive(\._internal.runsFetched.success)
     }
 
     func testFailureWhenFetchingRuns() async throws {
