@@ -83,6 +83,13 @@ public struct SettingsView: View {
                         )
 
                         Section(
+                            header: Text("Cache"),
+                            content: {
+                                Button("Delete all runs") { viewStore.send(.view(.deleteAllRunsTapped)) }
+                            }
+                        )
+
+                        Section(
                             header: Text(L10n.Settings.Section.Debug.title),
                             footer: debugSectionGestureView {
                                 viewStore.send(.view(.hiddenAreaGestureFired))

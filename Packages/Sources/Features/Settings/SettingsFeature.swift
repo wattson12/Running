@@ -1,4 +1,6 @@
+import Cache
 import ComposableArchitecture
+import CoreData
 import DependenciesAdditions
 import FeatureFlags
 import Foundation
@@ -54,6 +56,7 @@ public struct SettingsFeature {
             case hiddenAreaGestureFired
             case showLoggingButtonTapped
             case loggingDisplayed(Bool)
+            case deleteAllRunsTapped
         }
 
         case view(View)
@@ -64,6 +67,7 @@ public struct SettingsFeature {
     @Dependency(\.bundleInfo) var bundleInfo
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.featureFlags) var featureFlags
+    @Dependency(\.coreData) var coreData
 
     public init() {}
 
@@ -101,6 +105,18 @@ public struct SettingsFeature {
         case let .loggingDisplayed(displayed):
             state.loggingDisplayed = displayed
             return .none
+        case .deleteAllRunsTapped:
+            return .run { _ in
+                try coreData.performWork { context in
+                    let allRunsFetchRequest = RunEntity.makeFetchRequest()
+                    let allRuns = try context.fetch(allRunsFetchRequest)
+                    print("deleting", allRuns.count, "runs")
+                    for run in allRuns {
+                        context.delete(run)
+                    }
+                    try context.save()
+                }
+            }
         }
     }
 }
