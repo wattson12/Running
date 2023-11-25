@@ -259,6 +259,7 @@ let package = Package(
                 .target(name: .designSystem),
                 .target(name: .logging),
                 .target(name: .featureFlags),
+                .target(name: .cache),
             ],
             path: .feature(.settings)
         ),
