@@ -6,6 +6,7 @@ import PackageDescription
 extension Target.Dependency {
     static let composableArchitecture: Self = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
     static let dependencies: Self = .product(name: "Dependencies", package: "swift-dependencies")
+    static let dependenciesMacros: Self = .product(name: "DependenciesMacros", package: "swift-dependencies")
     static let dependenciesAdditions: Self = .product(name: "DependenciesAdditions", package: "swift-dependencies-additions")
     static let urlRouting: Self = .product(name: "URLRouting", package: "swift-url-routing")
 }
@@ -210,6 +211,8 @@ let package = Package(
             name: .cache,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
+                
             ],
             path: .core(.cache)
         ),

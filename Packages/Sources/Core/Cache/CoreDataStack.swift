@@ -1,4 +1,5 @@
 import CoreData
+import DependenciesMacros
 import Foundation
 
 extension NSPersistentContainer {
@@ -37,8 +38,9 @@ extension NSPersistentContainer {
     }
 }
 
+@DependencyClient
 public struct CoreDataStack {
-    var _newContext: () -> NSManagedObjectContext
+    var _newContext: () -> NSManagedObjectContext = { .init(concurrencyType: .privateQueueConcurrencyType) }
 
     init(
         newContext: @escaping () -> NSManagedObjectContext

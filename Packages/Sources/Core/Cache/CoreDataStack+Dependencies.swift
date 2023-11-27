@@ -5,9 +5,7 @@ import XCTestDynamicOverlay
 enum CoreDataStackDependencyKey: DependencyKey {
     static var liveValue: CoreDataStack = .stack(inMemory: false)
     static var previewValue: CoreDataStack = .stack(inMemory: true)
-    static var testValue: CoreDataStack = .init(
-        newContext: unimplemented("CoreDataStack.newContext")
-    )
+    static var testValue: CoreDataStack = .init()
 }
 
 public extension DependencyValues {
