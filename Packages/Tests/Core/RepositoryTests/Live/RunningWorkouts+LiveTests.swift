@@ -168,6 +168,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         let fetchedRuns = try coreData.performWork { context in
             try context.fetch(RunEntity.makeFetchRequest())
         }
+
         let updatedRun = try XCTUnwrap(fetchedRuns.first)
         XCTAssertEqual(updatedRun.distance, distance * 1000)
         XCTAssertEqual(updatedRun.duration, duration * 60)

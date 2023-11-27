@@ -3,10 +3,7 @@ import Foundation
 import XCTestDynamicOverlay
 
 enum WidgetDependencyDependencyKey: TestDependencyKey {
-    static var testValue: WidgetDependency = .init(
-        reloadTimelines: unimplemented("WidgetDependency.reloadTimelines"),
-        reloadAllTimelines: unimplemented("WidgetDependency.reloadAllTimelines")
-    )
+    static var testValue: WidgetDependency = .init()
 
     static var previewValue: WidgetDependency = .init(
         reloadTimelines: { _ in },

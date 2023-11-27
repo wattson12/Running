@@ -1,6 +1,8 @@
+import DependenciesMacros
 import Foundation
 import HealthKit
 
+@DependencyClient
 public struct HealthKitObservation: Sendable {
     public var _enableBackgroundDelivery: @Sendable () async throws -> Void
     public var _observeWorkouts: @Sendable () async throws -> Void

@@ -7,8 +7,5 @@ extension HealthKitObservation {
         observeWorkouts: {}
     )
 
-    static var testValue: HealthKitObservation = .init(
-        enableBackgroundDelivery: unimplemented("HealthKitObservation.enableBackgroundDelivery"),
-        observeWorkouts: unimplemented("HealthKitObservation.observeWorkouts")
-    )
+    static var testValue: HealthKitObservation = .init()
 }

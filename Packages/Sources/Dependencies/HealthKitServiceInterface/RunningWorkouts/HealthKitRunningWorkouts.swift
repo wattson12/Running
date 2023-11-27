@@ -1,4 +1,5 @@
 import CoreLocation
+import DependenciesMacros
 import Foundation
 import HealthKit
 
@@ -15,6 +16,7 @@ public struct WorkoutDetail: Equatable {
     }
 }
 
+@DependencyClient
 public struct HealthKitRunningWorkouts: Sendable {
     public var _allRunningWorkouts: @Sendable () async throws -> [WorkoutType]
     public var _detail: @Sendable (UUID) async throws -> WorkoutDetail

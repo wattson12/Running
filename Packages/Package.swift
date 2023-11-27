@@ -142,6 +142,7 @@ let package = Package(
             name: .healthKitServiceInterface,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
                 .target(name: .model),
             ],
             path: .dependencies(.healthKitServiceInterface)
@@ -159,6 +160,7 @@ let package = Package(
             name: .widgets,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
             ],
             path: .dependencies(.widgets)
         ),
