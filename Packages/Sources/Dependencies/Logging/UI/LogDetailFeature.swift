@@ -3,6 +3,7 @@ import Foundation
 
 @Reducer
 public struct LogDetailFeature {
+    @ObservableState
     public struct State: Equatable {
         struct IndexedElement: Equatable, Identifiable {
             let label: String

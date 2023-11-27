@@ -28,6 +28,7 @@ public struct RunListFeature {
         }
     }
 
+    @ObservableState
     public struct State: Equatable {
         var runs: [Run] = []
         var isInitialImport: Bool = false

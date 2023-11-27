@@ -11,25 +11,19 @@ public struct PermissionsView: View {
     }
 
     public var body: some View {
-        WithViewStore(
-            store,
-            observe: \.state,
-            send: PermissionsFeature.Action.view
-        ) { viewStore in
-            VStack {
-                switch viewStore.state {
-                case .initial:
-                    Color.clear
-                        .onAppear { viewStore.send(.onAppear) }
-                case .requestPermissions:
-                    RequestPermissionsView(
-                        requestPermissionsTapped: {
-                            viewStore.send(.requestPermissionsButtonTapped)
-                        }
-                    )
-                case .healthKitNotAvailable:
-                    HealthKitNotAvailableView()
-                }
+        VStack {
+            switch store.state.state {
+            case .initial:
+                Color.clear
+                    .onAppear { store.send(.view(.onAppear)) }
+            case .requestPermissions:
+                RequestPermissionsView(
+                    requestPermissionsTapped: {
+                        store.send(.view(.requestPermissionsButtonTapped))
+                    }
+                )
+            case .healthKitNotAvailable:
+                HealthKitNotAvailableView()
             }
         }
     }

@@ -4,16 +4,6 @@ import Repository
 import SwiftUI
 
 public struct RunDetailView: View {
-    struct ViewState: Equatable {
-        let run: Run
-        let isLoading: Bool
-
-        init(state: RunDetailFeature.State) {
-            run = state.run
-            isLoading = state.isLoading
-        }
-    }
-
     let store: StoreOf<RunDetailFeature>
 
     public init(
@@ -23,29 +13,23 @@ public struct RunDetailView: View {
     }
 
     public var body: some View {
-        WithViewStore(
-            store,
-            observe: ViewState.init,
-            send: RunDetailFeature.Action.view
-        ) { viewStore in
-            VStack {
-                Text(viewStore.run.distance.formatted())
+        VStack {
+            Text(store.run.distance.formatted())
 
-                if let locations = viewStore.run.detail?.locations {
-                    RouteView(locations: locations)
-                        .frame(height: 200)
-                }
-
-                if viewStore.isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                }
-
-                Spacer()
+            if let locations = store.run.detail?.locations {
+                RouteView(locations: locations)
+                    .frame(height: 200)
             }
-            .onAppear { viewStore.send(.onAppear) }
-            .navigationTitle("Run")
+
+            if store.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
+
+            Spacer()
         }
+        .onAppear { store.send(.view(.onAppear)) }
+        .navigationTitle("Run")
     }
 }
 

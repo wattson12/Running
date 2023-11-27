@@ -5,18 +5,6 @@ import RunDetail
 import SwiftUI
 
 public struct RunListView: View {
-    struct ViewState: Equatable {
-        let runs: [Run]
-        let isLoading: Bool
-        let isInitialImport: Bool
-
-        init(state: RunListFeature.State) {
-            runs = state.runs
-            isLoading = state.isLoading
-            isInitialImport = state.isInitialImport
-        }
-    }
-
     let store: StoreOf<RunListFeature>
 
     @Environment(\.locale) var locale
@@ -28,44 +16,38 @@ public struct RunListView: View {
     }
 
     public var body: some View {
-        WithViewStore(
-            store,
-            observe: ViewState.init,
-            send: RunListFeature.Action.view
-        ) { viewStore in
-            VStack {
-                if !viewStore.runs.isEmpty {
-                    List {
-                        ForEach(viewStore.runs) { run in
-                            RunListItemView(
-                                run: run,
-                                tapped: {
-                                    viewStore.send(.runTapped(run))
-                                }
-                            )
-                        }
+        VStack {
+            if !store.runs.isEmpty {
+                List {
+                    ForEach(store.runs) { run in
+                        RunListItemView(
+                            run: run,
+                            tapped: {
+                                store.send(.view(.runTapped(run)))
+                            }
+                        )
                     }
-                    .navigationDestination(
-                        store: store.scope(
-                            state: \.$destination.detail,
-                            action: \.destination.detail
-                        ),
-                        destination: RunDetailView.init
-                    )
-                } else if viewStore.isInitialImport {
-                    InitialImportView()
-                } else if !viewStore.isLoading {
-                    EmptyView()
                 }
+                .navigationDestination(
+                    store: store.scope(
+                        state: \.$destination.detail,
+                        action: \.destination.detail
+                    ),
+                    destination: RunDetailView.init
+                )
+            } else if store.isInitialImport {
+                InitialImportView()
+            } else if !store.isLoading {
+                EmptyView()
             }
-            .onAppear { viewStore.send(.onAppear) }
-            .navigationTitle(L10n.App.Feature.runs)
-            .toolbar {
-                if viewStore.isLoading {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                    }
+        }
+        .onAppear { store.send(.view(.onAppear)) }
+        .navigationTitle(L10n.App.Feature.runs)
+        .toolbar {
+            if store.isLoading {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ProgressView()
+                        .progressViewStyle(.circular)
                 }
             }
         }
