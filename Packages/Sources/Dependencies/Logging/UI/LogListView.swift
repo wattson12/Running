@@ -2,14 +2,6 @@ import ComposableArchitecture
 import SwiftUI
 
 public struct LogListView: View {
-    struct ViewState: Equatable {
-        let logs: [ActionLog]
-
-        init(state: LogListFeature.State) {
-            logs = state.logs
-        }
-    }
-
     let store: StoreOf<LogListFeature>
 
     public init(
@@ -19,53 +11,47 @@ public struct LogListView: View {
     }
 
     public var body: some View {
-        WithViewStore(
-            store,
-            observe: ViewState.init,
-            send: LogListFeature.Action.view
-        ) { viewStore in
-            NavigationStack {
-                List(viewStore.logs) { log in
+        NavigationStack {
+            List(store.logs) { log in
+                Button(
+                    action: {
+                        store.send(.view(.logTapped(log)))
+                    },
+                    label: {
+                        LogListRow(log: log)
+                    }
+                )
+                .buttonStyle(.plain)
+            }
+            .navigationDestination(
+                store: store.scope(
+                    state: \.$destination.detail,
+                    action: \.destination.detail
+                ),
+                destination: LogDetailView.init
+            )
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(
                         action: {
-                            viewStore.send(.logTapped(log))
+                            store.send(.view(.refreshButtonTapped))
                         },
                         label: {
-                            LogListRow(log: log)
+                            Image(systemName: "arrow.counterclockwise")
                         }
                     )
-                    .buttonStyle(.plain)
                 }
-                .navigationDestination(
-                    store: store.scope(
-                        state: \.$destination.detail,
-                        action: \.destination.detail
-                    ),
-                    destination: LogDetailView.init
-                )
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(
-                            action: {
-                                viewStore.send(.refreshButtonTapped)
-                            },
-                            label: {
-                                Image(systemName: "arrow.counterclockwise")
-                            }
-                        )
-                    }
 
-                    ToolbarItem(placement: .topBarTrailing) {
-                        ShareLink(
-                            item: viewStore.logs,
-                            preview: SharePreview("Exported Logs")
-                        )
-                    }
+                ToolbarItem(placement: .topBarTrailing) {
+                    ShareLink(
+                        item: store.logs,
+                        preview: SharePreview("Exported Logs")
+                    )
                 }
-                .navigationTitle("Logs")
             }
-            .onAppear { viewStore.send(.onAppear) }
+            .navigationTitle("Logs")
         }
+        .onAppear { store.send(.view(.onAppear)) }
     }
 }
 
