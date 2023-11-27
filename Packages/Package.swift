@@ -175,6 +175,7 @@ let package = Package(
             dependencies: [
                 .dependencies,
                 .dependenciesAdditions,
+                .dependenciesMacros,
             ],
             path: .dependencies(.featureFlags)
         ),
