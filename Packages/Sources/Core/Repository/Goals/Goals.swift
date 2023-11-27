@@ -1,6 +1,8 @@
+import DependenciesMacros
 import Foundation
 import Model
 
+@DependencyClient
 public struct Goals {
     public var _goal: (Goal.Period) throws -> Goal
     public var _updateGoal: (Goal) throws -> Void

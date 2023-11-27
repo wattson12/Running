@@ -194,6 +194,7 @@ let package = Package(
             name: .repository,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
                 .target(name: .model),
                 .target(name: .healthKitServiceInterface),
                 .target(name: .cache),

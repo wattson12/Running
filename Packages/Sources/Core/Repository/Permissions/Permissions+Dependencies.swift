@@ -6,8 +6,5 @@ extension Permissions {
         requestAuthorization: {}
     )
 
-    static var testValue: Permissions = .init(
-        authorizationRequestStatus: unimplemented("Permissions.authorizationRequestStatus", placeholder: .unknown),
-        requestAuthorization: unimplemented("Permissions.requestAuthorization")
-    )
+    static var testValue: Permissions = .init()
 }
