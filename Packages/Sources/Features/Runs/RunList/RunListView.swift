@@ -47,11 +47,9 @@ public struct RunListView: View {
                     }
                     .navigationDestination(
                         store: store.scope(
-                            state: \.$destination,
-                            action: RunListFeature.Action.destination
+                            state: \.$destination.detail,
+                            action: \.destination.detail
                         ),
-                        state: /RunListFeature.Destination.State.detail,
-                        action: RunListFeature.Destination.Action.detail,
                         destination: RunDetailView.init
                     )
                 } else if viewStore.isInitialImport {

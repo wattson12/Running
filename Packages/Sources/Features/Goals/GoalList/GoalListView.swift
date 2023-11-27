@@ -82,20 +82,16 @@ public struct GoalListView: View {
             .onAppear { viewStore.send(.onAppear) }
             .navigationDestination(
                 store: store.scope(
-                    state: \.$destination,
-                    action: GoalListFeature.Action.destination
+                    state: \.$destination.detail,
+                    action: \.destination.detail
                 ),
-                state: /GoalListFeature.Destination.State.detail,
-                action: GoalListFeature.Destination.Action.detail,
                 destination: GoalDetailView.init
             )
             .sheet(
                 store: store.scope(
-                    state: \.$destination,
-                    action: GoalListFeature.Action.destination
+                    state: \.$destination.editGoal,
+                    action: \.destination.editGoal
                 ),
-                state: /GoalListFeature.Destination.State.editGoal,
-                action: GoalListFeature.Destination.Action.editGoal,
                 content: { store in
                     EditGoalView(store: store)
                         .presentationDetents([.medium])

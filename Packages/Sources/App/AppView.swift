@@ -62,11 +62,9 @@ public struct AppView: View {
                             }
                             .sheet(
                                 store: store.scope(
-                                    state: \.$destination,
-                                    action: AppFeature.Action.destination
+                                    state: \.$destination.settings,
+                                    action: \.destination.settings
                                 ),
-                                state: /AppFeature.Destination.State.settings,
-                                action: AppFeature.Destination.Action.settings,
                                 content: SettingsView.init
                             )
                         }

@@ -38,11 +38,9 @@ public struct LogListView: View {
                 }
                 .navigationDestination(
                     store: store.scope(
-                        state: \.$destination,
-                        action: LogListFeature.Action.destination
+                        state: \.$destination.detail,
+                        action: \.destination.detail
                     ),
-                    state: /LogListFeature.Destination.State.detail,
-                    action: LogListFeature.Destination.Action.detail,
                     destination: LogDetailView.init
                 )
                 .toolbar {
