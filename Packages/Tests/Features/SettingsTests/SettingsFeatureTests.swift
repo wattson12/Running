@@ -66,11 +66,11 @@ final class SettingsFeatureTests: XCTestCase {
 
         store.exhaustivity = .off
 
-        await store.send(.binding(.set(\.$showRunDetailFeatureFlag, true)))
+        await store.send(.binding(.set(\.showRunDetailFeatureFlag, true)))
 
         XCTAssertEqual(lastSetValue.value, true)
 
-        await store.send(.binding(.set(\.$showRunDetailFeatureFlag, false)))
+        await store.send(.binding(.set(\.showRunDetailFeatureFlag, false)))
 
         XCTAssertEqual(lastSetValue.value, false)
     }

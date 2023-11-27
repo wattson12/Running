@@ -4,6 +4,7 @@ import Model
 
 @Reducer
 public struct GoalDetailFeature {
+    @ObservableState
     public struct State: Equatable {
         let goal: Goal
         var runs: [Run]?

@@ -33,6 +33,7 @@ public struct SettingsFeature {
         }
     }
 
+    @ObservableState
     public struct State: Equatable {
         var versionNumber: String = ""
         var buildNumber: String = ""
@@ -41,7 +42,7 @@ public struct SettingsFeature {
         var debugSectionVisible: Bool
         var loggingDisplayed: Bool = false
 
-        @BindingState var showRunDetailFeatureFlag: Bool = false
+        var showRunDetailFeatureFlag: Bool = false
 
         @PresentationState var destination: Destination.State?
 
@@ -77,7 +78,7 @@ public struct SettingsFeature {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
-            case .binding(\.$showRunDetailFeatureFlag):
+            case .binding(\.showRunDetailFeatureFlag):
                 featureFlags[.showRunDetail] = state.showRunDetailFeatureFlag
                 return .none
             case .binding:

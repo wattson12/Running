@@ -4,25 +4,7 @@ import Resources
 import SwiftUI
 
 public struct SettingsView: View {
-    struct ViewState: Equatable {
-        let versionNumber: String
-        let buildNumber: String
-        let acknowledgements: [Acknowledgement]
-        let debugSectionVisible: Bool
-        let loggingDisplayed: Bool
-        @BindingViewState var showRunDetail: Bool
-
-        init(state: BindingViewStore<SettingsFeature.State>) {
-            versionNumber = state.versionNumber
-            buildNumber = state.buildNumber
-            acknowledgements = state.acknowledgements.elements
-            debugSectionVisible = state.debugSectionVisible
-            loggingDisplayed = state.loggingDisplayed
-            _showRunDetail = state.$showRunDetailFeatureFlag
-        }
-    }
-
-    let store: StoreOf<SettingsFeature>
+    @State var store: StoreOf<SettingsFeature>
 
     public init(store: StoreOf<SettingsFeature>) {
         self.store = store
@@ -30,121 +12,110 @@ public struct SettingsView: View {
 
     public var body: some View {
         NavigationStack {
-            WithViewStore(
-                store,
-                observe: ViewState.init
-            ) { viewStore in
-                List {
-                    Section(L10n.Settings.Section.Links.title) {
-                        linksSection()
-                    }
+            List {
+                Section(L10n.Settings.Section.Links.title) {
+                    linksSection()
+                }
 
-                    Section(L10n.Settings.Section.acknowledgements) {
-                        ForEach(viewStore.acknowledgements) { acknowledgement in
-                            Link(
-                                destination: acknowledgement.url,
-                                label: {
-                                    HStack {
-                                        Text(acknowledgement.name)
-                                        Spacer()
-                                        Image(systemName: "network")
-                                    }
+                Section(L10n.Settings.Section.acknowledgements) {
+                    ForEach(store.acknowledgements) { acknowledgement in
+                        Link(
+                            destination: acknowledgement.url,
+                            label: {
+                                HStack {
+                                    Text(acknowledgement.name)
+                                    Spacer()
+                                    Image(systemName: "network")
                                 }
-                            )
-                        }
-                    }
-
-                    if viewStore.debugSectionVisible {
-                        Section(L10n.Settings.Section.BuildInfo.title) {
-                            buildInfoSection(
-                                state: viewStore.state
-                            )
-                        }
-                    } else {
-                        Section(
-                            header: Text(L10n.Settings.Section.BuildInfo.title),
-                            footer: debugSectionGestureView {
-                                viewStore.send(.view(.hiddenAreaGestureFired))
-                            },
-                            content: {
-                                buildInfoSection(
-                                    state: viewStore.state
-                                )
-                            }
-                        )
-                    }
-
-                    if viewStore.debugSectionVisible {
-                        Section(
-                            header: Text("Feature Flags"),
-                            content: {
-                                Toggle("Show run detail", isOn: viewStore.$showRunDetail)
-                            }
-                        )
-
-                        Section(
-                            header: Text("Cache"),
-                            content: {
-                                Button("Delete all runs") { viewStore.send(.view(.deleteAllRunsTapped)) }
-                            }
-                        )
-
-                        Section(
-                            header: Text(L10n.Settings.Section.Debug.title),
-                            footer: debugSectionGestureView {
-                                viewStore.send(.view(.hiddenAreaGestureFired))
-                            },
-                            content: {
-                                Button(
-                                    action: {
-                                        viewStore.send(.view(.showLoggingButtonTapped))
-                                    },
-                                    label: {
-                                        Text(L10n.Settings.Section.Debug.showLogging)
-                                    }
-                                )
                             }
                         )
                     }
                 }
-                .sheet(
-                    isPresented: viewStore.binding(
-                        get: \.loggingDisplayed,
-                        send: { .view(.loggingDisplayed($0)) }
-                    ),
-                    content: {
-                        LogListView(
-                            store: .init(
-                                initialState: .init(),
-                                reducer: LogListFeature.init,
-                                withDependencies: {
-                                    #if targetEnvironment(simulator)
-                                        $0 = .preview
-                                    #endif
+
+                if store.debugSectionVisible {
+                    Section(L10n.Settings.Section.BuildInfo.title) {
+                        buildInfoSection()
+                    }
+                } else {
+                    Section(
+                        header: Text(L10n.Settings.Section.BuildInfo.title),
+                        footer: debugSectionGestureView {
+                            store.send(.view(.hiddenAreaGestureFired))
+                        },
+                        content: {
+                            buildInfoSection()
+                        }
+                    )
+                }
+
+                if store.debugSectionVisible {
+                    Section(
+                        header: Text("Feature Flags"),
+                        content: {
+                            Toggle("Show run detail", isOn: $store.showRunDetailFeatureFlag)
+                        }
+                    )
+
+                    Section(
+                        header: Text("Cache"),
+                        content: {
+                            Button("Delete all runs") { store.send(.view(.deleteAllRunsTapped)) }
+                        }
+                    )
+
+                    Section(
+                        header: Text(L10n.Settings.Section.Debug.title),
+                        footer: debugSectionGestureView {
+                            store.send(.view(.hiddenAreaGestureFired))
+                        },
+                        content: {
+                            Button(
+                                action: {
+                                    store.send(.view(.showLoggingButtonTapped))
+                                },
+                                label: {
+                                    Text(L10n.Settings.Section.Debug.showLogging)
                                 }
                             )
-                        )
-                    }
-                )
-                .buttonStyle(.plain)
-                .navigationTitle(L10n.App.Feature.settings)
-                .onAppear { viewStore.send(.view(.onAppear)) }
+                        }
+                    )
+                }
             }
+            .sheet(
+                isPresented: .constant(false),
+//                    isPresented: $store.loggingDisplayed.sending(\.loggingDisplayed),
+                content: {
+                    LogListView(
+                        store: .init(
+                            initialState: .init(),
+                            reducer: LogListFeature.init,
+                            withDependencies: {
+                                #if targetEnvironment(simulator)
+                                    $0 = .preview
+                                #endif
+                            }
+                        )
+                    )
+                }
+            )
+            .buttonStyle(.plain)
+            .navigationTitle(L10n.App.Feature.settings)
+            .onAppear { store.send(.view(.onAppear)) }
         }
     }
 
-    @ViewBuilder func buildInfoSection(state: ViewState) -> some View {
+    @ViewBuilder func buildInfoSection() -> some View {
         HStack {
             Text(L10n.Settings.Section.BuildInfo.version)
             Spacer()
-            Text(state.versionNumber)
+            Text(store.versionNumber)
                 .font(.footnote)
         }
 
         HStack {
             Text(L10n.Settings.Section.BuildInfo.buildNumber)
             Spacer()
-            Text(state.buildNumber)
+            Text(store.buildNumber)
                 .font(.footnote)
         }
     }
