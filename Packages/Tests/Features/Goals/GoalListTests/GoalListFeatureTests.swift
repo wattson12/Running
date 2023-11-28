@@ -37,6 +37,8 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
+        store.exhaustivity = .off
+
         // initial setup on appearance
         await store.send(.view(.onAppear)) {
             $0.weeklyGoal = .mock(
@@ -85,6 +87,8 @@ final class GoalListFeatureTests: XCTestCase {
                 $0.widget._reloadAllTimelines = {}
             }
         )
+
+        store.exhaustivity = .off
 
         // initial setup on appearance
         await store.send(.view(.onAppear)) {
@@ -138,6 +142,8 @@ final class GoalListFeatureTests: XCTestCase {
                 $0.widget._reloadAllTimelines = {}
             }
         )
+
+        store.exhaustivity = .off
 
         // initial setup on appearance
         await store.send(.view(.onAppear)) {

@@ -6,6 +6,15 @@ import Model
 import Repository
 import Widgets
 
+struct GoalRow: Identifiable, Equatable {
+    let goal: Goal
+    let distance: Measurement<UnitLength>
+
+    var id: String {
+        goal.period.rawValue
+    }
+}
+
 @Reducer
 public struct GoalListFeature {
     @Reducer
@@ -34,6 +43,7 @@ public struct GoalListFeature {
         }
     }
 
+    @ObservableState
     public struct State: Equatable {
         var weeklyGoal: Goal?
         var weeklyRuns: [Run] = []
@@ -41,6 +51,8 @@ public struct GoalListFeature {
         var yearlyRuns: [Run] = []
         var monthlyGoal: Goal?
         var monthlyRuns: [Run] = []
+
+        var rows: IdentifiedArrayOf<GoalRow> = []
 
         @PresentationState var destination: Destination.State?
 
@@ -84,6 +96,31 @@ public struct GoalListFeature {
                     runningWorkouts: runningWorkouts
                 )
             }
+
+            let weekly: (Goal?, Measurement<UnitLength>) = (
+                weeklyGoal,
+                weeklyRuns.map(\.distance)
+                    .reduce(.init(value: 0, unit: .secondaryUnit()), +)
+            )
+            let monthly: (Goal?, Measurement<UnitLength>) = (
+                monthlyGoal,
+                monthlyRuns.map(\.distance)
+                    .reduce(.init(value: 0, unit: .secondaryUnit()), +)
+            )
+            let yearly: (Goal?, Measurement<UnitLength>) = (
+                yearlyGoal,
+                yearlyRuns.map(\.distance)
+                    .reduce(.init(value: 0, unit: .secondaryUnit()), +)
+            )
+
+            let rowArray: [GoalRow] = [weekly, monthly, yearly].compactMap { goal, distance in
+                guard let goal else { return nil }
+                return .init(
+                    goal: goal,
+                    distance: distance
+                )
+            }
+            rows = .init(uniqueElements: rowArray)
         }
 
         private mutating func updateGoalAndRuns(
