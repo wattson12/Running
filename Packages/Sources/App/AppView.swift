@@ -51,6 +51,7 @@ public struct AppView: View {
                 .tabItem {
                     Label(L10n.App.Feature.goals, systemImage: "target")
                 }
+                .tag(AppFeature.State.Tab.goals)
 
                 NavigationStack {
                     RunListView(
@@ -63,6 +64,7 @@ public struct AppView: View {
                 .tabItem {
                     Label(L10n.App.Feature.runs, systemImage: "figure.run")
                 }
+                .tag(AppFeature.State.Tab.runs)
             }
             .onAppear { store.send(.view(.onAppear)) }
             .tint(Color(asset: Asset.blue))
