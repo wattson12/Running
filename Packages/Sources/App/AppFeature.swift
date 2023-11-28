@@ -24,6 +24,7 @@ public struct AppFeature {
         }
     }
 
+    @ObservableState
     public struct State: Equatable {
         public enum Tab: Equatable, Hashable {
             case goals
@@ -61,6 +62,7 @@ public struct AppFeature {
     }
 
     public enum Action: Equatable {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case settingsButtonTapped

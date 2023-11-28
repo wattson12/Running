@@ -2,82 +2,67 @@ import ComposableArchitecture
 import SwiftUI
 
 struct LogDetailView: View {
-    let store: StoreOf<LogDetailFeature>
+    @State var store: StoreOf<LogDetailFeature>
 
     var body: some View {
-        WithViewStore(
-            store,
-            observe: { $0 }
-        ) { viewStore in
-            List {
-                Section(
-                    content: {
-                        Text(viewStore.actionLabel)
-                            .font(.caption)
-                            .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
-                            .listRowSeparator(.hidden)
-                    },
-                    header: {
-                        HStack {
-                            Text("Action Name")
-                        }
+        List {
+            Section(
+                content: {
+                    Text(store.actionLabel)
+                        .font(.caption)
+                        .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
+                        .listRowSeparator(.hidden)
+                },
+                header: {
+                    HStack {
+                        Text("Action Name")
                     }
-                )
+                }
+            )
 
-                Section(
-                    isExpanded: viewStore.binding(
-                        get: \.actionExpanded,
-                        send: { _ in
-                            .view(.toggleActionExpandedTapped)
+            Section(
+                isExpanded: $store.actionExpanded.sending(\.view.toggleActionExpandedTapped),
+                content: {
+                    sectionContent(rows: store.actionLines)
+                },
+                header: {
+                    HStack {
+                        Text("Action")
+
+                        Spacer()
+
+                        Button("Toggle") {
+                            store.send(.view(.toggleActionExpandedTapped(true)))
                         }
-                    ),
+                        .buttonStyle(.plain)
+                    }
+                }
+            )
+
+            if let stateDiffLines = store.diffLines {
+                Section(
+                    isExpanded: $store.diffExpanded.sending(\.view.toggleDiffExpandedTapped),
                     content: {
-                        sectionContent(rows: viewStore.actionLines)
+                        sectionContent(rows: stateDiffLines)
                     },
                     header: {
                         HStack {
-                            Text("Action")
+                            Text("State")
 
                             Spacer()
 
                             Button("Toggle") {
-                                viewStore.send(.view(.toggleActionExpandedTapped))
+                                store.send(.view(.toggleDiffExpandedTapped(true)))
                             }
                             .buttonStyle(.plain)
                         }
                     }
                 )
-
-                if let stateDiffLines = viewStore.diffLines {
-                    Section(
-                        isExpanded: viewStore.binding(
-                            get: \.diffExpanded,
-                            send: { _ in
-                                .view(.toggleDiffExpandedTapped)
-                            }
-                        ),
-                        content: {
-                            sectionContent(rows: stateDiffLines)
-                        },
-                        header: {
-                            HStack {
-                                Text("State")
-
-                                Spacer()
-
-                                Button("Toggle") {
-                                    viewStore.send(.view(.toggleDiffExpandedTapped))
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    )
-                }
             }
-            .listStyle(.plain)
-            .environment(\.defaultMinListRowHeight, 16)
-            .navigationTitle("Action")
         }
+        .listStyle(.plain)
+        .environment(\.defaultMinListRowHeight, 16)
+        .navigationTitle("Action")
     }
 
     @ViewBuilder private func sectionContent(rows: [LogDetailFeature.State.IndexedElement]) -> some View {
