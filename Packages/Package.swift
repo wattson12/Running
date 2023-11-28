@@ -6,6 +6,7 @@ import PackageDescription
 extension Target.Dependency {
     static let composableArchitecture: Self = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
     static let dependencies: Self = .product(name: "Dependencies", package: "swift-dependencies")
+    static let dependenciesMacros: Self = .product(name: "DependenciesMacros", package: "swift-dependencies")
     static let dependenciesAdditions: Self = .product(name: "DependenciesAdditions", package: "swift-dependencies-additions")
     static let urlRouting: Self = .product(name: "URLRouting", package: "swift-url-routing")
 }
@@ -97,7 +98,7 @@ let package = Package(
         .library(name: .designSystem),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.4.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "observation-beta"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
         .package(url: "https://github.com/tgrapperon/swift-dependencies-additions", from: "1.0.1"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.0"),
@@ -141,6 +142,7 @@ let package = Package(
             name: .healthKitServiceInterface,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
                 .target(name: .model),
             ],
             path: .dependencies(.healthKitServiceInterface)
@@ -158,6 +160,7 @@ let package = Package(
             name: .widgets,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
             ],
             path: .dependencies(.widgets)
         ),
@@ -174,6 +177,7 @@ let package = Package(
             dependencies: [
                 .dependencies,
                 .dependenciesAdditions,
+                .dependenciesMacros,
             ],
             path: .dependencies(.featureFlags)
         ),
@@ -193,6 +197,7 @@ let package = Package(
             name: .repository,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
                 .target(name: .model),
                 .target(name: .healthKitServiceInterface),
                 .target(name: .cache),
@@ -210,6 +215,8 @@ let package = Package(
             name: .cache,
             dependencies: [
                 .dependencies,
+                .dependenciesMacros,
+                
             ],
             path: .core(.cache)
         ),

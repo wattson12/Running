@@ -1,7 +1,9 @@
+import DependenciesMacros
 import Foundation
 
+@DependencyClient
 public struct FeatureFlags: Sendable {
-    public var _get: @Sendable (FeatureFlagKey) -> Bool
+    public var _get: @Sendable (FeatureFlagKey) -> Bool = { _ in false }
     public var _set: @Sendable (FeatureFlagKey, Bool) -> Void
 
     init(

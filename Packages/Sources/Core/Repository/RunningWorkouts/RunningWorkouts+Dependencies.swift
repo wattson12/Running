@@ -27,12 +27,5 @@ extension RunningWorkouts {
 
     static var previewValue: RunningWorkouts = .mock(runs: .allRuns)
 
-    static var testValue: RunningWorkouts = .init(
-        allRunningWorkouts: unimplemented(
-            "RunningWorkouts.allRunningWorkouts",
-            placeholder: .init(cache: { nil }, remote: { [] })
-        ),
-        runDetail: unimplemented("RunningWorkouts.runDetail", placeholder: .mock()),
-        runsWithinGoal: unimplemented("RunningWorkouts.runsWithinGoal", placeholder: [])
-    )
+    static var testValue: RunningWorkouts = .init()
 }

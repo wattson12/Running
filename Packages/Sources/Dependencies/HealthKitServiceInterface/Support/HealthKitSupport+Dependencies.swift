@@ -7,7 +7,5 @@ extension HealthKitSupport {
         isHealthKitDataAvailable: { true }
     )
 
-    static var testValue: HealthKitSupport = .init(
-        isHealthKitDataAvailable: unimplemented("HealthKitSupport.isHealthKitDataAvailable", placeholder: false)
-    )
+    static var testValue: HealthKitSupport = .init()
 }

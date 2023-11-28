@@ -8,89 +8,67 @@ import Settings
 import SwiftUI
 
 public struct AppView: View {
-    struct ViewState: Equatable {
-        let tab: AppFeature.State.Tab
-
-        init(state: AppFeature.State) {
-            tab = state.tab
-        }
-    }
-
-    let store: StoreOf<AppFeature>
+    @State var store: StoreOf<AppFeature>
 
     public init(store: StoreOf<AppFeature>) {
-        self.store = store
+        _store = .init(initialValue: store)
     }
 
     public var body: some View {
-        IfLetStore(
-            store.scope(
-                state: \.permissions,
-                action: AppFeature.Action.permissions
-            ),
-            then: PermissionsView.init,
-            else: {
-                WithViewStore(
-                    store,
-                    observe: ViewState.init,
-                    send: AppFeature.Action.view
-                ) { viewStore in
-                    TabView(
-                        selection: viewStore.binding(
-                            get: \.tab,
-                            send: AppFeature.Action.View.updateTab
+        if let permissionStore = store.scope(state: \.permissions, action: \.permissions) {
+            PermissionsView(store: permissionStore)
+        } else {
+            TabView(
+                selection: $store.tab.sending(\.view.updateTab)
+            ) {
+                NavigationStack {
+                    GoalListView(
+                        store: store.scope(
+                            state: \.goalList,
+                            action: AppFeature.Action.goalList
                         )
-                    ) {
-                        NavigationStack {
-                            GoalListView(
-                                store: store.scope(
-                                    state: \.goalList,
-                                    action: AppFeature.Action.goalList
-                                )
-                            )
-                            .toolbar {
-                                ToolbarItem(placement: .topBarTrailing) {
-                                    Button(
-                                        action: {
-                                            viewStore.send(.settingsButtonTapped)
-                                        },
-                                        label: {
-                                            Image(systemName: "gearshape")
-                                        }
-                                    )
+                    )
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(
+                                action: {
+                                    store.send(.view(.settingsButtonTapped))
+                                },
+                                label: {
+                                    Image(systemName: "gearshape")
                                 }
-                            }
-                            .sheet(
-                                store: store.scope(
-                                    state: \.$destination,
-                                    action: AppFeature.Action.destination
-                                ),
-                                state: /AppFeature.Destination.State.settings,
-                                action: AppFeature.Destination.Action.settings,
-                                content: SettingsView.init
                             )
-                        }
-                        .tabItem {
-                            Label(L10n.App.Feature.goals, systemImage: "target")
-                        }
-
-                        NavigationStack {
-                            RunListView(
-                                store: store.scope(
-                                    state: \.runList,
-                                    action: AppFeature.Action.runList
-                                )
-                            )
-                        }
-                        .tabItem {
-                            Label(L10n.App.Feature.runs, systemImage: "figure.run")
                         }
                     }
-                    .onAppear { viewStore.send(.onAppear) }
-                    .tint(Color(asset: Asset.blue))
+                    .sheet(
+                        store: store.scope(
+                            state: \.$destination.settings,
+                            action: \.destination.settings
+                        ),
+                        content: SettingsView.init
+                    )
                 }
+                .tabItem {
+                    Label(L10n.App.Feature.goals, systemImage: "target")
+                }
+                .tag(AppFeature.State.Tab.goals)
+
+                NavigationStack {
+                    RunListView(
+                        store: store.scope(
+                            state: \.runList,
+                            action: AppFeature.Action.runList
+                        )
+                    )
+                }
+                .tabItem {
+                    Label(L10n.App.Feature.runs, systemImage: "figure.run")
+                }
+                .tag(AppFeature.State.Tab.runs)
             }
-        )
+            .onAppear { store.send(.view(.onAppear)) }
+            .tint(Color(asset: Asset.blue))
+        }
     }
 }
 

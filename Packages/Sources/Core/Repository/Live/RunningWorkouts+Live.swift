@@ -117,7 +117,7 @@ extension RunningWorkouts {
 
             return try coreData.performWork { context in
                 let fetchRequestForRunsMatchingID = RunEntity.makeFetchRequest()
-                fetchRequestForRunsMatchingID.predicate = .init(format: "id == %@", id.uuidString)
+                fetchRequestForRunsMatchingID.predicate = .init(format: "id == %@", id as NSUUID)
                 let runsMatchingID = try context.fetch(fetchRequestForRunsMatchingID)
 
                 guard let run = runsMatchingID.first else {

@@ -1,5 +1,7 @@
+import DependenciesMacros
 import Foundation
 
+@DependencyClient
 public struct WidgetDependency: Sendable {
     public var _reloadTimelines: @Sendable (String) -> Void
     public var _reloadAllTimelines: @Sendable () -> Void

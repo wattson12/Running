@@ -44,10 +44,7 @@ enum FeatureFlagsDependencyKey: DependencyKey {
     static var liveValue: FeatureFlags = .userDefaults(.standard)
     static var previewValue: FeatureFlags = .userDefaults(.ephemeral())
 
-    static var testValue: FeatureFlags = .init(
-        get: unimplemented("FeatureFlags.get", placeholder: false),
-        set: unimplemented("FeatureFlags.set")
-    )
+    static var testValue: FeatureFlags = .init()
 }
 
 public extension DependencyValues {

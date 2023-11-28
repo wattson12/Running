@@ -5,9 +5,5 @@ extension Support {
         isHealthKitDataAvailable: { true }
     )
 
-    static var testValue: Support = .init(
-        isHealthKitDataAvailable: {
-            unimplemented("Support.isHealthKitDataAvailable", placeholder: false)
-        }
-    )
+    static var testValue: Support = .init()
 }

@@ -1,7 +1,9 @@
+import DependenciesMacros
 import Foundation
 
+@DependencyClient
 public struct Support: Sendable {
-    public var _isHealthKitDataAvailable: @Sendable () -> Bool
+    public var _isHealthKitDataAvailable: @Sendable () -> Bool = { false }
 
     public init(
         isHealthKitDataAvailable: @Sendable @escaping () -> Bool

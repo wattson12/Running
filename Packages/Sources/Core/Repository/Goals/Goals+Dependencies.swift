@@ -25,8 +25,5 @@ extension Goals {
         ]
     )
 
-    static var testValue: Goals = .init(
-        goal: unimplemented("Goals.goal"),
-        updateGoal: unimplemented("Goals.updateGoal")
-    )
+    static var testValue: Goals = .init()
 }

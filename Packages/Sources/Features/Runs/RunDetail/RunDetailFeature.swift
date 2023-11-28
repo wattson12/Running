@@ -5,6 +5,7 @@ import Repository
 
 @Reducer
 public struct RunDetailFeature {
+    @ObservableState
     public struct State: Equatable {
         var run: Run
         var isLoading: Bool

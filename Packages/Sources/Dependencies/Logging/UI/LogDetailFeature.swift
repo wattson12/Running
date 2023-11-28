@@ -3,6 +3,7 @@ import Foundation
 
 @Reducer
 public struct LogDetailFeature {
+    @ObservableState
     public struct State: Equatable {
         struct IndexedElement: Equatable, Identifiable {
             let label: String
@@ -48,9 +49,10 @@ public struct LogDetailFeature {
     }
 
     public enum Action: Equatable {
+        @CasePathable
         public enum View: Equatable {
-            case toggleActionExpandedTapped
-            case toggleDiffExpandedTapped
+            case toggleActionExpandedTapped(Bool)
+            case toggleDiffExpandedTapped(Bool)
         }
 
         case view(View)

@@ -1,3 +1,4 @@
+import DependenciesMacros
 import Foundation
 import Model
 
@@ -6,8 +7,15 @@ public enum RunningWorkoutsError: Error {
 }
 
 // @unchecked because RepositorySource<Void, _> isnt Sendable
+@DependencyClient
 public struct RunningWorkouts: @unchecked Sendable {
-    public var _allRunningWorkouts: () -> RepositorySource<Void, [Run]>
+    public var _allRunningWorkouts: () -> RepositorySource<Void, [Run]> = {
+        .init(
+            cache: { nil },
+            remote: { [] }
+        )
+    }
+
     public var _runDetail: @Sendable (Run.ID) async throws -> Run
     public var _runsWithinGoal: @Sendable (Goal) throws -> [Run]
 

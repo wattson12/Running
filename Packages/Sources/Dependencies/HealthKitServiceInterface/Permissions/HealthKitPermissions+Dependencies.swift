@@ -8,8 +8,5 @@ extension HealthKitPermissions {
         requestAuthorization: {}
     )
 
-    static var testValue: HealthKitPermissions = .init(
-        authorizationRequestStatus: unimplemented("HealthKitPermissions.authorizationRequestStatus"),
-        requestAuthorization: unimplemented("HealthKitPermissions.requestAuthorization")
-    )
+    static var testValue: HealthKitPermissions = .init()
 }

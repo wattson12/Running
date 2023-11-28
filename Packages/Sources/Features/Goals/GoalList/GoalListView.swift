@@ -8,45 +8,6 @@ import Resources
 import SwiftUI
 
 public struct GoalListView: View {
-    struct ViewState: Equatable {
-        struct GoalRow: Identifiable, Equatable {
-            let goal: Goal
-            let distance: Measurement<UnitLength>
-
-            var id: String {
-                goal.period.rawValue
-            }
-        }
-
-        let rows: [GoalRow]
-
-        init(state: GoalListFeature.State) {
-            let weekly: (Goal?, Measurement<UnitLength>) = (
-                state.weeklyGoal,
-                state.weeklyRuns.map(\.distance)
-                    .reduce(.init(value: 0, unit: .secondaryUnit()), +)
-            )
-            let monthly: (Goal?, Measurement<UnitLength>) = (
-                state.monthlyGoal,
-                state.monthlyRuns.map(\.distance)
-                    .reduce(.init(value: 0, unit: .secondaryUnit()), +)
-            )
-            let yearly: (Goal?, Measurement<UnitLength>) = (
-                state.yearlyGoal,
-                state.yearlyRuns.map(\.distance)
-                    .reduce(.init(value: 0, unit: .secondaryUnit()), +)
-            )
-
-            rows = [weekly, monthly, yearly].compactMap { goal, distance in
-                guard let goal else { return nil }
-                return .init(
-                    goal: goal,
-                    distance: distance
-                )
-            }
-        }
-    }
-
     let store: StoreOf<GoalListFeature>
 
     public init(
@@ -56,52 +17,42 @@ public struct GoalListView: View {
     }
 
     public var body: some View {
-        WithViewStore(
-            store,
-            observe: ViewState.init,
-            send: GoalListFeature.Action.view
-        ) { viewStore in
-            ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(viewStore.rows) { row in
-                        GoalRowView(
-                            goal: row.goal,
-                            distance: row.distance,
-                            action: {
-                                viewStore.send(.goalTapped(row.goal))
-                            },
-                            editAction: {
-                                viewStore.send(.editTapped(row.goal))
-                            }
-                        )
-                        .customTint(row.goal.period.tint)
-                    }
+        ScrollView {
+            VStack(spacing: 16) {
+                ForEach(store.rows) { row in
+                    GoalRowView(
+                        goal: row.goal,
+                        distance: row.distance,
+                        action: {
+                            store.send(.view(.goalTapped(row.goal)))
+                        },
+                        editAction: {
+                            store.send(.view(.editTapped(row.goal)))
+                        }
+                    )
+                    .customTint(row.goal.period.tint)
                 }
             }
-            .navigationTitle(L10n.App.Feature.goals)
-            .onAppear { viewStore.send(.onAppear) }
-            .navigationDestination(
-                store: store.scope(
-                    state: \.$destination,
-                    action: GoalListFeature.Action.destination
-                ),
-                state: /GoalListFeature.Destination.State.detail,
-                action: GoalListFeature.Destination.Action.detail,
-                destination: GoalDetailView.init
-            )
-            .sheet(
-                store: store.scope(
-                    state: \.$destination,
-                    action: GoalListFeature.Action.destination
-                ),
-                state: /GoalListFeature.Destination.State.editGoal,
-                action: GoalListFeature.Destination.Action.editGoal,
-                content: { store in
-                    EditGoalView(store: store)
-                        .presentationDetents([.medium])
-                }
-            )
         }
+        .navigationTitle(L10n.App.Feature.goals)
+        .onAppear { store.send(.view(.onAppear)) }
+        .navigationDestination(
+            store: store.scope(
+                state: \.$destination.detail,
+                action: \.destination.detail
+            ),
+            destination: GoalDetailView.init
+        )
+        .sheet(
+            store: store.scope(
+                state: \.$destination.editGoal,
+                action: \.destination.editGoal
+            ),
+            content: { store in
+                EditGoalView(store: store)
+                    .presentationDetents([.medium])
+            }
+        )
     }
 }
 

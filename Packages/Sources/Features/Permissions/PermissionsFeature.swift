@@ -8,6 +8,7 @@ public struct PermissionsFeature {
         init(_ _: Void) {}
     }
 
+    @ObservableState
     public struct State: Equatable {
         public enum InnerState: Int, Equatable {
             case initial

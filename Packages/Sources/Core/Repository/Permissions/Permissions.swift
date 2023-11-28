@@ -1,7 +1,9 @@
+import DependenciesMacros
 import Foundation
 import HealthKit
 import Model
 
+@DependencyClient
 public struct Permissions: Sendable {
     public var _authorizationRequestStatus: @Sendable () async throws -> AuthorizationRequestStatus
     public var _requestAuthorization: @Sendable () async throws -> Void

@@ -7,18 +7,6 @@ import RunList
 import SwiftUI
 
 public struct GoalDetailView: View {
-    struct ViewState: Equatable {
-        let goal: Goal
-        let runs: [Run]?
-        let emptyStateRuns: [Run]
-
-        init(state: GoalDetailFeature.State) {
-            goal = state.goal
-            runs = state.runs
-            emptyStateRuns = state.emptyStateRuns
-        }
-    }
-
     let store: StoreOf<GoalDetailFeature>
 
     @Environment(\.locale) var locale
@@ -28,85 +16,79 @@ public struct GoalDetailView: View {
     }
 
     public var body: some View {
-        WithViewStore(
-            store,
-            observe: ViewState.init,
-            send: GoalDetailFeature.Action.view
-        ) { viewStore in
-            ScrollView {
-                VStack(spacing: 16) {
-                    if
-                        let runs = viewStore.runs,
-                        let target = viewStore.goal.target
-                    {
-                        WidgetView {
-                            VStack(spacing: 8) {
+        ScrollView {
+            VStack(spacing: 16) {
+                if
+                    let runs = store.runs,
+                    let target = store.goal.target
+                {
+                    WidgetView {
+                        VStack(spacing: 8) {
+                            HStack {
+                                Text(L10n.Goals.Detail.Summary.goal)
+                                    .font(.title3)
+                                Spacer()
+                                Text(target.fullValue(locale: locale))
+                                    .font(.body.bold())
+                            }
+
+                            HStack {
+                                Text(L10n.Goals.Detail.Summary.distance)
+                                    .font(.title3)
+                                Spacer()
+                                Text(runs.distance.fullValue(locale: locale))
+                                    .font(.body.bold())
+                            }
+
+                            if (target - runs.distance).value > 0 {
                                 HStack {
-                                    Text(L10n.Goals.Detail.Summary.goal)
+                                    Text(L10n.Goals.Detail.Summary.remaining)
                                         .font(.title3)
                                     Spacer()
-                                    Text(target.fullValue(locale: locale))
+                                    Text((target - runs.distance).fullValue(locale: locale))
                                         .font(.body.bold())
-                                }
-
-                                HStack {
-                                    Text(L10n.Goals.Detail.Summary.distance)
-                                        .font(.title3)
-                                    Spacer()
-                                    Text(runs.distance.fullValue(locale: locale))
-                                        .font(.body.bold())
-                                }
-
-                                if (target - runs.distance).value > 0 {
-                                    HStack {
-                                        Text(L10n.Goals.Detail.Summary.remaining)
-                                            .font(.title3)
-                                        Spacer()
-                                        Text((target - runs.distance).fullValue(locale: locale))
-                                            .font(.body.bold())
-                                    }
                                 }
                             }
                         }
+                    }
 
-                        if !runs.isEmpty {
-                            WidgetView {
-                                GoalChartView(
-                                    period: viewStore.goal.period,
-                                    runs: runs,
-                                    goal: target
-                                )
-                            }
-                            .frame(height: 250)
-                        } else {
-                            WidgetView {
-                                GoalChartView(
-                                    period: viewStore.goal.period,
-                                    runs: viewStore.emptyStateRuns,
-                                    goal: target
-                                )
-                                .blur(radius: 5)
-                            }
-                            .frame(height: 250)
-                            .overlay {
-                                VStack {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(height: 20)
+                    if !runs.isEmpty {
+                        WidgetView {
+                            GoalChartView(
+                                period: store.goal.period,
+                                runs: runs,
+                                goal: target
+                            )
+                        }
+                        .frame(height: 250)
+                    } else {
+                        WidgetView {
+                            GoalChartView(
+                                period: store.goal.period,
+                                runs: store.emptyStateRuns,
+                                goal: target
+                            )
+                            .blur(radius: 5)
+                        }
+                        .frame(height: 250)
+                        .overlay {
+                            VStack {
+                                Image(systemName: "xmark.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 20)
 
-                                    Text(L10n.Goals.Detail.Chart.noRunsOverlay)
-                                        .font(.callout)
-                                }
+                                Text(L10n.Goals.Detail.Chart.noRunsOverlay)
+                                    .font(.callout)
                             }
                         }
                     }
                 }
             }
-            .navigationTitle(viewStore.goal.period.rawValue.capitalized)
-            .onAppear { viewStore.send(.onAppear) }
-            .customTint(viewStore.goal.period.tint)
         }
+        .navigationTitle(store.goal.period.rawValue.capitalized)
+        .onAppear { store.send(.view(.onAppear)) }
+        .customTint(store.goal.period.tint)
     }
 }
 
