@@ -17,7 +17,7 @@ final class AppFeatureTests: XCTestCase {
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _ in [] }
 
-                $0.repository.goals._goal = { _ in .mock() }
+                $0.repository.goals._goal = { period in .mock(period: period) }
 
                 $0.uuid = .incrementing
 
@@ -51,6 +51,20 @@ final class AppFeatureTests: XCTestCase {
             $0.goalList.weeklyGoal = .mock(period: .weekly, target: .init(value: 1, unit: .kilometers))
             $0.goalList.monthlyGoal = .mock(period: .monthly, target: .init(value: 1, unit: .kilometers))
             $0.goalList.yearlyGoal = .mock(period: .yearly, target: .init(value: 1, unit: .kilometers))
+            $0.goalList.rows = [
+                .init(
+                    goal: .mock(period: .weekly, target: .init(value: 1, unit: .kilometers)),
+                    distance: .init(value: 0, unit: .kilometers)
+                ),
+                .init(
+                    goal: .mock(period: .monthly, target: .init(value: 1, unit: .kilometers)),
+                    distance: .init(value: 0, unit: .kilometers)
+                ),
+                .init(
+                    goal: .mock(period: .yearly, target: .init(value: 1, unit: .kilometers)),
+                    distance: .init(value: 0, unit: .kilometers)
+                ),
+            ]
         }
     }
 
