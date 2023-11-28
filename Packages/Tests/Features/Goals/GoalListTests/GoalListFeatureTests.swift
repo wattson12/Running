@@ -11,10 +11,14 @@ import XCTest
 @MainActor
 final class GoalListFeatureTests: XCTestCase {
     func testGoalsPopulatedHappyPath() async throws {
+        let weeklyRun: Run = .mock()
+        let monthlyRun: Run = .mock()
+        let yearlyRun: Run = .mock()
+
         let runs: [Goal.Period: [Run]] = [
-            .weekly: [.mock()],
-            .monthly: [.mock()],
-            .yearly: [.mock()],
+            .weekly: [weeklyRun],
+            .monthly: [monthlyRun],
+            .yearly: [yearlyRun],
         ]
 
         let store = TestStore(
@@ -37,9 +41,6 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        #warning("update test")
-        store.exhaustivity = .off
-
         // initial setup on appearance
         await store.send(.view(.onAppear)) {
             $0.weeklyGoal = .mock(
@@ -59,14 +60,40 @@ final class GoalListFeatureTests: XCTestCase {
                 target: .init(value: 100, unit: .kilometers)
             )
             $0.yearlyRuns = runs[.yearly] ?? []
+
+            $0.rows = [
+                .init(
+                    goal: .mock(
+                        period: .weekly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: weeklyRun.distance
+                ),
+                .init(
+                    goal: .mock(
+                        period: .monthly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: monthlyRun.distance
+                ),
+                .init(
+                    goal: .mock(
+                        period: .yearly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: yearlyRun.distance
+                ),
+            ]
         }
     }
 
     func testGoalsPopulatedWhenSomeGoalsHaveNoRuns() async throws {
+        let weeklyRun: Run = .mock()
+        let yearlyRun: Run = .mock()
         let runs: [Goal.Period: [Run]] = [
-            .weekly: [.mock()],
+            .weekly: [weeklyRun],
             .monthly: [],
-            .yearly: [.mock()],
+            .yearly: [yearlyRun],
         ]
 
         let store = TestStore(
@@ -89,9 +116,6 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        #warning("update test")
-        store.exhaustivity = .off
-
         // initial setup on appearance
         await store.send(.view(.onAppear)) {
             $0.weeklyGoal = .mock(
@@ -111,14 +135,41 @@ final class GoalListFeatureTests: XCTestCase {
                 target: .init(value: 100, unit: .kilometers)
             )
             $0.yearlyRuns = runs[.yearly] ?? []
+
+            $0.rows = [
+                .init(
+                    goal: .mock(
+                        period: .weekly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: weeklyRun.distance
+                ),
+                .init(
+                    goal: .mock(
+                        period: .monthly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: .init(value: 0, unit: .kilometers)
+                ),
+                .init(
+                    goal: .mock(
+                        period: .yearly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: yearlyRun.distance
+                ),
+            ]
         }
     }
 
     func testGoalsPopulatedWhenFetchingSomeGoalsFails() async throws {
+        let weeklyRun: Run = .mock()
+        let yearlyRun: Run = .mock()
         let runs: [Goal.Period: [Run]] = [
-            .weekly: [.mock()],
-            .yearly: [.mock()],
+            .weekly: [weeklyRun],
+            .yearly: [yearlyRun],
         ]
+
         let failure = NSError(domain: #fileID, code: #line)
 
         let store = TestStore(
@@ -145,9 +196,6 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        #warning("update test")
-        store.exhaustivity = .off
-
         // initial setup on appearance
         await store.send(.view(.onAppear)) {
             $0.weeklyGoal = .mock(
@@ -164,6 +212,23 @@ final class GoalListFeatureTests: XCTestCase {
                 target: .init(value: 100, unit: .kilometers)
             )
             $0.yearlyRuns = runs[.yearly] ?? []
+
+            $0.rows = [
+                .init(
+                    goal: .mock(
+                        period: .weekly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: weeklyRun.distance
+                ),
+                .init(
+                    goal: .mock(
+                        period: .yearly,
+                        target: .init(value: 100, unit: .kilometers)
+                    ),
+                    distance: yearlyRun.distance
+                ),
+            ]
         }
     }
 
