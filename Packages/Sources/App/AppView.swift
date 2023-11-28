@@ -15,63 +15,58 @@ public struct AppView: View {
     }
 
     public var body: some View {
-        IfLetStore(
-            store.scope(
-                state: \.permissions,
-                action: AppFeature.Action.permissions
-            ),
-            then: PermissionsView.init,
-            else: {
-                TabView(
-                    selection: $store.tab.sending(\.view.updateTab)
-                ) {
-                    NavigationStack {
-                        GoalListView(
-                            store: store.scope(
-                                state: \.goalList,
-                                action: AppFeature.Action.goalList
-                            )
+        if let permissionStore = store.scope(state: \.permissions, action: \.permissions) {
+            PermissionsView(store: permissionStore)
+        } else {
+            TabView(
+                selection: $store.tab.sending(\.view.updateTab)
+            ) {
+                NavigationStack {
+                    GoalListView(
+                        store: store.scope(
+                            state: \.goalList,
+                            action: AppFeature.Action.goalList
                         )
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button(
-                                    action: {
-                                        store.send(.view(.settingsButtonTapped))
-                                    },
-                                    label: {
-                                        Image(systemName: "gearshape")
-                                    }
-                                )
-                            }
+                    )
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(
+                                action: {
+                                    store.send(.view(.settingsButtonTapped))
+                                },
+                                label: {
+                                    Image(systemName: "gearshape")
+                                }
+                            )
                         }
-                        .sheet(
-                            store: store.scope(
-                                state: \.$destination.settings,
-                                action: \.destination.settings
-                            ),
-                            content: SettingsView.init
-                        )
                     }
-                    .tabItem {
-                        Label(L10n.App.Feature.goals, systemImage: "target")
-                    }
-
-                    NavigationStack {
-                        RunListView(
-                            store: store.scope(
-                                state: \.runList,
-                                action: AppFeature.Action.runList
-                            )
-                        )
-                    }
-                    .tabItem {
-                        Label(L10n.App.Feature.runs, systemImage: "figure.run")
-                    }
+                    .sheet(
+                        store: store.scope(
+                            state: \.$destination.settings,
+                            action: \.destination.settings
+                        ),
+                        content: SettingsView.init
+                    )
                 }
-                .onAppear { store.send(.view(.onAppear)) }
-                .tint(Color(asset: Asset.blue))
+                .tabItem {
+                    Label(L10n.App.Feature.goals, systemImage: "target")
+                }
+
+                NavigationStack {
+                    RunListView(
+                        store: store.scope(
+                            state: \.runList,
+                            action: AppFeature.Action.runList
+                        )
+                    )
+                }
+                .tabItem {
+                    Label(L10n.App.Feature.runs, systemImage: "figure.run")
+                }
             }
-        )
+            .onAppear { store.send(.view(.onAppear)) }
+            .tint(Color(asset: Asset.blue))
+        }
     }
 }
 

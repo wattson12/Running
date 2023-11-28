@@ -37,6 +37,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
+        #warning("update test")
         store.exhaustivity = .off
 
         // initial setup on appearance
@@ -88,6 +89,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
+        #warning("update test")
         store.exhaustivity = .off
 
         // initial setup on appearance
@@ -143,6 +145,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
+        #warning("update test")
         store.exhaustivity = .off
 
         // initial setup on appearance
