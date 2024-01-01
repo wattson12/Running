@@ -293,6 +293,8 @@ public struct GoalListFeature {
 
             state.destination = nil
 
+            state.refreshRows()
+
             guard let goal else { return .none }
             return .run { [goal] _ in
                 try goals.update(goal: goal)
