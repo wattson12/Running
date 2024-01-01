@@ -105,6 +105,10 @@ public struct GoalListFeature {
                 )
             }
 
+            refreshRows()
+        }
+
+        mutating func refreshRows() {
             let weekly: (Goal?, Measurement<UnitLength>) = (
                 weeklyGoal,
                 weeklyRuns.map(\.distance)
@@ -264,7 +268,10 @@ public struct GoalListFeature {
             case .yearly:
                 state.yearlyGoal = goal
             }
+
             state.destination = nil
+
+            state.refreshRows()
 
             return .run { _ in
                 try goals.update(goal: goal)
