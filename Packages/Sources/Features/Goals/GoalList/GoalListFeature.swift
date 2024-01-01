@@ -11,7 +11,15 @@ struct GoalRow: Identifiable, Equatable {
     let distance: Measurement<UnitLength>
 
     var id: String {
-        goal.period.rawValue + distance.value.description
+        let components: [String?] = [
+            goal.period.rawValue,
+            goal.target?.value.description,
+            distance.value.description,
+        ]
+
+        return components
+            .compactMap { $0 }
+            .joined(separator: ".")
     }
 }
 
