@@ -11,7 +11,7 @@ struct GoalRow: Identifiable, Equatable {
     let distance: Measurement<UnitLength>
 
     var id: String {
-        goal.period.rawValue
+        goal.period.rawValue + distance.value.description
     }
 }
 
