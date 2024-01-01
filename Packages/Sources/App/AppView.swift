@@ -1,7 +1,9 @@
 import ComposableArchitecture
 import DesignSystem
 import GoalList
+import Model
 import Permissions
+import Repository
 import Resources
 import RunList
 import Settings
@@ -72,21 +74,58 @@ public struct AppView: View {
     }
 }
 
-struct AppView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppView(
-            store: .init(
-                initialState: .init(
-                    permissions: nil,
-                    runList: .init(),
-                    goalList: .init()
-                ),
-                reducer: AppFeature.init,
-                withDependencies: {
-                    $0.date = .constant(.preview)
-                }
+#Preview("Default") {
+    AppView(
+        store: .init(
+            initialState: .init(
+                permissions: nil,
+                runList: .init(),
+                goalList: .init()
+            ),
+            reducer: AppFeature.init,
+            withDependencies: {
+                $0.date = .constant(.preview)
+            }
+        )
+    )
+    .environment(\.locale, .init(identifier: "en_AU"))
+}
+
+#Preview("New Run") {
+    let runningWorkouts: RunningWorkouts = .newRun(
+        initialRuns: .initialRuns,
+        newRun: .mock(
+            distance: .init(
+                value: 20,
+                unit: .kilometers
             )
         )
-        .environment(\.locale, .init(identifier: "en_AU"))
-    }
+    )
+
+    return AppView(
+        store: .init(
+            initialState: .init(
+                permissions: nil,
+                runList: .init(),
+                goalList: .init()
+            ),
+            reducer: { AppFeature() },
+            withDependencies: {
+                $0.date = .constant(.preview)
+                $0.repository.runningWorkouts = runningWorkouts
+            }
+        )
+    )
+    .environment(\.locale, .init(identifier: "en_AU"))
+}
+
+extension [Run] {
+    static var initialRuns: [Run] = [
+        .mock(
+            distance: .init(
+                value: 20,
+                unit: .kilometers
+            )
+        ),
+    ]
 }

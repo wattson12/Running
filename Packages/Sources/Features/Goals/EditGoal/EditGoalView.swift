@@ -72,7 +72,7 @@ public struct EditGoalView: View {
                     Button(
                         role: .destructive,
                         action: {
-                            store.send(.view(.saveButtonTapped))
+                            store.send(.view(.clearButtonTapped))
                         },
                         label: {
                             Text(L10n.Goals.Edit.Button.clear)

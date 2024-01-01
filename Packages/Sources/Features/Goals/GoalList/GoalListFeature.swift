@@ -11,7 +11,15 @@ struct GoalRow: Identifiable, Equatable {
     let distance: Measurement<UnitLength>
 
     var id: String {
-        goal.period.rawValue
+        let components: [String?] = [
+            goal.period.rawValue,
+            goal.target?.value.description,
+            distance.value.description,
+        ]
+
+        return components
+            .compactMap { $0 }
+            .joined(separator: ".")
     }
 }
 
@@ -97,6 +105,10 @@ public struct GoalListFeature {
                 )
             }
 
+            refreshRows()
+        }
+
+        mutating func refreshRows() {
             let weekly: (Goal?, Measurement<UnitLength>) = (
                 weeklyGoal,
                 weeklyRuns.map(\.distance)
@@ -256,7 +268,10 @@ public struct GoalListFeature {
             case .yearly:
                 state.yearlyGoal = goal
             }
+
             state.destination = nil
+
+            state.refreshRows()
 
             return .run { _ in
                 try goals.update(goal: goal)
@@ -277,6 +292,8 @@ public struct GoalListFeature {
             }
 
             state.destination = nil
+
+            state.refreshRows()
 
             guard let goal else { return .none }
             return .run { [goal] _ in
