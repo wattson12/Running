@@ -57,6 +57,8 @@ extension String {
     
     static let settings: Self = "Settings"
     
+    static let history: Self = "History"
+    
     static func feature(_ name: String, in domain: String? = nil) -> Self {
         ["Sources", "Features", domain, name].compactMap { $0 }.joined(separator: "/")
     }
@@ -86,6 +88,7 @@ let package = Package(
         .library(name: .editGoal),
         .library(name: .goalDetail),
         .library(name: .settings),
+        .library(name: .history),
         .library(name: .repository),
         .library(name: .resources),
         .library(name: .healthKitServiceInterface),
@@ -191,6 +194,7 @@ let package = Package(
                 .target(name: .goalList),
                 .target(name: .permissions),
                 .target(name: .settings),
+                .target(name: .history),
             ]
         ),
         .target(
@@ -269,6 +273,21 @@ let package = Package(
                 .target(name: .cache),
             ],
             path: .feature(.settings)
+        ),
+        .target(
+            name: .history,
+            dependencies: [
+                .composableArchitecture,
+                .dependencies,
+                .dependenciesAdditions,
+                .target(name: .designSystem),
+                .target(name: .logging),
+                .target(name: .featureFlags),
+                .target(name: .repository),
+                .target(name: .model),
+                .target(name: .cache),
+            ],
+            path: .feature(.history)
         ),
         .target(
             name: .permissions,
