@@ -4,14 +4,14 @@ import Model
 import Repository
 
 @Reducer
-struct HistoryFeature: Reducer {
+public struct HistoryFeature: Reducer {
     @ObservableState
-    struct State: Equatable {
+    public struct State: Equatable {
         var totals: [IntervalTotal] = []
     }
 
-    enum Action: Equatable {
-        enum View: Equatable {
+    public enum Action: Equatable {
+        public enum View: Equatable {
             case onAppear
         }
 
@@ -20,7 +20,9 @@ struct HistoryFeature: Reducer {
 
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
 
-    var body: some ReducerOf<Self> {
+    public init() {}
+
+    public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case let .view(action):

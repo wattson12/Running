@@ -4,12 +4,16 @@ import Model
 import Repository
 import SwiftUI
 
-struct HistoryView: View {
+public struct HistoryView: View {
     let store: StoreOf<HistoryFeature>
 
     @Environment(\.locale) var locale
 
-    var body: some View {
+    public init(store: StoreOf<HistoryFeature>) {
+        self.store = store
+    }
+
+    public var body: some View {
         List(store.totals) { total in
             HStack {
                 Text(total.label)
