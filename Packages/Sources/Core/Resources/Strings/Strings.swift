@@ -19,6 +19,8 @@ public enum L10n {
             ///
             ///   Created by Sam Watts on 02/09/2023.
             public static let goals = L10n.tr("Localizable", "app.feature.goals", fallback: "Goals")
+            /// History
+            public static let history = L10n.tr("Localizable", "app.feature.history", fallback: "History")
             /// Runs
             public static let runs = L10n.tr("Localizable", "app.feature.runs", fallback: "Runs")
             /// About

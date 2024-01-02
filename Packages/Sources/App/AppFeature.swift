@@ -2,6 +2,7 @@ import ComposableArchitecture
 import Foundation
 import GoalList
 import HealthKitServiceInterface
+import History
 import Permissions
 import Repository
 import RunList
@@ -29,6 +30,7 @@ public struct AppFeature {
         public enum Tab: Equatable, Hashable {
             case goals
             case runs
+            case history
         }
 
         var permissions: PermissionsFeature.State?
@@ -36,6 +38,7 @@ public struct AppFeature {
         var tab: Tab
         var runList: RunListFeature.State
         var goalList: GoalListFeature.State
+        var history: HistoryFeature.State
 
         @PresentationState var destination: Destination.State?
 
@@ -44,12 +47,14 @@ public struct AppFeature {
             tab: Tab = .goals,
             runList: RunListFeature.State = .init(),
             goalList: GoalListFeature.State = .init(),
+            history: HistoryFeature.State = .init(),
             destination: Destination.State? = nil
         ) {
             self.permissions = permissions
             self.tab = tab
             self.runList = runList
             self.goalList = goalList
+            self.history = history
             self.destination = destination
         }
 
@@ -58,6 +63,7 @@ public struct AppFeature {
             tab = .goals
             runList = .init()
             goalList = .init()
+            history = .init()
         }
     }
 
@@ -73,6 +79,7 @@ public struct AppFeature {
         case permissions(PermissionsFeature.Action)
         case runList(RunListFeature.Action)
         case goalList(GoalListFeature.Action)
+        case history(HistoryFeature.Action)
         case deepLink(URL)
         case destination(PresentationAction<Destination.Action>)
     }
@@ -95,6 +102,8 @@ public struct AppFeature {
                 return runList(action, state: &state)
             case .goalList:
                 return .none
+            case .history:
+                return .none
             case let .deepLink(url):
                 return deepLink(url: url, state: &state)
             case let .destination(action):
@@ -114,6 +123,12 @@ public struct AppFeature {
             state: \.goalList,
             action: /Action.goalList,
             child: GoalListFeature.init
+        )
+
+        Scope(
+            state: \.history,
+            action: /Action.history,
+            child: HistoryFeature.init
         )
     }
 

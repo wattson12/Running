@@ -2,10 +2,10 @@ import Dependencies
 import Foundation
 import Model
 
-struct IntervalTotal: Identifiable, Equatable {
-    let id: UUID
-    let label: String
-    let distance: Measurement<UnitLength>
+public struct IntervalTotal: Identifiable, Equatable {
+    public let id: UUID
+    public let label: String
+    public let distance: Measurement<UnitLength>
 }
 
 extension [IntervalTotal] {

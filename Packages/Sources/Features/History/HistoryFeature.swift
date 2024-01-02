@@ -8,6 +8,10 @@ public struct HistoryFeature: Reducer {
     @ObservableState
     public struct State: Equatable {
         var totals: [IntervalTotal] = []
+
+        public init(totals: [IntervalTotal] = []) {
+            self.totals = totals
+        }
     }
 
     public enum Action: Equatable {
