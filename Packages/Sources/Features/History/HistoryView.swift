@@ -1,18 +1,51 @@
 import ComposableArchitecture
 import Dependencies
+import Model
 import Repository
 import SwiftUI
+
+struct IntervalTotal: Identifiable, Equatable {
+    let id: UUID
+    let label: String
+    let distance: Measurement<UnitLength>
+}
+
+extension [IntervalTotal] {
+    init(runs: [Run]) {
+        guard let first = runs.first, let last = runs.last else {
+            self = []
+            return
+        }
+
+        let firstYear = Calendar.current.component(.year, from: first.startDate)
+        let lastYear = Calendar.current.component(.year, from: last.startDate)
+
+        var totals: [Measurement<UnitLength>] = .init(repeating: .init(value: 0, unit: .kilometers), count: lastYear - firstYear + 1)
+        for run in runs {
+            let year = Calendar.current.component(.year, from: run.startDate)
+            var currentTotal = totals[year - firstYear]
+            currentTotal = currentTotal + run.distance
+            totals[year - firstYear] = currentTotal
+        }
+
+        self = totals.enumerated().map {
+            index,
+                distance in
+            .init(
+                id: .init(),
+                label: (
+                    index + firstYear
+                ).description,
+                distance: distance
+            )
+        }
+    }
+}
 
 @Reducer
 struct HistoryFeature: Reducer {
     @ObservableState
     struct State: Equatable {
-        struct IntervalTotal: Identifiable, Equatable {
-            let id: UUID
-            let label: String
-            let distance: Measurement<UnitLength>
-        }
-
         var totals: [IntervalTotal] = []
     }
 
@@ -24,6 +57,8 @@ struct HistoryFeature: Reducer {
         case view(View)
     }
 
+    @Dependency(\.repository.runningWorkouts) var runningWorkouts
+
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -33,9 +68,15 @@ struct HistoryFeature: Reducer {
         }
     }
 
-    private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
+    private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
+            guard let allRuns = runningWorkouts.allRunningWorkouts.cache() else {
+                return .none
+            }
+
+            state.totals = .init(runs: allRuns.sorted(by: { $0.startDate < $1.startDate }))
+
             return .none
         }
     }
@@ -54,13 +95,14 @@ struct HistoryView: View {
                 Text(total.distance.fullValue(locale: locale))
             }
         }
+        .onAppear { store.send(.view(.onAppear)) }
     }
 }
 
 #Preview {
     HistoryView(
         store: .init(
-            initialState: .init(
+            initialState: HistoryFeature.State(
                 totals: [
                     .init(
                         id: .init(),
@@ -72,7 +114,7 @@ struct HistoryView: View {
                     ),
                 ]
             ),
-            reducer: HistoryFeature.init
+            reducer: { HistoryFeature() }
         )
     )
     .environment(\.locale, .init(identifier: "en-AU"))
