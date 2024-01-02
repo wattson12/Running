@@ -367,5 +367,10 @@ let package = Package(
             dependencies: [.byName(name: .settings)],
             path: .featureTests(.settings)
         ),
+        .testTarget(
+            name: .history.tests,
+            dependencies: [.byName(name: .history)],
+            path: .featureTests(.history)
+        ),
     ]
 )
