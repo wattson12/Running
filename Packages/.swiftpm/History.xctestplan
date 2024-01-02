@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "B74613A4-C804-438F-8A8B-5BF51116217F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "History",
+          "name" : "History"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "HistoryTests",
+        "name" : "HistoryTests"
+      }
+    }
+  ],
+  "version" : 1
+}

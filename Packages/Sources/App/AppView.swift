@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import DesignSystem
 import GoalList
+import History
 import Model
 import Permissions
 import Repository
@@ -67,6 +68,19 @@ public struct AppView: View {
                     Label(L10n.App.Feature.runs, systemImage: "figure.run")
                 }
                 .tag(AppFeature.State.Tab.runs)
+
+                NavigationStack {
+                    HistoryView(
+                        store: store.scope(
+                            state: \.history,
+                            action: AppFeature.Action.history
+                        )
+                    )
+                }
+                .tabItem {
+                    Label(L10n.App.Feature.history, systemImage: "clock.arrow.circlepath")
+                }
+                .tag(AppFeature.State.Tab.history)
             }
             .onAppear { store.send(.view(.onAppear)) }
             .tint(Color(asset: Asset.blue))
