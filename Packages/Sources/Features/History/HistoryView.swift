@@ -2,6 +2,7 @@ import ComposableArchitecture
 import Dependencies
 import Model
 import Repository
+import Resources
 import SwiftUI
 
 public struct HistoryView: View {
@@ -22,26 +23,29 @@ public struct HistoryView: View {
             }
         }
         .onAppear { store.send(.view(.onAppear)) }
+        .navigationTitle(L10n.History.title)
     }
 }
 
 #Preview {
-    HistoryView(
-        store: .init(
-            initialState: HistoryFeature.State(
-                totals: [
-                    .init(
-                        id: .init(),
-                        label: "2020",
-                        distance: .init(
-                            value: 100,
-                            unit: .kilometers
-                        )
-                    ),
-                ]
-            ),
-            reducer: { HistoryFeature() }
+    NavigationStack {
+        HistoryView(
+            store: .init(
+                initialState: HistoryFeature.State(
+                    totals: [
+                        .init(
+                            id: .init(),
+                            label: "2020",
+                            distance: .init(
+                                value: 100,
+                                unit: .kilometers
+                            )
+                        ),
+                    ]
+                ),
+                reducer: { HistoryFeature() }
+            )
         )
-    )
-    .environment(\.locale, .init(identifier: "en-AU"))
+        .environment(\.locale, .init(identifier: "en-AU"))
+    }
 }

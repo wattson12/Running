@@ -81,6 +81,11 @@ public enum L10n {
         }
     }
 
+    public enum History {
+        /// History
+        public static let title = L10n.tr("Localizable", "history.title", fallback: "History")
+    }
+
     public enum Permissions {
         public enum HealthKitUnavailable {
             /// We use running workouts to update your running goals. This device doesn't currently support importing workouts so we can't track your goals
