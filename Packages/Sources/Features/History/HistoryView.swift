@@ -27,7 +27,7 @@ public struct HistoryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Section("Sort") {
+                    Section(L10n.History.Menu.Sort.title) {
                         Button(
                             action: {
                                 store.send(.view(.sortByDateMenuButtonTapped))
@@ -37,7 +37,7 @@ public struct HistoryView: View {
                                     if store.sortType == .date {
                                         Image(systemName: "checkmark")
                                     }
-                                    Text("Date")
+                                    Text(L10n.History.Menu.Sort.date)
                                 }
                             }
                         )
@@ -50,13 +50,13 @@ public struct HistoryView: View {
                                     if store.sortType == .distance {
                                         Image(systemName: "checkmark")
                                     }
-                                    Text("Distance")
+                                    Text(L10n.History.Menu.Sort.distance)
                                 }
                             }
                         )
                     }
                 } label: {
-                    Label("Sort", systemImage: "arrow.up.arrow.down")
+                    Label(L10n.History.Menu.label, systemImage: "arrow.up.arrow.down")
                 }
             }
         }

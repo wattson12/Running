@@ -57,3 +57,7 @@
 "settings.section.links.privacy" = "Privacy policy";
 
 "history.title" = "History";
+"history.menu.label" = "Menu";
+"history.menu.sort.title" = "Sort";
+"history.menu.sort.date" = "Date";
+"history.menu.sort.distance" = "Distance";
