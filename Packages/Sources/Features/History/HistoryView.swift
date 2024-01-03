@@ -24,6 +24,16 @@ public struct HistoryView: View {
         }
         .onAppear { store.send(.view(.onAppear)) }
         .navigationTitle(L10n.History.title)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button("Date") {}
+                    Button("Distance") {}
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down")
+                }
+            }
+        }
     }
 }
 
