@@ -27,32 +27,34 @@ public struct HistoryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button(
-                        action: {
-                            store.send(.view(.sortByDateMenuButtonTapped))
-                        },
-                        label: {
-                            HStack {
-                                if store.sortType == .date {
-                                    Image(systemName: "checkmark")
+                    Section("Sort") {
+                        Button(
+                            action: {
+                                store.send(.view(.sortByDateMenuButtonTapped))
+                            },
+                            label: {
+                                HStack {
+                                    if store.sortType == .date {
+                                        Image(systemName: "checkmark")
+                                    }
+                                    Text("Date")
                                 }
-                                Text("Date")
                             }
-                        }
-                    )
-                    Button(
-                        action: {
-                            store.send(.view(.sortByDistanceMenuButtonTapped))
-                        },
-                        label: {
-                            HStack {
-                                if store.sortType == .distance {
-                                    Image(systemName: "checkmark")
+                        )
+                        Button(
+                            action: {
+                                store.send(.view(.sortByDistanceMenuButtonTapped))
+                            },
+                            label: {
+                                HStack {
+                                    if store.sortType == .distance {
+                                        Image(systemName: "checkmark")
+                                    }
+                                    Text("Distance")
                                 }
-                                Text("Distance")
                             }
-                        }
-                    )
+                        )
+                    }
                 } label: {
                     Label("Sort", systemImage: "arrow.up.arrow.down")
                 }
