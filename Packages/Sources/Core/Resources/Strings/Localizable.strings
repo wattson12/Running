@@ -55,3 +55,9 @@
 "settings.section.links.source_code" = "Source code";
 "settings.section.links.terms" = "Terms & conditions";
 "settings.section.links.privacy" = "Privacy policy";
+
+"history.title" = "History";
+"history.menu.label" = "Menu";
+"history.menu.sort.title" = "Sort";
+"history.menu.sort.date" = "Date";
+"history.menu.sort.distance" = "Distance";

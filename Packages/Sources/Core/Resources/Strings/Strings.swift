@@ -81,6 +81,23 @@ public enum L10n {
         }
     }
 
+    public enum History {
+        /// History
+        public static let title = L10n.tr("Localizable", "history.title", fallback: "History")
+        public enum Menu {
+            /// Menu
+            public static let label = L10n.tr("Localizable", "history.menu.label", fallback: "Menu")
+            public enum Sort {
+                /// Date
+                public static let date = L10n.tr("Localizable", "history.menu.sort.date", fallback: "Date")
+                /// Distance
+                public static let distance = L10n.tr("Localizable", "history.menu.sort.distance", fallback: "Distance")
+                /// Sort
+                public static let title = L10n.tr("Localizable", "history.menu.sort.title", fallback: "Sort")
+            }
+        }
+    }
+
     public enum Permissions {
         public enum HealthKitUnavailable {
             /// We use running workouts to update your running goals. This device doesn't currently support importing workouts so we can't track your goals

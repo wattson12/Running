@@ -7,16 +7,37 @@ import Repository
 public struct HistoryFeature: Reducer {
     @ObservableState
     public struct State: Equatable {
-        var totals: [IntervalTotal] = []
+        public enum SortType: Equatable {
+            case date
+            case distance
+        }
 
-        public init(totals: [IntervalTotal] = []) {
+        var totals: [IntervalTotal]
+        var sortType: SortType
+
+        public init(
+            totals: [IntervalTotal] = [],
+            sortType: SortType = .date
+        ) {
             self.totals = totals
+            self.sortType = sortType
+        }
+
+        mutating func sortTotals() {
+            switch sortType {
+            case .date:
+                totals.sort(by: { $0.sort < $1.sort })
+            case .distance:
+                totals.sort(by: { $0.distance > $1.distance })
+            }
         }
     }
 
     public enum Action: Equatable {
         public enum View: Equatable {
             case onAppear
+            case sortByDateMenuButtonTapped
+            case sortByDistanceMenuButtonTapped
         }
 
         case view(View)
@@ -43,7 +64,16 @@ public struct HistoryFeature: Reducer {
             }
 
             state.totals = .init(runs: allRuns.sorted(by: { $0.startDate < $1.startDate }))
+            state.sortTotals()
 
+            return .none
+        case .sortByDateMenuButtonTapped:
+            state.sortType = .date
+            state.sortTotals()
+            return .none
+        case .sortByDistanceMenuButtonTapped:
+            state.sortType = .distance
+            state.sortTotals()
             return .none
         }
     }

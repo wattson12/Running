@@ -5,6 +5,7 @@ import Model
 public struct IntervalTotal: Identifiable, Equatable {
     public let id: UUID
     public let label: String
+    public let sort: Int
     public let distance: Measurement<UnitLength>
 }
 
@@ -33,9 +34,8 @@ extension [IntervalTotal] {
                 distance in
             .init(
                 id: .init(),
-                label: (
-                    index + firstYear
-                ).description,
+                label: (index + firstYear).description,
+                sort: index + firstYear,
                 distance: distance
             )
         }
