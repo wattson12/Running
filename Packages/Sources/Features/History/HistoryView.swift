@@ -46,6 +46,7 @@ public struct HistoryView: View {
                         .init(
                             id: .init(),
                             label: "2020",
+                            sort: 2020,
                             distance: .init(
                                 value: 100,
                                 unit: .kilometers

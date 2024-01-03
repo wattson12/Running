@@ -26,7 +26,7 @@ public struct HistoryFeature: Reducer {
         mutating func sortTotals() {
             switch sortType {
             case .date:
-                totals.sort(by: { Int($0.label)! < Int($1.label)! })
+                totals.sort(by: { $0.sort < $1.sort })
             case .distance:
                 totals.sort(by: { $0.distance > $1.distance })
             }
