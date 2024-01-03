@@ -22,6 +22,7 @@ public struct HistoryView: View {
                 Text(total.distance.fullValue(locale: locale))
             }
         }
+        .animation(.default, value: store.sortType)
         .onAppear { store.send(.view(.onAppear)) }
         .navigationTitle(L10n.History.title)
         .toolbar {
