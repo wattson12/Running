@@ -27,8 +27,8 @@ public struct HistoryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button("Date") {}
-                    Button("Distance") {}
+                    Button("Date") { store.send(.view(.sortByDateMenuButtonTapped)) }
+                    Button("Distance") { store.send(.view(.sortByDistanceMenuButtonTapped)) }
                 } label: {
                     Label("Sort", systemImage: "arrow.up.arrow.down")
                 }
