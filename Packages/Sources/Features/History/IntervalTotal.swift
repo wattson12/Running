@@ -12,6 +12,7 @@ public struct IntervalTotal: Identifiable, Equatable {
 extension [IntervalTotal] {
     init(runs: [Run]) {
         @Dependency(\.calendar) var calendar
+        @Dependency(\.uuid) var uuid
 
         guard let first = runs.first, let last = runs.last else {
             self = []
@@ -33,7 +34,7 @@ extension [IntervalTotal] {
             index,
                 distance in
             .init(
-                id: .init(),
+                id: uuid(),
                 label: (index + firstYear).description,
                 sort: index + firstYear,
                 distance: distance
