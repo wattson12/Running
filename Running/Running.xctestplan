@@ -99,6 +99,13 @@
         "identifier" : "RunDetailTests",
         "name" : "RunDetailTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "HistoryTests",
+        "name" : "HistoryTests"
+      }
     }
   ],
   "version" : 1
