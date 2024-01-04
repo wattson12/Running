@@ -60,6 +60,7 @@ public struct HistoryFeature: Reducer {
         switch action {
         case .onAppear:
             guard let allRuns = runningWorkouts.allRunningWorkouts.cache() else {
+                state.totals = []
                 return .none
             }
 
