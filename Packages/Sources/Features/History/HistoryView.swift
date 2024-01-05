@@ -33,9 +33,9 @@ public struct HistoryView: View {
                         footer: {
                             if let summary = store.summary {
                                 VStack(alignment: .leading) {
-                                    Text("Distance: \(summary.distance.fullValue(locale: locale))")
-                                    Text("Duration: \(summary.duration.summaryValue(locale: locale))")
-                                    Text("Count: \(summary.count.description)")
+                                    Text(L10n.History.Summary.distanceFormat(summary.distance.fullValue(locale: locale)))
+                                    Text(L10n.History.Summary.durationFormat(summary.duration.summaryValue(locale: locale)))
+                                    Text(L10n.History.Summary.countFormat(summary.count))
                                 }
                             }
                         }

@@ -106,6 +106,23 @@ public enum L10n {
                 public static let title = L10n.tr("Localizable", "history.menu.sort.title", fallback: "Sort")
             }
         }
+
+        public enum Summary {
+            /// Total runs: %d
+            public static func countFormat(_ p1: Int) -> String {
+                L10n.tr("Localizable", "history.summary.count_format", p1, fallback: "Total runs: %d")
+            }
+
+            /// Total distance: %@
+            public static func distanceFormat(_ p1: Any) -> String {
+                L10n.tr("Localizable", "history.summary.distance_format", String(describing: p1), fallback: "Total distance: %@")
+            }
+
+            /// Total duration: %@
+            public static func durationFormat(_ p1: Any) -> String {
+                L10n.tr("Localizable", "history.summary.duration_format", String(describing: p1), fallback: "Total duration: %@")
+            }
+        }
     }
 
     public enum Permissions {

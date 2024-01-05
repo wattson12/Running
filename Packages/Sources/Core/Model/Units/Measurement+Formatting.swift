@@ -33,8 +33,9 @@ public extension Measurement where UnitType == UnitDuration {
         let converted = converted(to: .seconds).value
 
         let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .brief
         formatter.calendar = locale.calendar
-        formatter.allowedUnits = [.day, .hour, .minute, .second]
+        formatter.allowedUnits = [.day, .hour, .minute]
 
         return formatter.string(from: converted) ?? ""
     }
