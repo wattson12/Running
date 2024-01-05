@@ -84,6 +84,16 @@ public enum L10n {
     public enum History {
         /// History
         public static let title = L10n.tr("Localizable", "history.title", fallback: "History")
+        public enum Empty {
+            /// Missing workouts?
+            /// Check your permissions in the [Health](x-apple-health://) app
+            public static let caption = L10n.tr("Localizable", "history.empty.caption", fallback: "Missing workouts?\nCheck your permissions in the [Health](x-apple-health://) app")
+            /// Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your history will be updated automatically
+            public static let message = L10n.tr("Localizable", "history.empty.message", fallback: "Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your history will be updated automatically")
+            /// No history (yet)
+            public static let title = L10n.tr("Localizable", "history.empty.title", fallback: "No history (yet)")
+        }
+
         public enum Menu {
             /// Menu
             public static let label = L10n.tr("Localizable", "history.menu.label", fallback: "Menu")
@@ -94,6 +104,23 @@ public enum L10n {
                 public static let distance = L10n.tr("Localizable", "history.menu.sort.distance", fallback: "Distance")
                 /// Sort
                 public static let title = L10n.tr("Localizable", "history.menu.sort.title", fallback: "Sort")
+            }
+        }
+
+        public enum Summary {
+            /// Total runs: %d
+            public static func countFormat(_ p1: Int) -> String {
+                L10n.tr("Localizable", "history.summary.count_format", p1, fallback: "Total runs: %d")
+            }
+
+            /// Total distance: %@
+            public static func distanceFormat(_ p1: Any) -> String {
+                L10n.tr("Localizable", "history.summary.distance_format", String(describing: p1), fallback: "Total distance: %@")
+            }
+
+            /// Total duration: %@
+            public static func durationFormat(_ p1: Any) -> String {
+                L10n.tr("Localizable", "history.summary.duration_format", String(describing: p1), fallback: "Total duration: %@")
             }
         }
     }

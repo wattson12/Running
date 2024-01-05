@@ -61,3 +61,12 @@
 "history.menu.sort.title" = "Sort";
 "history.menu.sort.date" = "Date";
 "history.menu.sort.distance" = "Distance";
+
+"history.summary.distance_format" = "Total distance: %@";
+"history.summary.duration_format" = "Total duration: %@";
+"history.summary.count_format" = "Total runs: %d";
+
+
+"history.empty.title" = "No history (yet)";
+"history.empty.message" = "Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your history will be updated automatically";
+"history.empty.caption" = "Missing workouts?\nCheck your permissions in the [Health](x-apple-health://) app";
