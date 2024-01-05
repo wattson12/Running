@@ -21,7 +21,9 @@ public struct HistorySummary: Equatable {
 }
 
 extension HistorySummary {
-    init(runs: [Run]) {
+    init?(runs: [Run]) {
+        guard !runs.isEmpty else { return nil }
+
         var distance: Measurement<UnitLength> = .init(value: 0, unit: .kilometers)
         var duration: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
 
