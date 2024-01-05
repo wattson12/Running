@@ -84,6 +84,16 @@ public enum L10n {
     public enum History {
         /// History
         public static let title = L10n.tr("Localizable", "history.title", fallback: "History")
+        public enum Empty {
+            /// Missing workouts?
+            /// Check your permissions in the [Health](x-apple-health://) app
+            public static let caption = L10n.tr("Localizable", "history.empty.caption", fallback: "Missing workouts?\nCheck your permissions in the [Health](x-apple-health://) app")
+            /// Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your history will be updated automatically
+            public static let message = L10n.tr("Localizable", "history.empty.message", fallback: "Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your history will be updated automatically")
+            /// No history (yet)
+            public static let title = L10n.tr("Localizable", "history.empty.title", fallback: "No history (yet)")
+        }
+
         public enum Menu {
             /// Menu
             public static let label = L10n.tr("Localizable", "history.menu.label", fallback: "Menu")
