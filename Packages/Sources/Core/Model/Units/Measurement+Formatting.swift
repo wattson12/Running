@@ -28,4 +28,14 @@ public extension Measurement where UnitType == UnitDuration {
 
         return formatter.string(from: converted) ?? ""
     }
+
+    func summaryValue(locale: Locale = .current) -> String {
+        let converted = converted(to: .seconds).value
+
+        let formatter = DateComponentsFormatter()
+        formatter.calendar = locale.calendar
+        formatter.allowedUnits = [.day, .hour, .minute, .second]
+
+        return formatter.string(from: converted) ?? ""
+    }
 }
