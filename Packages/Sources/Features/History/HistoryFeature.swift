@@ -1,18 +1,29 @@
 import ComposableArchitecture
 import Dependencies
+import Foundation
 import Model
 import Repository
 
-struct HistorySummary: Equatable {
+public struct HistorySummary: Equatable {
     let distance: Measurement<UnitLength>
     let duration: Measurement<UnitDuration>
     let count: Int
+
+    public init(
+        distance: Measurement<UnitLength>,
+        duration: Measurement<UnitDuration>,
+        count: Int
+    ) {
+        self.distance = distance
+        self.duration = duration
+        self.count = count
+    }
 }
 
 extension HistorySummary {
     init(runs: [Run]) {
-        var distance: Measurement<UnitLength> = .init(value: 0, unit: .kilometer)
-        var duration: Measurement<UnitDuration> = .init(value: 0, unit: .kilometer)
+        var distance: Measurement<UnitLength> = .init(value: 0, unit: .kilometers)
+        var duration: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
 
         for run in runs {
             distance = distance + run.distance
