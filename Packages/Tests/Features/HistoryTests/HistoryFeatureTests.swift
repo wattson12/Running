@@ -27,14 +27,14 @@ final class HistoryFeatureTests: XCTestCase {
                 id: .init(),
                 startDate: .init(timeIntervalSince1970: 947_022_395),
                 distance: .init(value: 10, unit: .kilometers),
-                duration: .init(value: 0, unit: .seconds),
+                duration: .init(value: 10, unit: .seconds),
                 detail: nil
             ),
             .init(
                 id: .init(),
                 startDate: .init(timeIntervalSince1970: 978_644_795),
                 distance: .init(value: 10, unit: .kilometers),
-                duration: .init(value: 0, unit: .seconds),
+                duration: .init(value: 10, unit: .seconds),
                 detail: nil
             ),
         ]
@@ -58,6 +58,12 @@ final class HistoryFeatureTests: XCTestCase {
                 .init(id: id, label: "2000", sort: 2000, distance: .init(value: 10, unit: .kilometers)),
                 .init(id: id, label: "2001", sort: 2001, distance: .init(value: 10, unit: .kilometers)),
             ]
+
+            $0.summary = .init(
+                distance: .init(value: 20, unit: .kilometers),
+                duration: .init(value: 20, unit: .seconds),
+                count: 2
+            )
         }
     }
 

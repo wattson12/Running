@@ -1,7 +1,44 @@
 import ComposableArchitecture
 import Dependencies
+import Foundation
 import Model
 import Repository
+
+public struct HistorySummary: Equatable {
+    let distance: Measurement<UnitLength>
+    let duration: Measurement<UnitDuration>
+    let count: Int
+
+    public init(
+        distance: Measurement<UnitLength>,
+        duration: Measurement<UnitDuration>,
+        count: Int
+    ) {
+        self.distance = distance
+        self.duration = duration
+        self.count = count
+    }
+}
+
+extension HistorySummary {
+    init?(runs: [Run]) {
+        guard !runs.isEmpty else { return nil }
+
+        var distance: Measurement<UnitLength> = .init(value: 0, unit: .kilometers)
+        var duration: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
+
+        for run in runs {
+            distance = distance + run.distance
+            duration = duration + run.duration
+        }
+
+        self = .init(
+            distance: distance,
+            duration: duration,
+            count: runs.count
+        )
+    }
+}
 
 @Reducer
 public struct HistoryFeature: Reducer {
@@ -14,13 +51,16 @@ public struct HistoryFeature: Reducer {
 
         var totals: [IntervalTotal]
         var sortType: SortType
+        var summary: HistorySummary?
 
         public init(
             totals: [IntervalTotal] = [],
-            sortType: SortType = .date
+            sortType: SortType = .date,
+            summary: HistorySummary? = nil
         ) {
             self.totals = totals
             self.sortType = sortType
+            self.summary = summary
         }
 
         mutating func sortTotals() {
@@ -66,6 +106,8 @@ public struct HistoryFeature: Reducer {
 
             state.totals = .init(runs: allRuns.sorted(by: { $0.startDate < $1.startDate }))
             state.sortTotals()
+
+            state.summary = .init(runs: allRuns)
 
             return .none
         case .sortByDateMenuButtonTapped:

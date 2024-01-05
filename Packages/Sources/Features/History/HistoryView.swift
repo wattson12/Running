@@ -15,12 +15,27 @@ public struct HistoryView: View {
     }
 
     public var body: some View {
-        List(store.totals) { total in
-            HStack {
-                Text(total.label)
-                Spacer()
-                Text(total.distance.fullValue(locale: locale))
-            }
+        List {
+            Section(
+                content: {
+                    ForEach(store.totals) { total in
+                        HStack {
+                            Text(total.label)
+                            Spacer()
+                            Text(total.distance.fullValue(locale: locale))
+                        }
+                    }
+                },
+                footer: {
+                    if let summary = store.summary {
+                        VStack(alignment: .leading) {
+                            Text("Distance: \(summary.distance.fullValue(locale: locale))")
+                            Text("Duration: \(summary.duration.summaryValue(locale: locale))")
+                            Text("Count: \(summary.count.description)")
+                        }
+                    }
+                }
+            )
         }
         .animation(.default, value: store.sortType)
         .onAppear { store.send(.view(.onAppear)) }
