@@ -22,6 +22,15 @@ public struct GoalDetailFeature {
             self.runs = runs
             self.emptyStateRuns = emptyStateRuns
         }
+
+        var title: String {
+            if let intervalDate {
+                let dateFormatter: DateFormatter = .rangeTitle(for: goal.period)
+                return dateFormatter.string(from: intervalDate)
+            } else {
+                return goal.period.rawValue.capitalized
+            }
+        }
     }
 
     public enum Action: Equatable {

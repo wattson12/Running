@@ -86,7 +86,7 @@ public struct GoalDetailView: View {
                 }
             }
         }
-        .navigationTitle(store.goal.period.rawValue.capitalized)
+        .navigationTitle(store.title)
         .onAppear { store.send(.view(.onAppear)) }
         .customTint(store.goal.period.tint)
     }
@@ -117,6 +117,15 @@ struct GoalDetailView_Previews: PreviewProvider {
         }
         .environment(\.locale, .init(identifier: "en_AU"))
         .previewDisplayName("Yearly")
+
+        NavigationStack {
+            GoalDetailView.preview(
+                goalPeriod: .yearly,
+                date: Date(timeIntervalSince1970: 1_578_346_222) // 2020
+            )
+        }
+        .environment(\.locale, .init(identifier: "en_AU"))
+        .previewDisplayName("Custom Date")
 
         NavigationStack {
             GoalDetailView(
@@ -157,7 +166,8 @@ extension GoalDetailView {
     }
 
     static func preview(
-        goalPeriod: Goal.Period
+        goalPeriod: Goal.Period,
+        date: Date? = nil
     ) -> Self {
         GoalDetailView(
             store: .init(
@@ -166,6 +176,7 @@ extension GoalDetailView {
                         period: goalPeriod,
                         target: target(from: goalPeriod)
                     ),
+                    intervalDate: date,
                     runs: .week
                 ),
                 reducer: GoalDetailFeature.init,
