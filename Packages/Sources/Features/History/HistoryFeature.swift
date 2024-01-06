@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Dependencies
 import Foundation
+import GoalDetail
 import Model
 import Repository
 
@@ -42,6 +43,21 @@ extension HistorySummary {
 
 @Reducer
 public struct HistoryFeature: Reducer {
+    @Reducer
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case detail(GoalDetailFeature.State)
+        }
+
+        public enum Action: Equatable {
+            case detail(GoalDetailFeature.Action)
+        }
+
+        public var body: some ReducerOf<Self> {
+            Scope(state: \.detail, action: \.detail, child: GoalDetailFeature.init)
+        }
+    }
+
     @ObservableState
     public struct State: Equatable {
         public enum SortType: Equatable {
@@ -52,15 +68,18 @@ public struct HistoryFeature: Reducer {
         var totals: [IntervalTotal]
         var sortType: SortType
         var summary: HistorySummary?
+        @PresentationState var destination: Destination.State?
 
         public init(
             totals: [IntervalTotal] = [],
             sortType: SortType = .date,
-            summary: HistorySummary? = nil
+            summary: HistorySummary? = nil,
+            destination: Destination.State? = nil
         ) {
             self.totals = totals
             self.sortType = sortType
             self.summary = summary
+            self.destination = destination
         }
 
         mutating func sortTotals() {
@@ -76,14 +95,17 @@ public struct HistoryFeature: Reducer {
     public enum Action: Equatable {
         public enum View: Equatable {
             case onAppear
+            case totalTapped(IntervalTotal)
             case sortByDateMenuButtonTapped
             case sortByDistanceMenuButtonTapped
         }
 
         case view(View)
+        case destination(PresentationAction<Destination.Action>)
     }
 
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
+    @Dependency(\.repository.goals) var goals
 
     public init() {}
 
@@ -92,8 +114,11 @@ public struct HistoryFeature: Reducer {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case .destination:
+                return .none
             }
         }
+        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
@@ -109,6 +134,10 @@ public struct HistoryFeature: Reducer {
 
             state.summary = .init(runs: allRuns)
 
+            return .none
+        case let .totalTapped(total):
+            guard let goal = try? goals.goal(in: total.period) else { return .none }
+            state.destination = .detail(.init(goal: goal, intervalDate: total.date))
             return .none
         case .sortByDateMenuButtonTapped:
             state.sortType = .date

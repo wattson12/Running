@@ -9,7 +9,6 @@ extension RunningWorkouts {
         @Dependency(\.coreData) var coreData
         @Dependency(\.healthKit.runningWorkouts) var healthKitRunningWorkouts
         @Dependency(\.calendar) var calendar
-        @Dependency(\.date) var date
 
         return .init(
             allRunningWorkouts: .init(
@@ -32,12 +31,12 @@ extension RunningWorkouts {
                     healthKitRunningWorkouts: healthKitRunningWorkouts
                 )
             },
-            runsWithinGoal: { goal in
+            runsWithinGoal: { goal, date in
                 try Implementation.runsWithinGoal(
                     goal: goal,
                     coreData: coreData,
                     calendar: calendar,
-                    date: date.now
+                    date: date
                 )
             }
         )

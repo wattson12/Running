@@ -15,7 +15,7 @@ final class AppFeatureTests: XCTestCase {
                 $0.userDefaults = .ephemeral()
 
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
-                $0.repository.runningWorkouts._runsWithinGoal = { _ in [] }
+                $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
 
                 $0.repository.goals._goal = { period in .mock(period: period) }
 
@@ -25,6 +25,8 @@ final class AppFeatureTests: XCTestCase {
 
                 $0.healthKit.observation._enableBackgroundDelivery = {}
                 $0.healthKit.observation._observeWorkouts = {}
+
+                $0.date = .incrementing()
             }
         )
 
@@ -43,7 +45,9 @@ final class AppFeatureTests: XCTestCase {
                 $0.repository.goals._goal = { period in
                     .mock(period: period, target: .init(value: 1, unit: .kilometers))
                 }
-                $0.repository.runningWorkouts._runsWithinGoal = { _ in [] }
+                $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
+
+                $0.date = .incrementing()
             }
         )
 

@@ -280,6 +280,7 @@ let package = Package(
                 .composableArchitecture,
                 .dependencies,
                 .dependenciesAdditions,
+                .target(name: .goalDetail),
                 .target(name: .designSystem),
                 .target(name: .logging),
                 .target(name: .featureFlags),

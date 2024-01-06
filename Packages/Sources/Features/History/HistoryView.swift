@@ -1,5 +1,7 @@
 import ComposableArchitecture
 import Dependencies
+import DesignSystem
+import GoalDetail
 import Model
 import Repository
 import Resources
@@ -23,11 +25,20 @@ public struct HistoryView: View {
                     Section(
                         content: {
                             ForEach(store.totals) { total in
-                                HStack {
-                                    Text(total.label)
-                                    Spacer()
-                                    Text(total.distance.fullValue(locale: locale))
-                                }
+                                Button(
+                                    action: {
+                                        store.send(.view(.totalTapped(total)))
+                                    },
+                                    label: {
+                                        HStack {
+                                            Text(total.label)
+                                            Spacer()
+                                            Text(total.distance.fullValue(locale: locale))
+                                        }
+                                        .contentShape(Rectangle())
+                                    }
+                                )
+                                .buttonStyle(.navigation)
                             }
                         },
                         footer: {
@@ -42,6 +53,13 @@ public struct HistoryView: View {
                     )
                 }
                 .animation(.default, value: store.sortType)
+                .navigationDestination(
+                    store: store.scope(
+                        state: \.$destination.detail,
+                        action: \.destination.detail
+                    ),
+                    destination: GoalDetailView.init
+                )
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
@@ -93,6 +111,8 @@ public struct HistoryView: View {
                     totals: [
                         .init(
                             id: .init(),
+                            period: .yearly,
+                            date: .now,
                             label: "2020",
                             sort: 2020,
                             distance: .init(
@@ -102,11 +122,14 @@ public struct HistoryView: View {
                         ),
                     ]
                 ),
-                reducer: { HistoryFeature() }
+                reducer: HistoryFeature.init,
+                withDependencies: {
+                    $0.locale = .init(identifier: "en-AU")
+                }
             )
         )
-        .environment(\.locale, .init(identifier: "en-AU"))
     }
+    .environment(\.locale, .init(identifier: "en-AU"))
 }
 
 #Preview("Empty") {
@@ -124,6 +147,6 @@ public struct HistoryView: View {
                 }
             )
         )
-        .environment(\.locale, .init(identifier: "en-AU"))
     }
+    .environment(\.locale, .init(identifier: "en-AU"))
 }

@@ -4,6 +4,8 @@ import Model
 
 public struct IntervalTotal: Identifiable, Equatable {
     public let id: UUID
+    public let period: Goal.Period
+    public let date: Date
     public let label: String
     public let sort: Int
     public let distance: Measurement<UnitLength>
@@ -22,22 +24,25 @@ extension [IntervalTotal] {
         let firstYear = calendar.component(.year, from: first.startDate)
         let lastYear = calendar.component(.year, from: last.startDate)
 
-        var totals: [Measurement<UnitLength>] = .init(repeating: .init(value: 0, unit: .kilometers), count: lastYear - firstYear + 1)
+        var totals: [(Measurement<UnitLength>, Date)] = .init(repeating: (.init(value: 0, unit: .kilometers), .now), count: lastYear - firstYear + 1)
         for run in runs {
             let year = calendar.component(.year, from: run.startDate)
             var currentTotal = totals[year - firstYear]
-            currentTotal = currentTotal + run.distance
+            currentTotal.0 = currentTotal.0 + run.distance
+            currentTotal.1 = run.startDate
             totals[year - firstYear] = currentTotal
         }
 
         self = totals.enumerated().map {
             index,
-                distance in
+                totalValues in
             .init(
                 id: uuid(),
+                period: .yearly,
+                date: totalValues.1,
                 label: (index + firstYear).description,
                 sort: index + firstYear,
-                distance: distance
+                distance: totalValues.0
             )
         }
     }
