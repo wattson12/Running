@@ -33,9 +33,12 @@ public struct HistoryView: View {
                                             Text(total.label)
                                             Spacer()
                                             Text(total.distance.fullValue(locale: locale))
+                                            Image(systemName: "chevron.right")
                                         }
+                                        .contentShape(Rectangle())
                                     }
                                 )
+                                .buttonStyle(.plain)
                             }
                         },
                         footer: {
