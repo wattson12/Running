@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Dependencies
 import Foundation
+import GoalDetail
 import Model
 import Repository
 
@@ -42,6 +43,21 @@ extension HistorySummary {
 
 @Reducer
 public struct HistoryFeature: Reducer {
+    @Reducer
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case detail(GoalDetailFeature.State)
+        }
+
+        public enum Action: Equatable {
+            case detail(GoalDetailFeature.Action)
+        }
+
+        public var body: some ReducerOf<Self> {
+            Scope(state: \.detail, action: \.detail, child: GoalDetailFeature.init)
+        }
+    }
+
     @ObservableState
     public struct State: Equatable {
         public enum SortType: Equatable {
@@ -52,15 +68,18 @@ public struct HistoryFeature: Reducer {
         var totals: [IntervalTotal]
         var sortType: SortType
         var summary: HistorySummary?
+        @PresentationState var destination: Destination.State?
 
         public init(
             totals: [IntervalTotal] = [],
             sortType: SortType = .date,
-            summary: HistorySummary? = nil
+            summary: HistorySummary? = nil,
+            destination: Destination.State? = nil
         ) {
             self.totals = totals
             self.sortType = sortType
             self.summary = summary
+            self.destination = destination
         }
 
         mutating func sortTotals() {
