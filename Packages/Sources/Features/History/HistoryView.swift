@@ -108,6 +108,7 @@ public struct HistoryView: View {
                     totals: [
                         .init(
                             id: .init(),
+                            period: .yearly,
                             label: "2020",
                             sort: 2020,
                             distance: .init(
