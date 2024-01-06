@@ -237,7 +237,11 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         }
 
         let goal: Model.Goal = .mock(period: .weekly)
-        let remoteRuns = try sut.runs(within: goal)
+        let remoteRuns = try withDependencies {
+            $0.date = .constant(.now)
+        } operation: {
+            try sut.runs(within: goal)
+        }
         XCTAssert(remoteRuns.isEmpty)
     }
 
@@ -282,7 +286,11 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         }
 
         let goal: Model.Goal = .mock(period: .weekly)
-        let remoteRuns = try sut.runs(within: goal)
+        let remoteRuns = try withDependencies {
+            $0.date = .constant(.now)
+        } operation: {
+            try sut.runs(within: goal)
+        }
         XCTAssertEqual(remoteRuns.count, 1)
     }
 
