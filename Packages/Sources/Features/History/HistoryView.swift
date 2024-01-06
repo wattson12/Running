@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import Dependencies
+import GoalDetail
 import Model
 import Repository
 import Resources
@@ -23,11 +24,18 @@ public struct HistoryView: View {
                     Section(
                         content: {
                             ForEach(store.totals) { total in
-                                HStack {
-                                    Text(total.label)
-                                    Spacer()
-                                    Text(total.distance.fullValue(locale: locale))
-                                }
+                                Button(
+                                    action: {
+                                        store.send(.view(.totalTapped(total)))
+                                    },
+                                    label: {
+                                        HStack {
+                                            Text(total.label)
+                                            Spacer()
+                                            Text(total.distance.fullValue(locale: locale))
+                                        }
+                                    }
+                                )
                             }
                         },
                         footer: {
@@ -42,6 +50,13 @@ public struct HistoryView: View {
                     )
                 }
                 .animation(.default, value: store.sortType)
+                .navigationDestination(
+                    store: store.scope(
+                        state: \.$destination.detail,
+                        action: \.destination.detail
+                    ),
+                    destination: GoalDetailView.init
+                )
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {

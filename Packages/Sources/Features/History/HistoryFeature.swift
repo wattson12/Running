@@ -95,11 +95,13 @@ public struct HistoryFeature: Reducer {
     public enum Action: Equatable {
         public enum View: Equatable {
             case onAppear
+            case totalTapped(IntervalTotal)
             case sortByDateMenuButtonTapped
             case sortByDistanceMenuButtonTapped
         }
 
         case view(View)
+        case destination(PresentationAction<Destination.Action>)
     }
 
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
@@ -111,8 +113,11 @@ public struct HistoryFeature: Reducer {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case .destination:
+                return .none
             }
         }
+        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
@@ -128,6 +133,9 @@ public struct HistoryFeature: Reducer {
 
             state.summary = .init(runs: allRuns)
 
+            return .none
+        case let .totalTapped(total):
+            state.destination = .detail(.init(goal: .mock()))
             return .none
         case .sortByDateMenuButtonTapped:
             state.sortType = .date
