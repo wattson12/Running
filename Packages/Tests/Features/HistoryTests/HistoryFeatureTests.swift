@@ -55,8 +55,8 @@ final class HistoryFeatureTests: XCTestCase {
 
         await store.send(.view(.onAppear)) {
             $0.totals = [
-                .init(id: id, period: .yearly, label: "2000", sort: 2000, distance: .init(value: 10, unit: .kilometers)),
-                .init(id: id, period: .yearly, label: "2001", sort: 2001, distance: .init(value: 10, unit: .kilometers)),
+                .init(id: id, period: .yearly, date: runs[0].startDate, label: "2000", sort: 2000, distance: .init(value: 10, unit: .kilometers)),
+                .init(id: id, period: .yearly, date: runs[1].startDate, label: "2001", sort: 2001, distance: .init(value: 10, unit: .kilometers)),
             ]
 
             $0.summary = .init(
@@ -71,6 +71,7 @@ final class HistoryFeatureTests: XCTestCase {
         let total1: IntervalTotal = .init(
             id: .init(),
             period: .yearly,
+            date: .now,
             label: UUID().uuidString,
             sort: 10,
             distance: .init(value: 1, unit: .kilometers)
@@ -79,6 +80,7 @@ final class HistoryFeatureTests: XCTestCase {
         let total2: IntervalTotal = .init(
             id: .init(),
             period: .yearly,
+            date: .now,
             label: UUID().uuidString,
             sort: 1,
             distance: .init(value: 100, unit: .kilometers)
@@ -102,6 +104,7 @@ final class HistoryFeatureTests: XCTestCase {
         let total1: IntervalTotal = .init(
             id: .init(),
             period: .yearly,
+            date: .now,
             label: UUID().uuidString,
             sort: 10,
             distance: .init(value: 100, unit: .kilometers)
@@ -110,6 +113,7 @@ final class HistoryFeatureTests: XCTestCase {
         let total2: IntervalTotal = .init(
             id: .init(),
             period: .yearly,
+            date: .now,
             label: UUID().uuidString,
             sort: 1,
             distance: .init(value: 1, unit: .kilometers)

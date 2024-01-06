@@ -112,6 +112,7 @@ public struct HistoryView: View {
                         .init(
                             id: .init(),
                             period: .yearly,
+                            date: .now,
                             label: "2020",
                             sort: 2020,
                             distance: .init(
@@ -127,8 +128,8 @@ public struct HistoryView: View {
                 }
             )
         )
-        .environment(\.locale, .init(identifier: "en-AU"))
     }
+    .environment(\.locale, .init(identifier: "en-AU"))
 }
 
 #Preview("Empty") {
@@ -146,6 +147,6 @@ public struct HistoryView: View {
                 }
             )
         )
-        .environment(\.locale, .init(identifier: "en-AU"))
     }
+    .environment(\.locale, .init(identifier: "en-AU"))
 }

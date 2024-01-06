@@ -7,15 +7,18 @@ public struct GoalDetailFeature {
     @ObservableState
     public struct State: Equatable {
         let goal: Goal
+        let intervalDate: Date?
         var runs: [Run]?
         var emptyStateRuns: [Run]
 
         public init(
             goal: Goal,
+            intervalDate: Date? = nil,
             runs: [Run]? = nil,
             emptyStateRuns: [Run] = []
         ) {
             self.goal = goal
+            self.intervalDate = intervalDate
             self.runs = runs
             self.emptyStateRuns = emptyStateRuns
         }
@@ -58,15 +61,15 @@ public struct GoalDetailFeature {
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            if let runsForGoal = try? runningWorkouts.runs(within: state.goal) {
+            if let runsForGoal = try? runningWorkouts.runs(within: state.goal, date: state.intervalDate) {
                 state.runs = runsForGoal
                 updateEmptyStateRuns(state: &state)
             }
 
-            return .run { [goal = state.goal] send in
+            return .run { [goal = state.goal, intervalDate = state.intervalDate] send in
                 let result = await TaskResult {
                     _ = try await runningWorkouts.allRunningWorkouts.remote()
-                    return try runningWorkouts.runs(within: goal)
+                    return try runningWorkouts.runs(within: goal, date: intervalDate)
                 }
                 await send(._internal(.runsFetched(result)))
             }
@@ -89,7 +92,7 @@ public struct GoalDetailFeature {
         // skip recalculation if we populated empty state initially
         guard state.emptyStateRuns.isEmpty else { return }
 
-        guard let range = state.goal.period.startAndEnd(in: calendar, now: date.now) else { return }
+        guard let range = state.goal.period.startAndEnd(in: calendar, now: state.intervalDate ?? date.now) else { return }
         let numberOfDaysInRangeComponents = calendar.dateComponents([.day], from: range.start, to: range.end)
         guard let numberOfDaysInRange = numberOfDaysInRangeComponents.day else { return }
 
