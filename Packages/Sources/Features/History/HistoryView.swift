@@ -121,7 +121,10 @@ public struct HistoryView: View {
                         ),
                     ]
                 ),
-                reducer: { HistoryFeature() }
+                reducer: HistoryFeature.init,
+                withDependencies: {
+                    $0.locale = .init(identifier: "en-AU")
+                }
             )
         )
         .environment(\.locale, .init(identifier: "en-AU"))

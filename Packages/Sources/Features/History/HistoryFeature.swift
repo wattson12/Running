@@ -105,6 +105,7 @@ public struct HistoryFeature: Reducer {
     }
 
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
+    @Dependency(\.repository.goals) var goals
 
     public init() {}
 
@@ -135,7 +136,8 @@ public struct HistoryFeature: Reducer {
 
             return .none
         case let .totalTapped(total):
-            state.destination = .detail(.init(goal: .mock(period: total.period)))
+            guard let goal = try? goals.goal(in: total.period) else { return .none }
+            state.destination = .detail(.init(goal: goal))
             return .none
         case .sortByDateMenuButtonTapped:
             state.sortType = .date
