@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import Dependencies
+import DesignSystem
 import GoalDetail
 import Model
 import Repository
@@ -33,12 +34,11 @@ public struct HistoryView: View {
                                             Text(total.label)
                                             Spacer()
                                             Text(total.distance.fullValue(locale: locale))
-                                            Image(systemName: "chevron.right")
                                         }
                                         .contentShape(Rectangle())
                                     }
                                 )
-                                .buttonStyle(.plain)
+                                .buttonStyle(.navigation)
                             }
                         },
                         footer: {
