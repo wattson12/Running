@@ -137,7 +137,7 @@ public struct HistoryFeature: Reducer {
             return .none
         case let .totalTapped(total):
             guard let goal = try? goals.goal(in: total.period) else { return .none }
-            state.destination = .detail(.init(goal: goal))
+            state.destination = .detail(.init(goal: goal, intervalDate: total.date))
             return .none
         case .sortByDateMenuButtonTapped:
             state.sortType = .date
