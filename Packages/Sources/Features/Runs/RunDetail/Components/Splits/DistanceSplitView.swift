@@ -107,12 +107,7 @@ struct DistanceSplitView: View {
 struct DistanceSplitView_Previews: PreviewProvider {
     static var previews: some View {
         DistanceSplitView(
-            distances: [],
-//            distances: .preview(
-//                predicate: { run in
-//                    run.distance > .init(value: 5, unit: .kilometers) && run.distance < .init(value: 6, unit: .kilometers)
-//                }
-//            ),
+            distances: .preview,
             isMetric: true
         )
         .frame(height: 250)

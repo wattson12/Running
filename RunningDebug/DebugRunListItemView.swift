@@ -84,12 +84,13 @@ struct DebugRunListItemFeature: Reducer {
             state.isLoading = false
 //            print("repository", run.detail?.locations.count)
 //            print("repository", run.detail?.distanceSamples.count)
-            guard let samples = run.detail?.distanceSamples else { return .none }
+            guard let _samples = run.detail?.distanceSamples else { return .none }
+            let samples = _samples.sorted(by: { $0.startDate < $1.startDate })
             print("-----")
-            print("public extension DistanceSample {")
+            print("public extension [DistanceSample] {")
             print("    static var preview: [DistanceSample] {")
             print("        [")
-            for sample in samples {
+            for sample in samples.prefix(500) {
                 print("            .init(startDate: Date(timeIntervalSinceReferenceDate: \(sample.startDate.timeIntervalSinceReferenceDate)), distance: .init(value: \(sample.distance.converted(to: .meters).value), unit: .meters)),")
             }
             print("        ]")
