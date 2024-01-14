@@ -18,7 +18,7 @@ public extension Run {
 public extension Run.Detail {
     static func mock(
         locations: [Location] = [],
-        distanceSamples: [DistanceSample] = []
+        distanceSamples: [DistanceSample] = .preview
     ) -> Run.Detail {
         .init(
             locations: locations,
