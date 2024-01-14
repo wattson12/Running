@@ -6,6 +6,8 @@ import SwiftUI
 public struct RunDetailView: View {
     let store: StoreOf<RunDetailFeature>
 
+    @Environment(\.locale) var locale
+
     public init(
         store: StoreOf<RunDetailFeature>
     ) {
@@ -14,10 +16,15 @@ public struct RunDetailView: View {
 
     public var body: some View {
         VStack {
-            Text(store.run.distance.formatted())
+            Text(store.run.distance.fullValue(locale: locale))
 
             if let locations = store.run.detail?.locations {
                 RouteView(locations: locations)
+                    .frame(height: 200)
+            }
+
+            if let splits = store.splits {
+                DistanceSplitView(splits: splits)
                     .frame(height: 200)
             }
 
@@ -65,8 +72,10 @@ public struct RunDetailView: View {
                         try await Task.sleep(for: .seconds(1))
                         return run
                     }
+                    $0.locale = .init(identifier: "en_AU")
                 }
             )
         )
+        .environment(\.locale, .init(identifier: "en_AU"))
     }
 }

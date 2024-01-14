@@ -10,6 +10,8 @@ public struct RunDetailFeature {
         var run: Run
         var isLoading: Bool
 
+        var splits: [Split]?
+
         public init(
             run: Run
         ) {
@@ -42,6 +44,7 @@ public struct RunDetailFeature {
     public init() {}
 
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
+    @Dependency(\.locale) var locale
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -58,6 +61,9 @@ public struct RunDetailFeature {
         switch action {
         case .onAppear:
             state.isLoading = state.run.detail == nil
+
+            state.splits = state.run.detail?.distanceSamples.splits(locale: locale)
+
             return .run { [id = state.run.id] send in
                 let result = await TaskResult { try await runningWorkouts.detail(for: id) }
                 await send(._internal(.runDetailFetched(result)))
@@ -69,6 +75,7 @@ public struct RunDetailFeature {
         switch action {
         case let .runDetailFetched(.success(run)):
             state.run = run
+            state.splits = state.run.detail?.distanceSamples.splits(locale: locale)
             state.isLoading = false
             return .none
         case .runDetailFetched(.failure):

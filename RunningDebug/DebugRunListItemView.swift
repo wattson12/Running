@@ -82,8 +82,28 @@ struct DebugRunListItemFeature: Reducer {
             return .none
         case let .runDetailFetched(.success(run)):
             state.isLoading = false
-            print("repository", run.locations.count)
-            print("repository", run.distanceSamples.count)
+//            print("repository", run.detail?.locations.count)
+//            print("repository", run.detail?.distanceSamples.count)
+            guard let _samples = run.detail?.distanceSamples else { return .none }
+            let samples = _samples.sorted(by: { $0.startDate < $1.startDate })
+            print("-----")
+            print("public extension [DistanceSample] {")
+            print("    static var preview: [DistanceSample] {")
+            print("        [")
+            for (index, sample) in samples.enumerated() {
+                guard index % 2 == 0 else { continue }
+                print("            .init(startDate: Date(timeIntervalSinceReferenceDate: \(sample.startDate.timeIntervalSinceReferenceDate)), distance: .init(value: \(sample.distance.converted(to: .meters).value), unit: .meters)),")
+            }
+            print("        ]")
+            print("    }")
+            print("}")
+//            public extension DistanceSample {
+//                static var preview: [DistanceSample] {
+//                    [
+//                        .init(startDate: Date(), distance: .init(value: 1, unit: .meters))
+//                    ]
+//                }
+//            }
             return .none
         case let .runDetailFetched(.failure(error)):
             print("repository", error)
@@ -107,8 +127,8 @@ struct DebugRunListItemView: View {
                     Text(viewStore.run.distance.formatted())
 
                     HStack {
-                        Text(viewStore.run.locations.count.description)
-                        Text(viewStore.run.distanceSamples.count.description)
+//                        Text(viewStore.run.locations.count.description)
+                        Text(viewStore.run.detail?.distanceSamples.count.description ?? "-")
                     }
                     .font(.caption2)
                 }
