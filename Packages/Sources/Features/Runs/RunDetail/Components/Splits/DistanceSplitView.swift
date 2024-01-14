@@ -65,10 +65,9 @@ struct DistanceSplitView: View {
     @Environment(\.locale) var locale
 
     init(
-        distances: [DistanceSample],
-        locale: Locale
+        splits: [Split]
     ) {
-        splits = distances.splits(locale: locale)
+        self.splits = splits
     }
 
     var body: some View {
@@ -107,8 +106,13 @@ struct DistanceSplitView: View {
 struct DistanceSplitView_Previews: PreviewProvider {
     static var previews: some View {
         DistanceSplitView(
-            distances: .preview,
-            locale: .init(identifier: "en_AU")
+            splits: [
+                .init(distance: "1", duration: 60 * 5),
+                .init(distance: "2", duration: 60 * 4.3),
+                .init(distance: "3", duration: 60 * 4.7),
+                .init(distance: "4", duration: 60 * 5.1),
+                .init(distance: "5", duration: 60 * 7),
+            ]
         )
         .frame(height: 250)
         .environment(\.locale, .init(identifier: "en_AU"))
