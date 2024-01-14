@@ -22,8 +22,8 @@ extension TimeInterval {
 }
 
 extension [DistanceSample] {
-    func splits(isMetric _: Bool) -> [Split] {
-        let unit: UnitLength = .primaryUnit()
+    func splits(locale: Locale) -> [Split] {
+        let unit: UnitLength = .primaryUnit(locale: locale)
 
         let zero: Measurement<UnitLength> = .init(value: 0, unit: unit)
         let splitBoundary: Measurement<UnitLength> = .init(value: 1, unit: unit)
@@ -57,18 +57,18 @@ extension [DistanceSample] {
 
 struct DistanceSplitView: View {
     let splits: [Split]
-    let isMetric: Bool
 
     var splitSymbol: String {
-        UnitLength.primaryUnit().symbol
+        UnitLength.primaryUnit(locale: locale).symbol
     }
+
+    @Environment(\.locale) var locale
 
     init(
         distances: [DistanceSample],
-        isMetric: Bool
+        locale: Locale
     ) {
-        splits = distances.splits(isMetric: isMetric)
-        self.isMetric = isMetric
+        splits = distances.splits(locale: locale)
     }
 
     var body: some View {
@@ -108,42 +108,9 @@ struct DistanceSplitView_Previews: PreviewProvider {
     static var previews: some View {
         DistanceSplitView(
             distances: .preview,
-            isMetric: true
+            locale: .init(identifier: "en_AU")
         )
         .frame(height: 250)
-        .previewDisplayName("5k")
-
-//        DistanceSplitView(
-//            distances: .preview(
-//                predicate: { run in
-//                    run.distance > .init(value: 5, unit: .miles) && run.distance < .init(value: 6, unit: .miles)
-//                }
-//            ),
-//            isMetric: false
-//        )
-//        .frame(height: 250)
-//        .previewDisplayName("5mi")
-//
-//        DistanceSplitView(
-//            distances: .preview(
-//                predicate: { run in
-//                    run.distance > .init(value: 10, unit: .kilometers) && run.distance < .init(value: 11, unit: .kilometers)
-//                }
-//            ),
-//            isMetric: true
-//        )
-//        .frame(height: 250)
-//        .previewDisplayName("Long Run")
-//
-//        DistanceSplitView(
-//            distances: .preview(
-//                predicate: { run in
-//                    run.distance > .init(value: 20, unit: .kilometers)
-//                }
-//            ),
-//            isMetric: true
-//        )
-//        .frame(height: 250)
-//        .previewDisplayName("Half Marathon")
+        .environment(\.locale, .init(identifier: "en_AU"))
     }
 }

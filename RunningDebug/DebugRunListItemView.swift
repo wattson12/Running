@@ -90,7 +90,8 @@ struct DebugRunListItemFeature: Reducer {
             print("public extension [DistanceSample] {")
             print("    static var preview: [DistanceSample] {")
             print("        [")
-            for sample in samples.prefix(500) {
+            for (index, sample) in samples.enumerated() {
+                guard index % 2 == 0 else { continue }
                 print("            .init(startDate: Date(timeIntervalSinceReferenceDate: \(sample.startDate.timeIntervalSinceReferenceDate)), distance: .init(value: \(sample.distance.converted(to: .meters).value), unit: .meters)),")
             }
             print("        ]")
