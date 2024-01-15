@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Location: Equatable, Hashable {
+public struct Location: Equatable, Hashable, Identifiable {
     public struct Coordinate: Equatable, Hashable {
         public let latitude: Double
         public let longitude: Double
@@ -17,6 +17,8 @@ public struct Location: Equatable, Hashable {
     public let coordinate: Coordinate
     public let altitude: Measurement<UnitLength>
     public let timestamp: Date
+
+    public var id: Date { timestamp }
 
     public init(
         coordinate: Coordinate,
