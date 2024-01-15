@@ -15,23 +15,25 @@ public struct RunDetailView: View {
     }
 
     public var body: some View {
-        VStack {
-            if let locations = store.run.detail?.locations {
-                RouteView(locations: locations)
-                    .frame(height: 200)
-            }
+        ScrollView {
+            VStack {
+                if let locations = store.run.detail?.locations {
+                    RouteView(locations: locations)
+                        .frame(height: 200)
+                }
 
-            if let splits = store.splits {
-                DistanceSplitView(splits: splits)
-                    .frame(height: 200)
-            }
+                if let splits = store.splits {
+                    DistanceSplitView(splits: splits)
+                        .frame(height: 200)
+                }
 
-            if store.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-            }
+                if store.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
 
-            Spacer()
+                Spacer()
+            }
         }
         .onAppear { store.send(.view(.onAppear)) }
         .navigationTitle(store.run.distance.fullValue(locale: locale))
