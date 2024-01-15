@@ -16,8 +16,6 @@ public struct RunDetailView: View {
 
     public var body: some View {
         VStack {
-            Text(store.run.distance.fullValue(locale: locale))
-
             if let locations = store.run.detail?.locations {
                 RouteView(locations: locations)
                     .frame(height: 200)
@@ -36,7 +34,7 @@ public struct RunDetailView: View {
             Spacer()
         }
         .onAppear { store.send(.view(.onAppear)) }
-        .navigationTitle("Run")
+        .navigationTitle(store.run.distance.fullValue(locale: locale))
     }
 }
 
