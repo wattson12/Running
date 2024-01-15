@@ -31,6 +31,48 @@ public struct GoalDetailFeature {
                 return goal.period.rawValue.capitalized
             }
         }
+
+        mutating func updateEmptyStateRuns(
+            calendar: Calendar,
+            date: DateGenerator,
+            uuid: UUIDGenerator
+        ) {
+            guard runs?.isEmpty != false else { return }
+            // skip recalculation if we populated empty state initially
+            guard emptyStateRuns.isEmpty else { return }
+
+            guard let range = goal.period.startAndEnd(in: calendar, now: intervalDate ?? date.now) else { return }
+            let numberOfDaysInRangeComponents = calendar.dateComponents([.day], from: range.start, to: range.end)
+            guard let numberOfDaysInRange = numberOfDaysInRangeComponents.day else { return }
+
+            guard let goal = goal.target else { return }
+
+            let emptyStateDistance: Measurement<UnitLength> = .init(value: goal.value * 1.2, unit: goal.unit)
+            let numberOfRuns = Int(numberOfDaysInRange / 2)
+
+            let timeBetweenRuns = numberOfDaysInRange / numberOfRuns
+
+            var currentDate = range.start
+            var runs: [Run] = []
+
+            let distance: Measurement<UnitLength> = .init(value: emptyStateDistance.value / Double(numberOfRuns), unit: goal.unit)
+            let duration: Measurement<UnitDuration> = .init(value: distance.converted(to: .kilometers).value * 5, unit: .minutes)
+
+            for _ in 0 ..< numberOfRuns {
+                runs.append(
+                    .init(
+                        id: uuid(),
+                        startDate: currentDate,
+                        distance: distance,
+                        duration: duration,
+                        detail: nil
+                    )
+                )
+
+                currentDate = calendar.date(byAdding: .day, value: timeBetweenRuns, to: currentDate) ?? currentDate
+            }
+            emptyStateRuns = runs
+        }
     }
 
     public enum Action: Equatable {
@@ -72,7 +114,7 @@ public struct GoalDetailFeature {
         case .onAppear:
             if let runsForGoal = try? runningWorkouts.runs(within: state.goal, date: state.intervalDate) {
                 state.runs = runsForGoal
-                updateEmptyStateRuns(state: &state)
+                state.updateEmptyStateRuns(calendar: calendar, date: date, uuid: uuid)
             }
 
             return .run { [goal = state.goal, intervalDate = state.intervalDate] send in
@@ -89,48 +131,10 @@ public struct GoalDetailFeature {
         switch action {
         case let .runsFetched(.success(runs)):
             state.runs = runs
-            updateEmptyStateRuns(state: &state)
+            state.updateEmptyStateRuns(calendar: calendar, date: date, uuid: uuid)
             return .none
         case .runsFetched(.failure):
             return .none
         }
-    }
-
-    private func updateEmptyStateRuns(state: inout State) {
-        guard state.runs?.isEmpty != false else { return }
-        // skip recalculation if we populated empty state initially
-        guard state.emptyStateRuns.isEmpty else { return }
-
-        guard let range = state.goal.period.startAndEnd(in: calendar, now: state.intervalDate ?? date.now) else { return }
-        let numberOfDaysInRangeComponents = calendar.dateComponents([.day], from: range.start, to: range.end)
-        guard let numberOfDaysInRange = numberOfDaysInRangeComponents.day else { return }
-
-        guard let goal = state.goal.target else { return }
-
-        let emptyStateDistance: Measurement<UnitLength> = .init(value: goal.value * 1.2, unit: goal.unit)
-        let numberOfRuns = Int(numberOfDaysInRange / 2)
-
-        let timeBetweenRuns = numberOfDaysInRange / numberOfRuns
-
-        var currentDate = range.start
-        var runs: [Run] = []
-
-        let distance: Measurement<UnitLength> = .init(value: emptyStateDistance.value / Double(numberOfRuns), unit: goal.unit)
-        let duration: Measurement<UnitDuration> = .init(value: distance.converted(to: .kilometers).value * 5, unit: .minutes)
-
-        for _ in 0 ..< numberOfRuns {
-            runs.append(
-                .init(
-                    id: uuid(),
-                    startDate: currentDate,
-                    distance: distance,
-                    duration: duration,
-                    detail: nil
-                )
-            )
-
-            currentDate = calendar.date(byAdding: .day, value: timeBetweenRuns, to: currentDate) ?? currentDate
-        }
-        state.emptyStateRuns = runs
     }
 }

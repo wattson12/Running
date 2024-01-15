@@ -15,28 +15,32 @@ public struct RunDetailView: View {
     }
 
     public var body: some View {
-        VStack {
-            Text(store.run.distance.fullValue(locale: locale))
+        ScrollView {
+            VStack(spacing: 16) {
+                if let locations = store.run.detail?.locations {
+                    RouteView(locations: locations)
+                        .frame(height: 200)
+                        .allowsHitTesting(false)
+                        .cornerRadius(8)
+                }
 
-            if let locations = store.run.detail?.locations {
-                RouteView(locations: locations)
-                    .frame(height: 200)
+                if let splits = store.splits {
+                    DistanceSplitView(splits: splits)
+                        .frame(height: 200)
+                        .cornerRadius(8)
+                }
+
+                if store.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
+
+                Spacer()
             }
-
-            if let splits = store.splits {
-                DistanceSplitView(splits: splits)
-                    .frame(height: 200)
-            }
-
-            if store.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-            }
-
-            Spacer()
+            .padding(.horizontal, 16)
         }
         .onAppear { store.send(.view(.onAppear)) }
-        .navigationTitle("Run")
+        .navigationTitle(store.run.distance.fullValue(locale: locale))
     }
 }
 

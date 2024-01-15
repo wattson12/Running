@@ -84,37 +84,21 @@ final class GoalDetailFeatureTests: XCTestCase {
             reducer: GoalDetailFeature.init,
             withDependencies: {
                 $0.calendar = .current
-                $0.calendar.timeZone = .init(secondsFromGMT: 0)!
                 $0.date = .constant(now)
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
-                $0.uuid = .incrementing
+                $0.uuid = .constant(.init(1))
             }
         )
 
         // setup on appearance
         await store.send(.view(.onAppear)) {
             $0.runs = []
-            $0.emptyStateRuns = [
-                .mock(
-                    id: .init(0),
-                    startDate: .init(timeIntervalSince1970: 864_000),
-                    distance: .init(value: 40, unit: .kilometers),
-                    duration: .init(value: 200, unit: .minutes)
-                ),
-                .mock(
-                    id: .init(1),
-                    startDate: .init(timeIntervalSince1970: 1_036_800),
-                    distance: .init(value: 40, unit: .kilometers),
-                    duration: .init(value: 200, unit: .minutes)
-                ),
-                .mock(
-                    id: .init(2),
-                    startDate: .init(timeIntervalSince1970: 1_209_600),
-                    distance: .init(value: 40, unit: .kilometers),
-                    duration: .init(value: 200, unit: .minutes)
-                ),
-            ]
+            $0.updateEmptyStateRuns(
+                calendar: .current,
+                date: .constant(now),
+                uuid: .constant(.init(1))
+            )
         }
 
         await store.receive(._internal(.runsFetched(.success([]))))
