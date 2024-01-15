@@ -16,15 +16,18 @@ public struct RunDetailView: View {
 
     public var body: some View {
         ScrollView {
-            VStack {
+            VStack(spacing: 16) {
                 if let locations = store.run.detail?.locations {
                     RouteView(locations: locations)
                         .frame(height: 200)
+                        .allowsHitTesting(false)
+                        .cornerRadius(8)
                 }
 
                 if let splits = store.splits {
                     DistanceSplitView(splits: splits)
                         .frame(height: 200)
+                        .cornerRadius(8)
                 }
 
                 if store.isLoading {
@@ -34,6 +37,7 @@ public struct RunDetailView: View {
 
                 Spacer()
             }
+            .padding(.horizontal, 16)
         }
         .onAppear { store.send(.view(.onAppear)) }
         .navigationTitle(store.run.distance.fullValue(locale: locale))
