@@ -33,7 +33,9 @@ extension Model.Run {
                     locations: detail.locations
                         .sorted(by: { $0.timestamp < $1.timestamp })
                         .map(Model.Location.init(entity:)),
-                    distanceSamples: detail.distanceSamples.map(Model.DistanceSample.init(entity:))
+                    distanceSamples: detail.distanceSamples
+                        .sorted(by: { $0.startDate < $1.startDate })
+                        .map(Model.DistanceSample.init(entity:))
                 )
             }
         )
