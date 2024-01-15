@@ -30,6 +30,16 @@ public struct RunDetailView: View {
                         .cornerRadius(8)
                 }
 
+                if let locations = store.run.detail?.locations, let splits = store.splits {
+                    AltitudeChartView(
+                        locations: locations,
+                        splits: splits
+                    )
+                    .frame(height: 200)
+                    .allowsHitTesting(false)
+                    .cornerRadius(8)
+                }
+
                 if store.isLoading {
                     ProgressView()
                         .progressViewStyle(.circular)
