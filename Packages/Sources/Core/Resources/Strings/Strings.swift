@@ -148,6 +148,17 @@ public enum L10n {
     }
 
     public enum Runs {
+        public enum Detail {
+            public enum Section {
+                /// Altitude
+                public static let altitude = L10n.tr("Localizable", "runs.detail.section.altitude", fallback: "Altitude")
+                /// Route
+                public static let route = L10n.tr("Localizable", "runs.detail.section.route", fallback: "Route")
+                /// Splits
+                public static let splits = L10n.tr("Localizable", "runs.detail.section.splits", fallback: "Splits")
+            }
+        }
+
         public enum Empty {
             /// Missing workouts?
             /// Check your permissions in the [Health](x-apple-health://) app

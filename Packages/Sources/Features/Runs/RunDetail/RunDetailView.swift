@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Model
 import Repository
+import Resources
 import SwiftUI
 
 public struct RunDetailView: View {
@@ -16,28 +17,46 @@ public struct RunDetailView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 8) {
                 if let locations = store.run.detail?.locations {
-                    RouteView(locations: locations)
-                        .frame(height: 200)
-                        .allowsHitTesting(false)
-                        .cornerRadius(8)
+                    IconBorderedView(
+                        image: .init(systemName: "map.circle"),
+                        title: L10n.Runs.Detail.Section.route
+                    ) {
+                        RouteView(locations: locations)
+                            .frame(height: 200)
+                            .allowsHitTesting(false)
+                            .cornerRadius(8)
+                    }
+                    .customTint(Color(asset: Asset.blue))
                 }
 
                 if let splits = store.splits {
-                    DistanceSplitView(splits: splits)
-                        .frame(height: 200)
-                        .cornerRadius(8)
+                    IconBorderedView(
+                        image: .init(systemName: "stopwatch"),
+                        title: L10n.Runs.Detail.Section.splits
+                    ) {
+                        DistanceSplitView(splits: splits)
+                            .frame(height: 200)
+                            .cornerRadius(8)
+                    }
+                    .customTint(Color(asset: Asset.green))
                 }
 
                 if let locations = store.run.detail?.locations, let splits = store.splits {
-                    AltitudeChartView(
-                        locations: locations,
-                        splits: splits
-                    )
-                    .frame(height: 200)
-                    .allowsHitTesting(false)
-                    .cornerRadius(8)
+                    IconBorderedView(
+                        image: .init(systemName: "mountain.2.circle"),
+                        title: L10n.Runs.Detail.Section.altitude
+                    ) {
+                        AltitudeChartView(
+                            locations: locations,
+                            splits: splits
+                        )
+                        .frame(height: 200)
+                        .allowsHitTesting(false)
+                        .cornerRadius(8)
+                    }
+                    .customTint(Color(asset: Asset.purple))
                 }
 
                 if store.isLoading {
