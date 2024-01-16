@@ -4,6 +4,7 @@ import SwiftUI
 
 struct IconBorderedView<Content: View>: View {
     let image: Image
+    let title: String?
     let content: () -> Content
 
     @Environment(\.tintColor) var tintColor
@@ -20,10 +21,20 @@ struct IconBorderedView<Content: View>: View {
 
             HStack {
                 Spacer().frame(width: 16)
-                image
-                    .foregroundStyle(tintColor)
-                    .padding(.horizontal, 2)
-                    .background(Color.white)
+
+                HStack(spacing: 4) {
+                    image
+                        .foregroundStyle(tintColor)
+
+                    if let title {
+                        Text(title)
+                            .foregroundStyle(tintColor)
+                            .font(.footnote)
+                    }
+                }
+                .padding(.horizontal, 2)
+                .background(Color.white)
+
                 Spacer()
             }
 
@@ -39,6 +50,7 @@ struct IconBorderedView<Content: View>: View {
 #Preview {
     IconBorderedView(
         image: .init(systemName: "stopwatch"),
+        title: "Splits",
         content: { Color.orange.frame(height: 200) }
     )
     .customTint(Color(asset: Asset.purple))

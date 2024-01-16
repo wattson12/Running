@@ -44,6 +44,10 @@
 "runs.list.today" = "Today";
 "runs.list.yesterday" = "Yesterday";
 
+"runs.detail.section.route" = "Route";
+"runs.detail.section.splits" = "Splits";
+"runs.detail.section.altitude" = "Altitude";
+
 "settings.section.acknowledgements" = "Acknowledgements";
 "settings.section.build_info.title" = "Build info";
 "settings.section.build_info.version" = "Version";

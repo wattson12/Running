@@ -20,7 +20,8 @@ public struct RunDetailView: View {
             VStack(spacing: 8) {
                 if let locations = store.run.detail?.locations {
                     IconBorderedView(
-                        image: .init(systemName: "map.circle")
+                        image: .init(systemName: "map.circle"),
+                        title: L10n.Runs.Detail.Section.route
                     ) {
                         RouteView(locations: locations)
                             .frame(height: 200)
@@ -32,7 +33,8 @@ public struct RunDetailView: View {
 
                 if let splits = store.splits {
                     IconBorderedView(
-                        image: .init(systemName: "stopwatch")
+                        image: .init(systemName: "stopwatch"),
+                        title: L10n.Runs.Detail.Section.splits
                     ) {
                         DistanceSplitView(splits: splits)
                             .frame(height: 200)
@@ -43,7 +45,8 @@ public struct RunDetailView: View {
 
                 if let locations = store.run.detail?.locations, let splits = store.splits {
                     IconBorderedView(
-                        image: .init(systemName: "mountain.2.circle")
+                        image: .init(systemName: "mountain.2.circle"),
+                        title: L10n.Runs.Detail.Section.altitude
                     ) {
                         AltitudeChartView(
                             locations: locations,
