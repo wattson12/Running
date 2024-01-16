@@ -20,7 +20,6 @@ public struct RunDetailView: View {
             VStack(spacing: 8) {
                 if let locations = store.run.detail?.locations {
                     IconBorderedView(
-                        tint: Color(Asset.blue.color),
                         image: .init(systemName: "map.circle")
                     ) {
                         RouteView(locations: locations)
@@ -28,22 +27,22 @@ public struct RunDetailView: View {
                             .allowsHitTesting(false)
                             .cornerRadius(8)
                     }
+                    .customTint(Color(asset: Asset.blue))
                 }
 
                 if let splits = store.splits {
                     IconBorderedView(
-                        tint: Color(Asset.green.color),
                         image: .init(systemName: "stopwatch")
                     ) {
                         DistanceSplitView(splits: splits)
                             .frame(height: 200)
                             .cornerRadius(8)
                     }
+                    .customTint(Color(asset: Asset.green))
                 }
 
                 if let locations = store.run.detail?.locations, let splits = store.splits {
                     IconBorderedView(
-                        tint: Color(Asset.purple.color),
                         image: .init(systemName: "mountain.2.circle")
                     ) {
                         AltitudeChartView(
@@ -54,6 +53,7 @@ public struct RunDetailView: View {
                         .allowsHitTesting(false)
                         .cornerRadius(8)
                     }
+                    .customTint(Color(asset: Asset.purple))
                 }
 
                 if store.isLoading {

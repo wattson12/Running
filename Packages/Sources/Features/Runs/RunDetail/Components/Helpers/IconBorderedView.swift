@@ -1,9 +1,12 @@
+import DesignSystem
+import Resources
 import SwiftUI
 
 struct IconBorderedView<Content: View>: View {
-    let tint: Color
     let image: Image
     let content: () -> Content
+
+    @Environment(\.tintColor) var tintColor
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -11,14 +14,14 @@ struct IconBorderedView<Content: View>: View {
                 .clipShape(RoundedRectangle(cornerSize: .init(width: 6, height: 6)))
                 .overlay(
                     RoundedRectangle(cornerRadius: 6)
-                        .stroke(tint, lineWidth: 2)
+                        .stroke(tintColor, lineWidth: 2)
                         .padding(.top, 10)
                 )
 
             HStack {
                 Spacer().frame(width: 16)
                 image
-                    .foregroundStyle(tint)
+                    .foregroundStyle(tintColor)
                     .padding(.horizontal, 2)
                     .background(Color.white)
                 Spacer()
@@ -35,8 +38,8 @@ struct IconBorderedView<Content: View>: View {
 
 #Preview {
     IconBorderedView(
-        tint: .purple,
         image: .init(systemName: "stopwatch"),
         content: { Color.orange.frame(height: 200) }
     )
+    .customTint(Color(asset: Asset.purple))
 }
