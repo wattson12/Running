@@ -3,6 +3,39 @@ import Model
 import Repository
 import SwiftUI
 
+struct ContentView<Content: View>: View {
+    let tint: Color
+    let image: Image
+    let content: () -> Content
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            Color.clear
+                .clipShape(RoundedRectangle(cornerSize: .init(width: 6, height: 6)))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(tint, lineWidth: 2)
+                        .padding(.top, 10)
+                )
+
+            HStack {
+                Spacer().frame(width: 16)
+                image
+                    .foregroundStyle(tint)
+                    .padding(.horizontal, 2)
+                    .background(Color.white)
+                Spacer()
+            }
+
+            content()
+                .cornerRadius(6)
+                .padding(.top, 12)
+                .padding(/*@START_MENU_TOKEN@*/ .all/*@END_MENU_TOKEN@*/, 8)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 public struct RunDetailView: View {
     let store: StoreOf<RunDetailFeature>
 
@@ -16,28 +49,34 @@ public struct RunDetailView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 8) {
                 if let locations = store.run.detail?.locations {
-                    RouteView(locations: locations)
-                        .frame(height: 200)
-                        .allowsHitTesting(false)
-                        .cornerRadius(8)
+                    ContentView(tint: .red, image: .init(systemName: "map.circle")) {
+                        RouteView(locations: locations)
+                            .frame(height: 200)
+                            .allowsHitTesting(false)
+                            .cornerRadius(8)
+                    }
                 }
 
                 if let splits = store.splits {
-                    DistanceSplitView(splits: splits)
-                        .frame(height: 200)
-                        .cornerRadius(8)
+                    ContentView(tint: .red, image: .init(systemName: "stopwatch")) {
+                        DistanceSplitView(splits: splits)
+                            .frame(height: 200)
+                            .cornerRadius(8)
+                    }
                 }
 
                 if let locations = store.run.detail?.locations, let splits = store.splits {
-                    AltitudeChartView(
-                        locations: locations,
-                        splits: splits
-                    )
-                    .frame(height: 200)
-                    .allowsHitTesting(false)
-                    .cornerRadius(8)
+                    ContentView(tint: .red, image: .init(systemName: "mountain.2.circle")) {
+                        AltitudeChartView(
+                            locations: locations,
+                            splits: splits
+                        )
+                        .frame(height: 200)
+                        .allowsHitTesting(false)
+                        .cornerRadius(8)
+                    }
                 }
 
                 if store.isLoading {
