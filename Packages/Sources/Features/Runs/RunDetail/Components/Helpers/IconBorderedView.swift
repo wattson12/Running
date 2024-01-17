@@ -33,7 +33,7 @@ struct IconBorderedView<Content: View>: View {
                     }
                 }
                 .padding(.horizontal, 2)
-                .background(Color.white)
+                .background(Color(UIColor.systemBackground))
 
                 Spacer()
             }
