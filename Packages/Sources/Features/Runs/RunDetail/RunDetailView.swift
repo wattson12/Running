@@ -67,18 +67,19 @@ public struct RunDetailView: View {
                     loading()
                         .customTint(Color(asset: Asset.purple))
                 }
-
-                if store.isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                }
-
-                Spacer()
             }
             .padding(.horizontal, 16)
         }
         .onAppear { store.send(.view(.onAppear)) }
         .navigationTitle(store.run.distance.fullValue(locale: locale))
+        .toolbar {
+            if store.isLoading {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
+            }
+        }
     }
 
     @ViewBuilder func loading() -> some View {
