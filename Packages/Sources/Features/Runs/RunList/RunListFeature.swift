@@ -30,7 +30,7 @@ public struct RunListFeature {
 
     @ObservableState
     public struct State: Equatable {
-        var runs: [Run] = []
+        var runs: IdentifiedArrayOf<Run> = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
         @PresentationState var destination: Destination.State?
@@ -38,7 +38,7 @@ public struct RunListFeature {
         public init(
             runs: [Run] = []
         ) {
-            self.runs = runs
+            self.runs = .init(uniqueElements: runs)
         }
 
         init(
@@ -47,7 +47,7 @@ public struct RunListFeature {
             isLoading: Bool = false,
             destination: Destination.State? = nil
         ) {
-            self.runs = runs
+            self.runs = .init(uniqueElements: runs)
             self.isInitialImport = isInitialImport
             self.isLoading = isLoading
             self.destination = destination
@@ -112,7 +112,7 @@ public struct RunListFeature {
         case let .runsFetched(.success(runs)):
             clearInitialImportFlag(state: &state)
             state.isLoading = false
-            state.runs = runs
+            state.runs = .init(uniqueElements: runs)
             return .merge(
                 .run { _ in widget.reloadAllTimelines() },
                 .send(.delegate(.runsRefreshed))
@@ -131,10 +131,19 @@ public struct RunListFeature {
         state.isInitialImport = false
     }
 
-    private func destination(_ action: PresentationAction<Destination.Action>, state _: inout State) -> EffectOf<Self> {
+    private func destination(_ action: PresentationAction<Destination.Action>, state: inout State) -> EffectOf<Self> {
         guard case let .presented(action) = action else { return .none }
         switch action {
-        case .detail:
+        case let .detail(action):
+            return detail(action, state: &state)
+        }
+    }
+
+    private func detail(_ action: RunDetailFeature.Action, state: inout State) -> EffectOf<Self> {
+        guard case let .delegate(action) = action else { return .none }
+        switch action {
+        case let .runDetailFetched(run):
+            state.runs[id: run.id] = run
             return .none
         }
     }

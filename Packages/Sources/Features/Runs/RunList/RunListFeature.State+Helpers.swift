@@ -15,7 +15,7 @@ public extension RunListFeature.State {
         isLoading = true
 
         if let cachedRuns = runningWorkouts.allRunningWorkouts.cache() {
-            runs = cachedRuns
+            runs = .init(uniqueElements: cachedRuns)
         } else if userDefaults.bool(forKey: .initialImportCompleted) != true {
             isInitialImport = true
         }

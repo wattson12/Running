@@ -37,8 +37,13 @@ public struct RunDetailFeature {
             case runDetailFetched(TaskResult<Run>)
         }
 
+        public enum Delegate: Equatable {
+            case runDetailFetched(Run)
+        }
+
         case view(View)
         case _internal(Internal)
+        case delegate(Delegate)
     }
 
     public init() {}
@@ -53,6 +58,8 @@ public struct RunDetailFeature {
                 return view(action, state: &state)
             case let ._internal(action):
                 return _internal(action, state: &state)
+            case .delegate:
+                return .none
             }
         }
     }
@@ -81,7 +88,7 @@ public struct RunDetailFeature {
             state.run = run
             state.splits = state.run.detail?.distanceSamples.splits(locale: locale)
             state.isLoading = false
-            return .none
+            return .send(.delegate(.runDetailFetched(run)))
         case .runDetailFetched(.failure):
             state.isLoading = false
             return .none
