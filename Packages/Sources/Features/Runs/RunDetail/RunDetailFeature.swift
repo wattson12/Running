@@ -65,6 +65,10 @@ public struct RunDetailFeature {
             state.splits = state.run.detail?.distanceSamples.splits(locale: locale)
 
             return .run { [id = state.run.id] send in
+                if let cachedRun = runningWorkouts.cachedRun(for: id) {
+                    await send(._internal(.runDetailFetched(.success(cachedRun))))
+                }
+
                 let result = await TaskResult { try await runningWorkouts.detail(for: id) }
                 await send(._internal(.runDetailFetched(result)))
             }
