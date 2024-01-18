@@ -24,6 +24,9 @@ extension RunningWorkouts {
                     )
                 }
             ),
+            cachedRun: { id in
+                Implementation.cachedRunningWorkout(id: id, coreData: coreData)
+            },
             runDetail: { id in
                 try await Implementation.runDetail(
                     id: id,
@@ -53,7 +56,7 @@ extension RunningWorkouts {
                         .init(keyPath: \Cache.RunEntity.startDate, ascending: false),
                     ]
                     let runs = try context.fetch(fetchRequest)
-                    return runs.isEmpty ? nil : runs.map(Model.Run.init(entity:))
+                    return runs.isEmpty ? nil : runs.map { Model.Run(entity: $0, includeDetail: false) }
                 }
             } catch {
                 return nil
@@ -70,7 +73,6 @@ extension RunningWorkouts {
                 .compactMap(Run.init(model:))
 
             return try coreData.performWork { context in
-
                 var runsNeedingUpdate: [Model.Run.ID: Cache.RunEntity] = [:]
                 for run in runs {
                     let fetchRequestForRunsMatchingID = Cache.RunEntity.makeFetchRequest()
@@ -101,7 +103,7 @@ extension RunningWorkouts {
 
                 return runs.map { run in
                     guard let updatedRunEntity = runsNeedingUpdate[run.id] else { return run }
-                    return .init(entity: updatedRunEntity)
+                    return .init(entity: updatedRunEntity, includeDetail: false)
                 }
             }
         }
@@ -150,7 +152,7 @@ extension RunningWorkouts {
 
                 try context.save()
 
-                return .init(entity: run)
+                return .init(entity: run, includeDetail: true)
             }
         }
 
@@ -175,7 +177,7 @@ extension RunningWorkouts {
                     .init(keyPath: \RunEntity.startDate, ascending: false),
                 ]
 
-                return try context.fetch(fetchRequest).map(Run.init(entity:))
+                return try context.fetch(fetchRequest).map { Run(entity: $0, includeDetail: false) }
             }
         }
     }
