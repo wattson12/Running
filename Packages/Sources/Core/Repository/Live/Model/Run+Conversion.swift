@@ -22,13 +22,13 @@ extension Model.Run {
 }
 
 extension Model.Run {
-    init(entity: Cache.RunEntity) {
+    init(entity: Cache.RunEntity, includeDetail: Bool) {
         self.init(
             id: entity.id,
             startDate: entity.startDate,
             distance: .init(value: entity.distance, unit: .meters),
             duration: .init(value: entity.duration, unit: .seconds),
-            detail: entity.detail.map { detail in
+            detail: !includeDetail ? nil : entity.detail.map { detail in
                 .init(
                     locations: detail.locations
                         .sorted(by: { $0.timestamp < $1.timestamp })

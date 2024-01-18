@@ -15,7 +15,7 @@ public extension RunListFeature.State {
         isLoading = true
 
         if let cachedRuns = runningWorkouts.allRunningWorkouts.cache() {
-            runs = cachedRuns
+            runs = .init(uniqueElements: cachedRuns)
         } else if userDefaults.bool(forKey: .initialImportCompleted) != true {
             isInitialImport = true
         }
@@ -24,9 +24,8 @@ public extension RunListFeature.State {
             .send(.delegate(.runsRefreshed)),
             .run { send in
                 do {
-                    for try await runs in runningWorkouts.allRunningWorkouts.stream() {
-                        await send(._internal(.runsFetched(.success(runs))))
-                    }
+                    let runs = try await runningWorkouts.allRunningWorkouts.remote()
+                    await send(._internal(.runsFetched(.success(runs))))
                 } catch {
                     await send(._internal(.runsFetched(.failure(error))))
                 }

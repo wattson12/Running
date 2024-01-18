@@ -11,6 +11,9 @@ extension RunningWorkouts {
                 cache: { runs },
                 remote: { runs }
             ),
+            cachedRun: { id in
+                runs.first(where: { $0.id == id })
+            },
             runDetail: { _ in
                 .mock()
             },
@@ -43,6 +46,9 @@ extension RunningWorkouts {
                     return runsValue
                 }
             ),
+            cachedRun: { id in
+                runs.value.first(where: { $0.id == id })
+            },
             runDetail: { _ in
                 .mock()
             },
