@@ -128,8 +128,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
             XCTAssertEqual(updatedRun.duration, duration * 60)
 
             let firstRun = try XCTUnwrap(allRuns.first)
-            XCTAssertEqual(firstRun.detail?.locations.count, 1)
-            XCTAssertEqual(firstRun.detail?.distanceSamples.count, 1)
+            XCTAssertNil(firstRun.detail)
         }
     }
 

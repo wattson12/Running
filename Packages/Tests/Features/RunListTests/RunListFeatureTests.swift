@@ -32,7 +32,7 @@ final class RunListFeatureTests: XCTestCase {
 
         // fetch runs and setup sections on appearance
         await store.send(.view(.onAppear)) {
-            $0.runs = runs
+            $0.runs = .init(uniqueElements: runs)
             $0.isLoading = true
         }
 
@@ -44,10 +44,6 @@ final class RunListFeatureTests: XCTestCase {
         }
 
         // refreshed from remote
-        await store.receive(.delegate(.runsRefreshed))
-
-        await store.receive(._internal(.runsFetched(.success(runs))))
-
         await store.receive(.delegate(.runsRefreshed))
     }
 
