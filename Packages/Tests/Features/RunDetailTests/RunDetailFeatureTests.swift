@@ -15,6 +15,7 @@ final class RunDetailFeatureTests: XCTestCase {
             reducer: RunDetailFeature.init,
             withDependencies: {
                 $0.repository.runningWorkouts._runDetail = { _ in runWithDetail }
+                $0.repository.runningWorkouts._cachedRun = { _ in initialRun }
                 $0.locale = .init(identifier: "en_AU")
             }
         )
@@ -22,6 +23,14 @@ final class RunDetailFeatureTests: XCTestCase {
         await store.send(.view(.onAppear)) {
             $0.isLoading = true
         }
+
+        await store.receive(._internal(.runDetailFetched(.success(initialRun)))) {
+            $0.isLoading = false
+            $0.splits = nil
+            $0.run = initialRun
+        }
+
+        await store.receive(.delegate(.runDetailFetched(initialRun)))
 
         await store.receive(._internal(.runDetailFetched(.success(runWithDetail)))) {
             $0.isLoading = false
@@ -45,6 +54,8 @@ final class RunDetailFeatureTests: XCTestCase {
             ]
             $0.run = runWithDetail
         }
+
+        await store.receive(.delegate(.runDetailFetched(runWithDetail)))
     }
 
     func testRunIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
@@ -56,6 +67,7 @@ final class RunDetailFeatureTests: XCTestCase {
             reducer: RunDetailFeature.init,
             withDependencies: {
                 $0.repository.runningWorkouts._runDetail = { _ in updatedRun }
+                $0.repository.runningWorkouts._cachedRun = { _ in initialRun }
                 $0.locale = .current
             }
         )
@@ -73,9 +85,15 @@ final class RunDetailFeatureTests: XCTestCase {
             ]
         }
 
+        await store.receive(._internal(.runDetailFetched(.success(initialRun))))
+
+        await store.receive(.delegate(.runDetailFetched(initialRun)))
+
         await store.receive(._internal(.runDetailFetched(.success(updatedRun)))) {
             $0.run = updatedRun
         }
+
+        await store.receive(.delegate(.runDetailFetched(updatedRun)))
     }
 
     func testFailedDetailFetchClearsLoadingState() async throws {
