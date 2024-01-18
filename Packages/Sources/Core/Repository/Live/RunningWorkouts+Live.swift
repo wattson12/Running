@@ -63,6 +63,25 @@ extension RunningWorkouts {
             }
         }
 
+        static func cachedRunningWorkout(
+            id: Model.Run.ID,
+            coreData: CoreDataStack
+        ) -> Model.Run? {
+            do {
+                let result = try coreData.performWork { context in
+                    let fetchRequest = Cache.RunEntity.makeFetchRequest()
+                    fetchRequest.predicate = .init(format: "id == %@", id as NSUUID)
+                    fetchRequest.fetchLimit = 1
+                    let runs = try context.fetch(fetchRequest)
+
+                    return runs.first.map { Model.Run(entity: $0, includeDetail: true) }
+                }
+                return result
+            } catch {
+                return nil
+            }
+        }
+
         @MainActor
         static func remoteRunningWorkouts(
             coreData: CoreDataStack,

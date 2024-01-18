@@ -17,25 +17,30 @@ public struct RunningWorkouts: @unchecked Sendable {
         )
     }
 
+    public var _cachedRun: @Sendable (Run.ID) -> Run?
     public var _runDetail: @Sendable (Run.ID) async throws -> Run
     public var _runsWithinGoal: @Sendable (Goal, Date) throws -> [Run]
 
     public init(
         allRunningWorkouts: @escaping () -> RepositorySource<Void, [Run]>,
+        cachedRun: @Sendable @escaping (Run.ID) -> Run?,
         runDetail: @Sendable @escaping (Run.ID) async throws -> Run,
         runsWithinGoal: @Sendable @escaping (Goal, Date) throws -> [Run]
     ) {
         _allRunningWorkouts = allRunningWorkouts
+        _cachedRun = cachedRun
         _runDetail = runDetail
         _runsWithinGoal = runsWithinGoal
     }
 
     public init(
         allRunningWorkouts: RepositorySource<Void, [Run]>,
+        cachedRun: @Sendable @escaping (Run.ID) -> Run?,
         runDetail: @Sendable @escaping (Run.ID) async throws -> Run,
         runsWithinGoal: @Sendable @escaping (Goal, Date) throws -> [Run]
     ) {
         _allRunningWorkouts = { allRunningWorkouts }
+        _cachedRun = cachedRun
         _runDetail = runDetail
         _runsWithinGoal = runsWithinGoal
     }
@@ -44,6 +49,10 @@ public struct RunningWorkouts: @unchecked Sendable {
 public extension RunningWorkouts {
     var allRunningWorkouts: RepositorySource<Void, [Run]> {
         _allRunningWorkouts()
+    }
+
+    func cachedRun(for id: Run.ID) -> Run? {
+        _cachedRun(id)
     }
 
     func detail(for id: Run.ID) async throws -> Run {
