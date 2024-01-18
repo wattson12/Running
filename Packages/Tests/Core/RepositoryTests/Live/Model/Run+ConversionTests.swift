@@ -84,7 +84,7 @@ final class Run_ConversionTests: XCTestCase {
 
             cached.detail = runDetail
 
-            let sut: Model.Run = .init(entity: cached)
+            let sut: Model.Run = .init(entity: cached, includeDetail: true)
             XCTAssertEqual(sut.id, id)
             XCTAssertEqual(sut.startDate, startDate)
             XCTAssertEqual(sut.distance, .init(value: distance, unit: .meters))

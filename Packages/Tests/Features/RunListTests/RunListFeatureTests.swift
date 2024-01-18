@@ -32,7 +32,7 @@ final class RunListFeatureTests: XCTestCase {
 
         // fetch runs and setup sections on appearance
         await store.send(.view(.onAppear)) {
-            $0.runs = runs
+            $0.runs = .init(uniqueElements: runs)
             $0.isLoading = true
         }
 
