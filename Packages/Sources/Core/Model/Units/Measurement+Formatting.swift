@@ -24,7 +24,7 @@ public extension Measurement where UnitType == UnitDuration {
 
         let formatter = DateComponentsFormatter()
         formatter.calendar = locale.calendar
-        formatter.allowedUnits = [.minute, .second]
+        formatter.allowedUnits = [.hour, .minute, .second]
 
         return formatter.string(from: converted) ?? ""
     }
