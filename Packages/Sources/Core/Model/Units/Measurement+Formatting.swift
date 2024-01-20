@@ -11,6 +11,7 @@ public extension Measurement where UnitType == UnitLength {
         let numberFormatter = NumberFormatter()
         numberFormatter.locale = locale
         numberFormatter.maximumFractionDigits = 2
+        numberFormatter.minimumFractionDigits = 2
 
         formatter.numberFormatter = numberFormatter
 
@@ -24,7 +25,7 @@ public extension Measurement where UnitType == UnitDuration {
 
         let formatter = DateComponentsFormatter()
         formatter.calendar = locale.calendar
-        formatter.allowedUnits = [.minute, .second]
+        formatter.allowedUnits = [.hour, .minute, .second]
 
         return formatter.string(from: converted) ?? ""
     }
