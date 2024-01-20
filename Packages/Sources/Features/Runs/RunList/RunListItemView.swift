@@ -15,7 +15,9 @@ struct RunListItemView: View {
                     VStack(alignment: .leading) {
                         Text(run.distance.fullValue(locale: locale))
                             .font(.title)
-                        Text(run.formattedPace(locale: locale))
+
+                        Text(run.startDate, formatter: DateFormatter.run)
+                            .font(.footnote)
                             .foregroundColor(.secondary)
                     }
 
@@ -25,8 +27,8 @@ struct RunListItemView: View {
                         Text(run.duration.fullValue(locale: locale))
                             .font(.title2)
 
-                        Text(run.startDate, formatter: DateFormatter.run)
-                            .font(.caption)
+                        Text(run.formattedPace(locale: locale))
+                            .font(.footnote)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -43,7 +45,7 @@ struct RunListItemView_Previews: PreviewProvider {
             run: .mock(
                 offset: 0,
                 distance: 10,
-                duration: 52.23
+                duration: 62.23
             ),
             tapped: { print("tapped") }
         )
