@@ -8,7 +8,7 @@ final class Measurement_FormattingTests: XCTestCase {
         let measurement: Measurement<UnitLength> = .init(value: distance, unit: .kilometers)
 
         let sut = measurement.fullValue(locale: locale)
-        XCTAssertEqual(sut, "123.4 km")
+        XCTAssertEqual(sut, "123.40 km")
     }
 
     func testUnitDurationFullValueFormatting() {
