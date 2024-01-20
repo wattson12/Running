@@ -11,6 +11,7 @@ public extension Measurement where UnitType == UnitLength {
         let numberFormatter = NumberFormatter()
         numberFormatter.locale = locale
         numberFormatter.maximumFractionDigits = 2
+        numberFormatter.minimumFractionDigits = 2
 
         formatter.numberFormatter = numberFormatter
 
