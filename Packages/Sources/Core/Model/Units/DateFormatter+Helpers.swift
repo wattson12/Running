@@ -1,5 +1,13 @@
 import Foundation
 
+public extension RelativeDateTimeFormatter {
+    static var run: RelativeDateTimeFormatter {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.formattingContext = .listItem
+        return formatter
+    }
+}
+
 public extension DateFormatter {
     static var run: DateFormatter {
         let formatter = DateFormatter()
