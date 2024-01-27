@@ -18,7 +18,7 @@ public struct RunDetailView: View {
     public var body: some View {
         ScrollView {
             VStack(spacing: 8) {
-                if let locations = store.run.detail?.locations {
+                if let locations = store.run.detail?.locations, !locations.isEmpty {
                     IconBorderedView(
                         image: .init(systemName: "map.circle"),
                         title: L10n.Runs.Detail.Section.route
@@ -49,7 +49,7 @@ public struct RunDetailView: View {
                         .customTint(Color(asset: Asset.green))
                 }
 
-                if let locations = store.run.detail?.locations, let splits = store.splits {
+                if let locations = store.run.detail?.locations, !locations.isEmpty, let splits = store.splits {
                     IconBorderedView(
                         image: .init(systemName: "mountain.2.circle"),
                         title: L10n.Runs.Detail.Section.altitude
