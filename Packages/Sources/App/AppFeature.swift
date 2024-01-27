@@ -40,7 +40,7 @@ public struct AppFeature {
         var goalList: GoalListFeature.State
         var history: HistoryFeature.State
 
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         init(
             permissions: PermissionsFeature.State? = .init(state: .initial),

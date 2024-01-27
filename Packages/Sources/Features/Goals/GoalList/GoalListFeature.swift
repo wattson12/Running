@@ -62,7 +62,7 @@ public struct GoalListFeature {
 
         var rows: IdentifiedArrayOf<GoalRow> = []
 
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(
             weeklyGoal: Goal? = nil,

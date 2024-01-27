@@ -33,7 +33,7 @@ public struct RunListFeature {
         var runs: IdentifiedArrayOf<Run> = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(
             runs: [Run] = []

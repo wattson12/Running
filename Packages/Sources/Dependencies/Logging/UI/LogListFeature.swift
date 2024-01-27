@@ -21,7 +21,7 @@ public struct LogListFeature {
     @ObservableState
     public struct State: Equatable {
         var logs: [ActionLog] = []
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(
             logs: [ActionLog] = [],
