@@ -69,8 +69,6 @@ public struct RunDetailFeature {
         case .onAppear:
             state.isLoading = state.run.detail == nil
 
-            state.splits = state.run.detail?.distanceSamples.splits(locale: locale)
-
             return .run { [id = state.run.id] send in
                 if let cachedRun = runningWorkouts.cachedRun(for: id) {
                     await send(._internal(.runDetailFetched(.success(cachedRun))))
@@ -87,7 +85,7 @@ public struct RunDetailFeature {
         case let .runDetailFetched(.success(run)):
             state.run = run
             state.splits = state.run.detail?.distanceSamples.splits(locale: locale)
-            state.isLoading = false
+            state.isLoading = run.detail == nil
             return .send(.delegate(.runDetailFetched(run)))
         case .runDetailFetched(.failure):
             state.isLoading = false

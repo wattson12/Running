@@ -67,7 +67,7 @@ struct UpdatedGoalPreviewWrapper: View {
         GoalListView(
             store: store.scope(
                 state: \.goalList,
-                action: UpdatedGoalPreviewWrapperFeature.Action.goalList
+                action: \.goalList
             )
         )
         .onAppear { store.send(.view(.onAppear)) }

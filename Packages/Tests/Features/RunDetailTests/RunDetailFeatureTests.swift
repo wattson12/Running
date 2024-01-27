@@ -24,11 +24,7 @@ final class RunDetailFeatureTests: XCTestCase {
             $0.isLoading = true
         }
 
-        await store.receive(._internal(.runDetailFetched(.success(initialRun)))) {
-            $0.isLoading = false
-            $0.splits = nil
-            $0.run = initialRun
-        }
+        await store.receive(._internal(.runDetailFetched(.success(initialRun))))
 
         await store.receive(.delegate(.runDetailFetched(initialRun)))
 
@@ -72,7 +68,9 @@ final class RunDetailFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.view(.onAppear)) {
+        await store.send(.view(.onAppear))
+
+        await store.receive(._internal(.runDetailFetched(.success(initialRun)))) {
             $0.splits = [
                 Split(
                     distance: "1",
@@ -84,8 +82,6 @@ final class RunDetailFeatureTests: XCTestCase {
                 ),
             ]
         }
-
-        await store.receive(._internal(.runDetailFetched(.success(initialRun))))
 
         await store.receive(.delegate(.runDetailFetched(initialRun)))
 

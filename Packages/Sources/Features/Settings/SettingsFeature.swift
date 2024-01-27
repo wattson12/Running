@@ -44,7 +44,7 @@ public struct SettingsFeature {
 
         var showRunDetailFeatureFlag: Bool = false
 
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(debugSectionVisible: Bool = .debugSectionVisibleDefaultValue) {
             self.debugSectionVisible = debugSectionVisible

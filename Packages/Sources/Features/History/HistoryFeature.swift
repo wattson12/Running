@@ -68,7 +68,7 @@ public struct HistoryFeature: Reducer {
         var totals: [IntervalTotal]
         var sortType: SortType
         var summary: HistorySummary?
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(
             totals: [IntervalTotal] = [],

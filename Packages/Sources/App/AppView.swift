@@ -28,7 +28,7 @@ public struct AppView: View {
                     GoalListView(
                         store: store.scope(
                             state: \.goalList,
-                            action: AppFeature.Action.goalList
+                            action: \.goalList
                         )
                     )
                     .toolbar {
@@ -60,7 +60,7 @@ public struct AppView: View {
                     RunListView(
                         store: store.scope(
                             state: \.runList,
-                            action: AppFeature.Action.runList
+                            action: \.runList
                         )
                     )
                 }
@@ -73,7 +73,7 @@ public struct AppView: View {
                     HistoryView(
                         store: store.scope(
                             state: \.history,
-                            action: AppFeature.Action.history
+                            action: \.history
                         )
                     )
                 }

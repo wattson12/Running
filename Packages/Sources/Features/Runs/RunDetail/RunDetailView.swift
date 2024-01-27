@@ -18,7 +18,7 @@ public struct RunDetailView: View {
     public var body: some View {
         ScrollView {
             VStack(spacing: 8) {
-                if let locations = store.run.detail?.locations {
+                if let locations = store.run.detail?.locations, !locations.isEmpty {
                     IconBorderedView(
                         image: .init(systemName: "map.circle"),
                         title: L10n.Runs.Detail.Section.route
@@ -32,9 +32,16 @@ public struct RunDetailView: View {
                 } else if store.isLoading {
                     loading()
                         .customTint(Color(asset: Asset.blue))
+                } else {
+                    empty(
+                        image: .init(systemName: "map.circle"),
+                        title: L10n.Runs.Detail.Section.route,
+                        message: L10n.Runs.Detail.Section.Route.empty
+                    )
+                    .customTint(Color(asset: Asset.blue))
                 }
 
-                if let splits = store.splits {
+                if let splits = store.splits, !splits.isEmpty {
                     IconBorderedView(
                         image: .init(systemName: "stopwatch"),
                         title: L10n.Runs.Detail.Section.splits
@@ -47,9 +54,16 @@ public struct RunDetailView: View {
                 } else if store.isLoading {
                     loading()
                         .customTint(Color(asset: Asset.green))
+                } else {
+                    empty(
+                        image: .init(systemName: "stopwatch"),
+                        title: L10n.Runs.Detail.Section.splits,
+                        message: L10n.Runs.Detail.Section.Splits.empty
+                    )
+                    .customTint(Color(asset: Asset.green))
                 }
 
-                if let locations = store.run.detail?.locations, let splits = store.splits {
+                if let locations = store.run.detail?.locations, !locations.isEmpty, let splits = store.splits {
                     IconBorderedView(
                         image: .init(systemName: "mountain.2.circle"),
                         title: L10n.Runs.Detail.Section.altitude
@@ -66,6 +80,13 @@ public struct RunDetailView: View {
                 } else if store.isLoading {
                     loading()
                         .customTint(Color(asset: Asset.purple))
+                } else {
+                    empty(
+                        image: .init(systemName: "mountain.2.circle"),
+                        title: L10n.Runs.Detail.Section.altitude,
+                        message: L10n.Runs.Detail.Section.Altitude.empty
+                    )
+                    .customTint(Color(asset: Asset.purple))
                 }
             }
             .padding(.horizontal, 16)
@@ -92,6 +113,28 @@ public struct RunDetailView: View {
                 .cornerRadius(8)
         }
         .redacted(reason: .placeholder)
+    }
+
+    @ViewBuilder func empty(
+        image: Image,
+        title: String,
+        message: String
+    ) -> some View {
+        IconBorderedView(
+            image: image,
+            title: title
+        ) {
+            ZStack {
+                Color.gray.opacity(0.3)
+                    .frame(height: 200)
+                    .cornerRadius(8)
+
+                Text(message)
+                    .font(.body)
+                    .padding(.all, 16)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 }
 
@@ -152,5 +195,27 @@ public struct RunDetailView: View {
                 }
             )
         )
+    }
+}
+
+#Preview("Empty Sections") {
+    let run: Run = .mock(
+        detail: .mock(locations: [], distanceSamples: [])
+    )
+    return NavigationStack {
+        RunDetailView(
+            store: .init(
+                initialState: .init(run: run),
+                reducer: RunDetailFeature.init,
+                withDependencies: {
+                    $0.repository.runningWorkouts._runDetail = { _ in
+                        try await Task.sleep(for: .seconds(1))
+                        return run
+                    }
+                    $0.locale = .init(identifier: "en_AU")
+                }
+            )
+        )
+        .environment(\.locale, .init(identifier: "en_AU"))
     }
 }
