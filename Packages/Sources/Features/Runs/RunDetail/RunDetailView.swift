@@ -36,7 +36,7 @@ public struct RunDetailView: View {
                     empty(
                         image: .init(systemName: "map.circle"),
                         title: L10n.Runs.Detail.Section.route,
-                        message: "No route information available"
+                        message: L10n.Runs.Detail.Section.Route.empty
                     )
                     .customTint(Color(asset: Asset.blue))
                 }
@@ -58,7 +58,7 @@ public struct RunDetailView: View {
                     empty(
                         image: .init(systemName: "stopwatch"),
                         title: L10n.Runs.Detail.Section.splits,
-                        message: "No split information available"
+                        message: L10n.Runs.Detail.Section.Splits.empty
                     )
                     .customTint(Color(asset: Asset.green))
                 }
@@ -84,7 +84,7 @@ public struct RunDetailView: View {
                     empty(
                         image: .init(systemName: "mountain.2.circle"),
                         title: L10n.Runs.Detail.Section.altitude,
-                        message: "No altitude information available"
+                        message: L10n.Runs.Detail.Section.Altitude.empty
                     )
                     .customTint(Color(asset: Asset.purple))
                 }

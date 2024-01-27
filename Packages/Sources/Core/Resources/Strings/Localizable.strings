@@ -45,8 +45,11 @@
 "runs.list.yesterday" = "Yesterday";
 
 "runs.detail.section.route" = "Route";
+"runs.detail.section.route.empty" = "No route information available";
 "runs.detail.section.splits" = "Splits";
+"runs.detail.section.splits.empty" = "No split information available";
 "runs.detail.section.altitude" = "Altitude";
+"runs.detail.section.altitude.empty" = "No altitude information available";
 
 "settings.section.acknowledgements" = "Acknowledgements";
 "settings.section.build_info.title" = "Build info";

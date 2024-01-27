@@ -156,6 +156,20 @@ public enum L10n {
                 public static let route = L10n.tr("Localizable", "runs.detail.section.route", fallback: "Route")
                 /// Splits
                 public static let splits = L10n.tr("Localizable", "runs.detail.section.splits", fallback: "Splits")
+                public enum Altitude {
+                    /// No altitude information available
+                    public static let empty = L10n.tr("Localizable", "runs.detail.section.altitude.empty", fallback: "No altitude information available")
+                }
+
+                public enum Route {
+                    /// No route information available
+                    public static let empty = L10n.tr("Localizable", "runs.detail.section.route.empty", fallback: "No route information available")
+                }
+
+                public enum Splits {
+                    /// No split information available
+                    public static let empty = L10n.tr("Localizable", "runs.detail.section.splits.empty", fallback: "No split information available")
+                }
             }
         }
 
