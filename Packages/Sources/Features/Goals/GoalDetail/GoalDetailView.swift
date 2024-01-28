@@ -22,7 +22,10 @@ public struct GoalDetailView: View {
                     let runs = store.runs,
                     let target = store.goal.target
                 {
-                    WidgetView {
+                    IconBorderedView(
+                        image: .init(systemName: "ruler"),
+                        title: "Summary"
+                    ) {
                         VStack(spacing: 8) {
                             HStack {
                                 Text(L10n.Goals.Detail.Summary.goal)
@@ -51,37 +54,46 @@ public struct GoalDetailView: View {
                             }
                         }
                     }
+                    .padding(.horizontal, 16)
 
                     if !runs.isEmpty {
-                        WidgetView {
+                        IconBorderedView(
+                            image: .init(systemName: "chart.line.uptrend.xyaxis"),
+                            title: "Progress"
+                        ) {
                             GoalChartView(
                                 period: store.goal.period,
                                 runs: runs,
                                 goal: target
                             )
+                            .frame(height: 250)
                         }
-                        .frame(height: 250)
+                        .padding(.horizontal, 16)
                     } else {
-                        WidgetView {
+                        IconBorderedView(
+                            image: .init(systemName: "chart.line.uptrend.xyaxis"),
+                            title: "Progress"
+                        ) {
                             GoalChartView(
                                 period: store.goal.period,
                                 runs: store.emptyStateRuns,
                                 goal: target
                             )
                             .blur(radius: 5)
-                        }
-                        .frame(height: 250)
-                        .overlay {
-                            VStack {
-                                Image(systemName: "xmark.circle.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: 20)
+                            .frame(height: 250)
+                            .overlay {
+                                VStack {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(height: 20)
 
-                                Text(L10n.Goals.Detail.Chart.noRunsOverlay)
-                                    .font(.callout)
+                                    Text(L10n.Goals.Detail.Chart.noRunsOverlay)
+                                        .font(.callout)
+                                }
                             }
                         }
+                        .padding(.horizontal, 16)
                     }
                 }
             }
