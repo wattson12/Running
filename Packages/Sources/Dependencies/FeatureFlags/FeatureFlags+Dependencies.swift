@@ -7,7 +7,7 @@ public extension FeatureFlags {
     internal static func userDefaults(_ defaults: UserDefaults.Dependency) -> FeatureFlags {
         .init(
             get: { key in
-                defaults.bool(forKey: key.rawValue) ?? false
+                defaults.bool(forKey: key.rawValue) ?? key.defaultValue
             },
             set: { key, newValue in
                 defaults.set(newValue, forKey: key.rawValue)
