@@ -6,16 +6,6 @@ import FeatureFlags
 import Foundation
 import Logging
 
-public extension Bool {
-    static var debugSectionVisibleDefaultValue: Bool {
-        #if targetEnvironment(simulator)
-            return false
-        #else
-            return false
-        #endif
-    }
-}
-
 @Reducer
 public struct SettingsFeature {
     @Reducer
@@ -39,22 +29,18 @@ public struct SettingsFeature {
         var buildNumber: String = ""
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
 
-        var debugSectionVisible: Bool
         var loggingDisplayed: Bool = false
 
         var showRunDetailFeatureFlag: Bool = false
 
         @Presents var destination: Destination.State?
 
-        public init(debugSectionVisible: Bool = .debugSectionVisibleDefaultValue) {
-            self.debugSectionVisible = debugSectionVisible
-        }
+        public init() {}
     }
 
     public enum Action: Equatable, BindableAction {
         public enum View: Equatable {
             case onAppear
-            case hiddenAreaGestureFired
             case showLoggingButtonTapped
             case loggingDisplayed(Bool)
             case deleteAllRunsTapped
@@ -96,9 +82,6 @@ public struct SettingsFeature {
             state.versionNumber = bundleInfo.shortVersion
             state.buildNumber = bundleInfo.version
             state.showRunDetailFeatureFlag = featureFlags[.showRunDetail]
-            return .none
-        case .hiddenAreaGestureFired:
-            state.debugSectionVisible.toggle()
             return .none
         case .showLoggingButtonTapped:
             state.loggingDisplayed = true

@@ -32,58 +32,41 @@ public struct SettingsView: View {
                     }
                 }
 
-                if store.debugSectionVisible {
-                    Section(L10n.Settings.Section.BuildInfo.title) {
-                        buildInfoSection()
+                Section(L10n.Settings.Section.BuildInfo.title) {
+                    buildInfoSection()
+                }
+
+                Section(
+                    header: Text("Beta Features"),
+                    content: {
+                        Toggle("Run detail", isOn: $store.showRunDetailFeatureFlag)
                     }
-                } else {
-                    Section(
-                        header: Text(L10n.Settings.Section.BuildInfo.title),
-                        footer: debugSectionGestureView {
-                            store.send(.view(.hiddenAreaGestureFired))
-                        },
-                        content: {
-                            buildInfoSection()
-                        }
-                    )
-                }
+                )
 
-                if store.debugSectionVisible {
-                    Section(
-                        header: Text("Feature Flags"),
-                        content: {
-                            Toggle("Show run detail", isOn: $store.showRunDetailFeatureFlag)
-                        }
-                    )
+                Section(
+                    header: Text("Cache"),
+                    content: {
+                        Button("Delete all runs") { store.send(.view(.deleteAllRunsTapped)) }
+                    }
+                )
 
-                    Section(
-                        header: Text("Cache"),
-                        content: {
-                            Button("Delete all runs") { store.send(.view(.deleteAllRunsTapped)) }
-                        }
-                    )
-
-                    Section(
-                        header: Text(L10n.Settings.Section.Debug.title),
-                        footer: debugSectionGestureView {
-                            store.send(.view(.hiddenAreaGestureFired))
-                        },
-                        content: {
-                            Button(
-                                action: {
-                                    store.send(.view(.showLoggingButtonTapped))
-                                },
-                                label: {
-                                    Text(L10n.Settings.Section.Debug.showLogging)
-                                }
-                            )
-                        }
-                    )
-                }
+                Section(
+                    header: Text(L10n.Settings.Section.Debug.title),
+                    content: {
+                        Button(
+                            action: {
+                                store.send(.view(.showLoggingButtonTapped))
+                            },
+                            label: {
+                                Text(L10n.Settings.Section.Debug.showLogging)
+                            }
+                        )
+                    }
+                )
             }
             .sheet(
                 isPresented: .constant(false),
-//                    isPresented: $store.loggingDisplayed.sending(\.loggingDisplayed),
+                //                    isPresented: $store.loggingDisplayed.sending(\.loggingDisplayed),
                 content: {
                     LogListView(
                         store: .init(
@@ -153,15 +136,6 @@ public struct SettingsView: View {
                 }
             }
         )
-    }
-
-    @ViewBuilder func debugSectionGestureView(action: @escaping () -> Void) -> some View {
-        Color.clear
-            .contentShape(Rectangle())
-            .frame(height: 100)
-            .onTapGesture(count: 5) {
-                action()
-            }
     }
 }
 
