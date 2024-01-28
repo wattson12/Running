@@ -193,7 +193,10 @@ public struct AppFeature {
     private func settings(_ action: SettingsFeature.Action, state: inout State) -> EffectOf<Self> {
         guard case let .delegate(action) = action else { return .none }
 
-        state.history = featureFlags[.history] ? .init() : nil
-        return .none
+        switch action {
+        case .featureFlagsUpdated:
+            state.history = featureFlags[.history] ? .init() : nil
+            return .none
+        }
     }
 }
