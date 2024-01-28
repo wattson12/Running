@@ -54,6 +54,11 @@ public enum L10n {
                 public static let noRunsOverlay = L10n.tr("Localizable", "goals.detail.chart.no_runs_overlay", fallback: "No runs recorded for this goal")
             }
 
+            public enum Progress {
+                /// Progress
+                public static let title = L10n.tr("Localizable", "goals.detail.progress.title", fallback: "Progress")
+            }
+
             public enum Summary {
                 /// Distance
                 public static let distance = L10n.tr("Localizable", "goals.detail.summary.distance", fallback: "Distance")
@@ -61,6 +66,8 @@ public enum L10n {
                 public static let goal = L10n.tr("Localizable", "goals.detail.summary.goal", fallback: "Goal")
                 /// Remaining
                 public static let remaining = L10n.tr("Localizable", "goals.detail.summary.remaining", fallback: "Remaining")
+                /// Summary
+                public static let title = L10n.tr("Localizable", "goals.detail.summary.title", fallback: "Summary")
             }
         }
 
@@ -202,6 +209,15 @@ public enum L10n {
         public enum Section {
             /// Acknowledgements
             public static let acknowledgements = L10n.tr("Localizable", "settings.section.acknowledgements", fallback: "Acknowledgements")
+            /// Beta features
+            public static let betaFeatures = L10n.tr("Localizable", "settings.section.beta_features", fallback: "Beta features")
+            /// Cache
+            public static let cache = L10n.tr("Localizable", "settings.section.cache", fallback: "Cache")
+            public enum BetaFeatures {
+                /// Run detail
+                public static let runDetail = L10n.tr("Localizable", "settings.section.beta_features.run_detail", fallback: "Run detail")
+            }
+
             public enum BuildInfo {
                 /// Build number
                 public static let buildNumber = L10n.tr("Localizable", "settings.section.build_info.build_number", fallback: "Build number")
@@ -209,6 +225,11 @@ public enum L10n {
                 public static let title = L10n.tr("Localizable", "settings.section.build_info.title", fallback: "Build info")
                 /// Version
                 public static let version = L10n.tr("Localizable", "settings.section.build_info.version", fallback: "Version")
+            }
+
+            public enum Cache {
+                /// Delete all runs
+                public static let deleteAllRuns = L10n.tr("Localizable", "settings.section.cache.delete_all_runs", fallback: "Delete all runs")
             }
 
             public enum Debug {

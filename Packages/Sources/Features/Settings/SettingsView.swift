@@ -37,16 +37,16 @@ public struct SettingsView: View {
                 }
 
                 Section(
-                    header: Text("Beta Features"),
+                    header: Text(L10n.Settings.Section.betaFeatures),
                     content: {
-                        Toggle("Run detail", isOn: $store.showRunDetailFeatureFlag)
+                        Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.showRunDetailFeatureFlag)
                     }
                 )
 
                 Section(
-                    header: Text("Cache"),
+                    header: Text(L10n.Settings.Section.cache),
                     content: {
-                        Button("Delete all runs") { store.send(.view(.deleteAllRunsTapped)) }
+                        Button(L10n.Settings.Section.Cache.deleteAllRuns) { store.send(.view(.deleteAllRunsTapped)) }
                     }
                 )
 

@@ -25,6 +25,8 @@
 "goals.detail.summary.goal" = "Goal";
 "goals.detail.summary.distance" = "Distance";
 "goals.detail.summary.remaining" = "Remaining";
+"goals.detail.summary.title" = "Summary";
+"goals.detail.progress.title" = "Progress";
 
 "permissions.health_kit_unavailable.title" = "Workouts not suppported";
 "permissions.health_kit_unavailable.message" = "We use running workouts to update your running goals. This device doesn't currently support importing workouts so we can't track your goals";
@@ -62,6 +64,10 @@
 "settings.section.links.source_code" = "Source code";
 "settings.section.links.terms" = "Terms & conditions";
 "settings.section.links.privacy" = "Privacy policy";
+"settings.section.beta_features" = "Beta features";
+"settings.section.beta_features.run_detail" = "Run detail";
+"settings.section.cache" = "Cache";
+"settings.section.cache.delete_all_runs" = "Delete all runs";
 
 "history.title" = "History";
 "history.menu.label" = "Menu";

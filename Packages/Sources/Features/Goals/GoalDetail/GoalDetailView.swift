@@ -24,7 +24,7 @@ public struct GoalDetailView: View {
                 {
                     IconBorderedView(
                         image: .init(systemName: "ruler"),
-                        title: "Summary"
+                        title: L10n.Goals.Detail.Summary.title
                     ) {
                         VStack(spacing: 8) {
                             HStack {
@@ -59,7 +59,7 @@ public struct GoalDetailView: View {
                     if !runs.isEmpty {
                         IconBorderedView(
                             image: .init(systemName: "chart.line.uptrend.xyaxis"),
-                            title: "Progress"
+                            title: L10n.Goals.Detail.Progress.title
                         ) {
                             GoalChartView(
                                 period: store.goal.period,
@@ -72,7 +72,7 @@ public struct GoalDetailView: View {
                     } else {
                         IconBorderedView(
                             image: .init(systemName: "chart.line.uptrend.xyaxis"),
-                            title: "Progress"
+                            title: L10n.Goals.Detail.Progress.title
                         ) {
                             GoalChartView(
                                 period: store.goal.period,
