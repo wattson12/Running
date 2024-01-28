@@ -32,6 +32,7 @@ public struct SettingsFeature {
         var loggingDisplayed: Bool = false
 
         var showRunDetailFeatureFlag: Bool = false
+        var showHistoryFeatureFlag: Bool = false
 
         @Presents var destination: Destination.State?
 
@@ -67,6 +68,9 @@ public struct SettingsFeature {
             case .binding(\.showRunDetailFeatureFlag):
                 featureFlags[.showRunDetail] = state.showRunDetailFeatureFlag
                 return .none
+            case .binding(\.showHistoryFeatureFlag):
+                featureFlags[.history] = state.showHistoryFeatureFlag
+                return .none
             case .binding:
                 return .none
             case .destination:
@@ -82,6 +86,7 @@ public struct SettingsFeature {
             state.versionNumber = bundleInfo.shortVersion
             state.buildNumber = bundleInfo.version
             state.showRunDetailFeatureFlag = featureFlags[.showRunDetail]
+            state.showHistoryFeatureFlag = featureFlags[.history]
             return .none
         case .showLoggingButtonTapped:
             state.loggingDisplayed = true
