@@ -104,65 +104,67 @@ public struct GoalDetailView: View {
     }
 }
 
-struct GoalDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            GoalDetailView.preview(
-                goalPeriod: .weekly
-            )
-        }
-        .environment(\.locale, .init(identifier: "en_AU"))
-        .previewDisplayName("Weekly")
-
-        NavigationStack {
-            GoalDetailView.preview(
-                goalPeriod: .monthly
-            )
-        }
-        .environment(\.locale, .init(identifier: "en_AU"))
-        .previewDisplayName("Monthly")
-
-        NavigationStack {
-            GoalDetailView.preview(
-                goalPeriod: .yearly
-            )
-        }
-        .environment(\.locale, .init(identifier: "en_AU"))
-        .previewDisplayName("Yearly")
-
-        NavigationStack {
-            GoalDetailView.preview(
-                goalPeriod: .yearly,
-                date: Date(timeIntervalSince1970: 1_578_346_222) // 2020
-            )
-        }
-        .environment(\.locale, .init(identifier: "en_AU"))
-        .previewDisplayName("Custom Date")
-
-        NavigationStack {
-            GoalDetailView(
-                store: .init(
-                    initialState: .init(
-                        goal: Goal(
-                            period: .monthly,
-                            target: .init(
-                                value: 20,
-                                unit: .kilometers
-                            )
-                        ),
-                        runs: []
-                    ),
-                    reducer: GoalDetailFeature.init,
-                    withDependencies: {
-                        $0.date = .constant(.preview)
-                        $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
-                    }
-                )
-            )
-        }
-        .environment(\.locale, .init(identifier: "en_AU"))
-        .previewDisplayName("Empty")
+#Preview("Weekly") {
+    NavigationStack {
+        GoalDetailView.preview(
+            goalPeriod: .weekly
+        )
     }
+    .environment(\.locale, .init(identifier: "en_AU"))
+}
+
+#Preview("Monthly") {
+    NavigationStack {
+        GoalDetailView.preview(
+            goalPeriod: .monthly
+        )
+    }
+    .environment(\.locale, .init(identifier: "en_AU"))
+}
+
+#Preview("Yearly") {
+    NavigationStack {
+        GoalDetailView.preview(
+            goalPeriod: .yearly
+        )
+    }
+    .environment(\.locale, .init(identifier: "en_AU"))
+}
+
+#Preview("Custom Date") {
+    NavigationStack {
+        GoalDetailView.preview(
+            goalPeriod: .yearly,
+            date: Date(timeIntervalSince1970: 1_578_346_222) // 2020
+        )
+    }
+    .environment(\.locale, .init(identifier: "en_AU"))
+}
+
+#Preview("Empty") {
+    NavigationStack {
+        GoalDetailView(
+            store: .init(
+                initialState: .init(
+                    goal: Goal(
+                        period: .monthly,
+                        target: .init(
+                            value: 20,
+                            unit: .kilometers
+                        )
+                    ),
+                    runs: []
+                ),
+                reducer: GoalDetailFeature.init,
+                withDependencies: {
+                    $0.date = .constant(.preview)
+                    $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
+                    $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
+                }
+            )
+        )
+    }
+    .environment(\.locale, .init(identifier: "en_AU"))
 }
 
 extension GoalDetailView {
