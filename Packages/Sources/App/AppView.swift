@@ -69,18 +69,22 @@ public struct AppView: View {
                 }
                 .tag(AppFeature.State.Tab.runs)
 
-                NavigationStack {
-                    HistoryView(
-                        store: store.scope(
-                            state: \.history,
-                            action: \.history
-                        )
+                IfLetStore(
+                    store.scope(
+                        state: \.history,
+                        action: \.history
                     )
+                ) { store in
+                    NavigationStack {
+                        HistoryView(
+                            store: store
+                        )
+                    }
+                    .tabItem {
+                        Label(L10n.App.Feature.history, systemImage: "clock.arrow.circlepath")
+                    }
+                    .tag(AppFeature.State.Tab.history)
                 }
-                .tabItem {
-                    Label(L10n.App.Feature.history, systemImage: "clock.arrow.circlepath")
-                }
-                .tag(AppFeature.State.Tab.history)
             }
             .onAppear { store.send(.view(.onAppear)) }
             .tint(Color(asset: Asset.blue))

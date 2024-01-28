@@ -10,6 +10,7 @@ final class SettingsFeatureTests: XCTestCase {
         let buildNumber: String = UUID().uuidString
         let versionNumber: String = UUID().uuidString
         let showRunDetail: Bool = .random()
+        let showHistory: Bool = .random()
 
         let store = TestStore(
             initialState: .init(),
@@ -24,7 +25,16 @@ final class SettingsFeatureTests: XCTestCase {
                     version: buildNumber
                 )
                 $0.userDefaults = .ephemeral()
-                $0.featureFlags._get = { _ in showRunDetail }
+                $0.featureFlags._get = { key in
+                    if key == .showRunDetail {
+                        return showRunDetail
+                    } else if key == .history {
+                        return showHistory
+                    } else {
+                        XCTFail()
+                        return .random()
+                    }
+                }
             }
         )
 
@@ -32,21 +42,7 @@ final class SettingsFeatureTests: XCTestCase {
             $0.versionNumber = versionNumber
             $0.buildNumber = buildNumber
             $0.showRunDetailFeatureFlag = showRunDetail
-        }
-    }
-
-    func testHiddenAreaGestureFiredTogglesState() async throws {
-        let store = TestStore(
-            initialState: .init(debugSectionVisible: false),
-            reducer: SettingsFeature.init
-        )
-
-        await store.send(.view(.hiddenAreaGestureFired)) {
-            $0.debugSectionVisible = true
-        }
-
-        await store.send(.view(.hiddenAreaGestureFired)) {
-            $0.debugSectionVisible = false
+            $0.showHistoryFeatureFlag = showHistory
         }
     }
 
@@ -68,9 +64,42 @@ final class SettingsFeatureTests: XCTestCase {
 
         await store.send(.binding(.set(\.showRunDetailFeatureFlag, true)))
 
+        await store.receive(.delegate(.featureFlagsUpdated))
+
         XCTAssertEqual(lastSetValue.value, true)
 
         await store.send(.binding(.set(\.showRunDetailFeatureFlag, false)))
+
+        await store.receive(.delegate(.featureFlagsUpdated))
+
+        XCTAssertEqual(lastSetValue.value, false)
+    }
+
+    func testBindingForShowHistoryUpdatesFeatureFlags() async throws {
+        let lastSetValue: LockIsolated<Bool?> = .init(nil)
+
+        let store = TestStore(
+            initialState: .init(),
+            reducer: SettingsFeature.init,
+            withDependencies: {
+                $0.featureFlags._set = { key, value in
+                    XCTAssertEqual(key, .history)
+                    lastSetValue.setValue(value)
+                }
+            }
+        )
+
+        store.exhaustivity = .off
+
+        await store.send(.binding(.set(\.showHistoryFeatureFlag, true)))
+
+        await store.receive(.delegate(.featureFlagsUpdated))
+
+        XCTAssertEqual(lastSetValue.value, true)
+
+        await store.send(.binding(.set(\.showHistoryFeatureFlag, false)))
+
+        await store.receive(.delegate(.featureFlagsUpdated))
 
         XCTAssertEqual(lastSetValue.value, false)
     }
