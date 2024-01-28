@@ -1,15 +1,24 @@
-import DesignSystem
 import Resources
 import SwiftUI
 
-struct IconBorderedView<Content: View>: View {
+public struct IconBorderedView<Content: View>: View {
     let image: Image
     let title: String?
     let content: () -> Content
 
     @Environment(\.tintColor) var tintColor
 
-    var body: some View {
+    public init(
+        image: Image,
+        title: String?,
+        content: @escaping () -> Content
+    ) {
+        self.image = image
+        self.title = title
+        self.content = content
+    }
+
+    public var body: some View {
         ZStack(alignment: .topLeading) {
             Color.clear
                 .clipShape(RoundedRectangle(cornerSize: .init(width: 6, height: 6)))
