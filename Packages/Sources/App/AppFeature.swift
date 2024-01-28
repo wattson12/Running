@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import FeatureFlags
 import Foundation
 import GoalList
 import HealthKitServiceInterface
@@ -38,7 +39,7 @@ public struct AppFeature {
         var tab: Tab
         var runList: RunListFeature.State
         var goalList: GoalListFeature.State
-        var history: HistoryFeature.State
+        var history: HistoryFeature.State?
 
         @Presents var destination: Destination.State?
 
@@ -47,7 +48,7 @@ public struct AppFeature {
             tab: Tab = .goals,
             runList: RunListFeature.State = .init(),
             goalList: GoalListFeature.State = .init(),
-            history: HistoryFeature.State = .init(),
+            history: HistoryFeature.State? = nil,
             destination: Destination.State? = nil
         ) {
             self.permissions = permissions
@@ -63,7 +64,7 @@ public struct AppFeature {
             tab = .goals
             runList = .init()
             goalList = .init()
-            history = .init()
+            history = nil
         }
     }
 
@@ -90,6 +91,7 @@ public struct AppFeature {
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
     @Dependency(\.healthKit.observation) var observation
     @Dependency(\.userDefaults) var userDefaults
+    @Dependency(\.featureFlags) var featureFlags
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -111,6 +113,7 @@ public struct AppFeature {
             }
         }
         .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
+        .ifLet(\.history, action: \.history, then: HistoryFeature.init)
         .ifLet(\.$destination, action: \.destination, destination: Destination.init)
 
         Scope(
@@ -124,17 +127,12 @@ public struct AppFeature {
             action: /Action.goalList,
             child: GoalListFeature.init
         )
-
-        Scope(
-            state: \.history,
-            action: /Action.history,
-            child: HistoryFeature.init
-        )
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
+            state.history = featureFlags[.history] ? .init() : nil
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in
@@ -192,7 +190,10 @@ public struct AppFeature {
         }
     }
 
-    private func settings(_: SettingsFeature.Action, state _: inout State) -> EffectOf<Self> {
-        .none
+    private func settings(_ action: SettingsFeature.Action, state: inout State) -> EffectOf<Self> {
+        guard case let .delegate(action) = action else { return .none }
+
+        state.history = featureFlags[.history] ? .init() : nil
+        return .none
     }
 }
