@@ -33,19 +33,19 @@ public struct GoalDetailFeature {
         }
 
         var totalDuration: Measurement<UnitDuration>? {
-            guard let runs else { return nil }
+            guard let runs, !runs.isEmpty else { return nil }
             return runs
                 .map(\.duration)
                 .reduce(.init(value: 0, unit: .minutes)) { $0 + $1 }
         }
 
         var averageDuration: Measurement<UnitDuration>? {
-            guard let runs, let totalDuration else { return nil }
+            guard let runs, !runs.isEmpty, let totalDuration else { return nil }
             return totalDuration / Double(runs.count)
         }
 
         var averageDistance: Measurement<UnitLength>? {
-            guard let runs else { return nil }
+            guard let runs, !runs.isEmpty else { return nil }
             let total = runs.distance
             return total / Double(runs.count)
         }

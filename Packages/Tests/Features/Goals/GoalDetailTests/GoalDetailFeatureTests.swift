@@ -113,6 +113,15 @@ final class GoalDetailFeatureTests: XCTestCase {
         XCTAssertNil(sut.totalDuration)
     }
 
+    func testTotalDurationIsCorrectWhenRunsAreEmpty() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: []
+        )
+
+        XCTAssertNil(sut.totalDuration)
+    }
+
     func testTotalDurationIsCorrect() throws {
         let durations: [Double] = [
             .random(in: 1 ..< 100_000),
@@ -143,6 +152,15 @@ final class GoalDetailFeatureTests: XCTestCase {
         XCTAssertNil(sut.averageDuration)
     }
 
+    func testAverageDurationIsCorrectWhenRunsAreEmpty() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: []
+        )
+
+        XCTAssertNil(sut.averageDuration)
+    }
+
     func testAverageDurationIsCorrect() throws {
         let durations: [Double] = [
             .random(in: 1 ..< 100_000),
@@ -168,6 +186,15 @@ final class GoalDetailFeatureTests: XCTestCase {
         let sut: GoalDetailFeature.State = .init(
             goal: .mock(),
             runs: nil
+        )
+
+        XCTAssertNil(sut.averageDistance)
+    }
+
+    func testAverageDistanceIsCorrectWhenRunsAreEmpty() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: []
         )
 
         XCTAssertNil(sut.averageDistance)
