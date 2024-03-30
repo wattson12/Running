@@ -103,4 +103,121 @@ final class GoalDetailFeatureTests: XCTestCase {
 
         await store.receive(._internal(.runsFetched(.success([]))))
     }
+
+    func testTotalDurationIsCorrectWhenRunsAreNil() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: nil
+        )
+
+        XCTAssertNil(sut.totalDuration)
+    }
+
+    func testTotalDurationIsCorrectWhenRunsAreEmpty() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: []
+        )
+
+        XCTAssertNil(sut.totalDuration)
+    }
+
+    func testTotalDurationIsCorrect() throws {
+        let durations: [Double] = [
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+        ]
+
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: durations.map { duration in
+                .mock(duration: .init(value: duration, unit: .seconds))
+            }
+        )
+
+        let totalDuration = try XCTUnwrap(sut.totalDuration)
+        let expectedTotal = durations.reduce(0, +)
+        XCTAssertEqual(totalDuration, .init(value: expectedTotal, unit: .seconds))
+    }
+
+    func testAverageDurationIsCorrectWhenRunsAreNil() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: nil
+        )
+
+        XCTAssertNil(sut.averageDuration)
+    }
+
+    func testAverageDurationIsCorrectWhenRunsAreEmpty() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: []
+        )
+
+        XCTAssertNil(sut.averageDuration)
+    }
+
+    func testAverageDurationIsCorrect() throws {
+        let durations: [Double] = [
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+        ]
+
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: durations.map { duration in
+                .mock(duration: .init(value: duration, unit: .seconds))
+            }
+        )
+
+        let averageDuration = try XCTUnwrap(sut.averageDuration)
+        let total = durations.reduce(0, +)
+        XCTAssertEqual(averageDuration, .init(value: total / 5, unit: .seconds))
+    }
+
+    func testAverageDistanceIsCorrectWhenRunsAreNil() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: nil
+        )
+
+        XCTAssertNil(sut.averageDistance)
+    }
+
+    func testAverageDistanceIsCorrectWhenRunsAreEmpty() {
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: []
+        )
+
+        XCTAssertNil(sut.averageDistance)
+    }
+
+    func testAverageDistanceIsCorrect() throws {
+        let distances: [Double] = [
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+            .random(in: 1 ..< 100_000),
+        ]
+
+        let sut: GoalDetailFeature.State = .init(
+            goal: .mock(),
+            runs: distances.map { distance in
+                .mock(distance: .init(value: distance, unit: .meters))
+            }
+        )
+
+        let averageDistance = try XCTUnwrap(sut.averageDistance)
+        let total = distances.reduce(0, +)
+        XCTAssertEqual(averageDistance, .init(value: total / 5, unit: .meters))
+    }
 }
