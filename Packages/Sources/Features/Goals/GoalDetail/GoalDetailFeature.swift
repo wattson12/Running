@@ -40,8 +40,7 @@ public struct GoalDetailFeature {
         }
 
         var averageDuration: Measurement<UnitDuration>? {
-            guard let runs else { return nil }
-            guard let totalDuration else { return nil }
+            guard let runs, let totalDuration else { return nil }
             return totalDuration / Double(runs.count)
         }
 
