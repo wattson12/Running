@@ -52,6 +52,44 @@ public struct GoalDetailView: View {
                                         .font(.body.bold())
                                 }
                             }
+
+                            HStack {
+                                Text("Runs")
+                                    .font(.title3)
+                                Spacer()
+                                Text(runs.count.description)
+                                    .font(.body.bold())
+                            }
+
+                            if let averageDistance = store.averageDistance {
+                                HStack {
+                                    Text("Average Distance")
+                                        .font(.title3)
+                                    Spacer()
+                                    Text(averageDistance.fullValue(locale: locale))
+                                        .font(.body.bold())
+                                }
+                            }
+
+                            if let totalDuration = store.totalDuration {
+                                HStack {
+                                    Text("Total Duration")
+                                        .font(.title3)
+                                    Spacer()
+                                    Text(totalDuration.fullValue(locale: locale))
+                                        .font(.body.bold())
+                                }
+                            }
+
+                            if let averageDuration = store.averageDuration {
+                                HStack {
+                                    Text("Average Duration")
+                                        .font(.title3)
+                                    Spacer()
+                                    Text(averageDuration.fullValue(locale: locale))
+                                        .font(.body.bold())
+                                }
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
