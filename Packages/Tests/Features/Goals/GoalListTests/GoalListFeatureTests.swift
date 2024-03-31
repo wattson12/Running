@@ -270,7 +270,7 @@ final class GoalListFeatureTests: XCTestCase {
         )
 
         await store.send(.view(.goalTapped(goal))) {
-            $0.destination = .editGoal(.init(goal: goal))
+            $0.destination = .detail(.init(goal: goal))
         }
     }
 

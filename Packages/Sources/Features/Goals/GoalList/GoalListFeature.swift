@@ -234,11 +234,7 @@ public struct GoalListFeature {
             state.refresh(goals: goals, runningWorkouts: runningWorkouts)
             return .run { _ in widget.reloadAllTimelines() }
         case let .goalTapped(goal):
-            if goal.target == nil {
-                state.destination = .editGoal(.init(goal: goal))
-            } else {
-                state.destination = .detail(.init(goal: goal))
-            }
+            state.destination = .detail(.init(goal: goal))
             return .none
         case let .editTapped(goal):
             state.destination = .editGoal(.init(goal: goal))
