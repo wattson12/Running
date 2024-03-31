@@ -18,10 +18,7 @@ public struct GoalDetailView: View {
     public var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                if
-                    let runs = store.runs,
-                    let target = store.goal.target
-                {
+                if let runs = store.runs {
                     IconBorderedView(
                         image: .init(systemName: "ruler"),
                         title: L10n.Goals.Detail.Summary.title
@@ -31,8 +28,12 @@ public struct GoalDetailView: View {
                                 Text(L10n.Goals.Detail.Summary.goal)
                                     .font(.title3)
                                 Spacer()
-                                Text(target.fullValue(locale: locale))
-                                    .font(.body.bold())
+                                if let target = store.goal.target {
+                                    Text(target.fullValue(locale: locale))
+                                        .font(.body.bold())
+                                } else {
+                                    Text("-")
+                                }
                             }
 
                             HStack {
@@ -43,7 +44,7 @@ public struct GoalDetailView: View {
                                     .font(.body.bold())
                             }
 
-                            if (target - runs.distance).value > 0 {
+                            if let target = store.goal.target, (target - runs.distance).value > 0 {
                                 HStack {
                                     Text(L10n.Goals.Detail.Summary.remaining)
                                         .font(.title3)
@@ -102,7 +103,7 @@ public struct GoalDetailView: View {
                             GoalChartView(
                                 period: store.goal.period,
                                 runs: runs,
-                                goal: target
+                                goal: store.goal.target
                             )
                             .frame(height: 250)
                         }
@@ -115,7 +116,7 @@ public struct GoalDetailView: View {
                             GoalChartView(
                                 period: store.goal.period,
                                 runs: store.emptyStateRuns,
-                                goal: target
+                                goal: store.goal.target
                             )
                             .blur(radius: 5)
                             .frame(height: 250)
