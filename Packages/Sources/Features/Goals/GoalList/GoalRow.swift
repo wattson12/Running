@@ -63,15 +63,6 @@ struct GoalRowView: View {
     enum GoalState {
         case noGoal
         case goalSet(distance: Measurement<UnitLength>, target: Measurement<UnitLength>)
-
-        var showSettings: Bool {
-            switch self {
-            case .noGoal:
-                return false
-            case .goalSet:
-                return true
-            }
-        }
     }
 
     let state: GoalState
@@ -124,16 +115,14 @@ struct GoalRowView: View {
 
                         Spacer()
 
-                        if state.showSettings {
-                            Button(
-                                action: editAction,
-                                label: {
-                                    Image(systemName: "gear")
-                                }
-                            )
-                            .buttonStyle(.plain)
-                            .tint(.secondary)
-                        }
+                        Button(
+                            action: editAction,
+                            label: {
+                                Image(systemName: "gear")
+                            }
+                        )
+                        .buttonStyle(.plain)
+                        .tint(.secondary)
                     }
 
                     Spacer()
@@ -151,7 +140,7 @@ struct GoalRowView: View {
     var subtitle: String {
         switch state {
         case .noGoal:
-            return "Tap to set goal"
+            return "No goal set"
         case let .goalSet(distance, target) where distance < target:
             let remaining = target - distance
             return formattedRemaining(remaining: remaining)
