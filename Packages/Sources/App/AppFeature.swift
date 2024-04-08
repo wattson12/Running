@@ -41,6 +41,8 @@ public struct AppFeature {
         var goalList: GoalListFeature.State
         var history: HistoryFeature.State?
 
+        @Shared(.appStorage("history_feature")) var showHistoryFeatureFlag: Bool = false
+
         @Presents var destination: Destination.State?
 
         init(
@@ -91,7 +93,7 @@ public struct AppFeature {
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
     @Dependency(\.healthKit.observation) var observation
     @Dependency(\.userDefaults) var userDefaults
-    @Dependency(\.featureFlags) var featureFlags
+//    @Dependency(\.featureFlags) var featureFlags
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -115,6 +117,12 @@ public struct AppFeature {
         .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
         .ifLet(\.history, action: \.history, then: HistoryFeature.init)
         .ifLet(\.$destination, action: \.destination, destination: Destination.init)
+        .onChange(of: \.showHistoryFeatureFlag) { _, _ in
+            Reduce { state, _ in
+                state.history = state.showHistoryFeatureFlag ? .init() : nil
+                return .none
+            }
+        }
 
         Scope(
             state: \.runList,
@@ -132,7 +140,7 @@ public struct AppFeature {
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            state.history = featureFlags[.history] ? .init() : nil
+            state.history = state.showHistoryFeatureFlag ? .init() : nil
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in
@@ -190,13 +198,14 @@ public struct AppFeature {
         }
     }
 
-    private func settings(_ action: SettingsFeature.Action, state: inout State) -> EffectOf<Self> {
-        guard case let .delegate(action) = action else { return .none }
-
-        switch action {
-        case .featureFlagsUpdated:
-            state.history = featureFlags[.history] ? .init() : nil
-            return .none
-        }
+    private func settings(_: SettingsFeature.Action, state _: inout State) -> EffectOf<Self> {
+        .none
+//        guard case let .delegate(action) = action else { return .none }
+//
+//        switch action {
+//        case .featureFlagsUpdated:
+//            state.history = featureFlags[.history] ? .init() : nil
+//            return .none
+//        }
     }
 }
