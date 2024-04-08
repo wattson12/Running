@@ -2,7 +2,6 @@ import Cache
 import ComposableArchitecture
 import CoreData
 import DependenciesAdditions
-import FeatureFlags
 import Foundation
 import Logging
 
@@ -78,8 +77,6 @@ public struct SettingsFeature {
         case .onAppear:
             state.versionNumber = bundleInfo.shortVersion
             state.buildNumber = bundleInfo.version
-//            state.showRunDetailFeatureFlag = featureFlags[.showRunDetail]
-//            state.showHistoryFeatureFlag = featureFlags[.history]
             return .none
         case .showLoggingButtonTapped:
             state.loggingDisplayed = true

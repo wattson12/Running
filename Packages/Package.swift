@@ -37,7 +37,6 @@ extension String {
     static let healthKitServiceLive: Self = "HealthKitServiceLive"
     static let widgets: Self = "Widgets"
     static let logging: Self = "Logging"
-    static let featureFlags: Self = "FeatureFlags"
     
     static func dependencies(_ package: String) -> Self {
         "Sources/Dependencies/\(package)"
@@ -95,7 +94,6 @@ let package = Package(
         .library(name: .healthKitServiceLive),
         .library(name: .widgets),
         .library(name: .logging),
-        .library(name: .featureFlags),
         .library(name: .cache),
         .library(name: .model),
         .library(name: .designSystem),
@@ -117,7 +115,6 @@ let package = Package(
                 .target(name: .repository),
                 .target(name: .designSystem),
                 .target(name: .widgets),
-                .target(name: .featureFlags),
             ],
             path: .feature(.runList, in: .runs)
         ),
@@ -129,7 +126,6 @@ let package = Package(
                 .target(name: .model),
                 .target(name: .repository),
                 .target(name: .designSystem),
-                .target(name: .featureFlags),
             ],
             path: .feature(.runDetail, in: .runs)
         ),
@@ -174,15 +170,6 @@ let package = Package(
                 .dependencies
             ],
             path: .dependencies(.logging)
-        ),
-        .target(
-            name: .featureFlags,
-            dependencies: [
-                .dependencies,
-                .dependenciesAdditions,
-                .dependenciesMacros,
-            ],
-            path: .dependencies(.featureFlags)
         ),
         .target(
             name: .app,
@@ -269,7 +256,6 @@ let package = Package(
                 .dependenciesAdditions,
                 .target(name: .designSystem),
                 .target(name: .logging),
-                .target(name: .featureFlags),
                 .target(name: .cache),
             ],
             path: .feature(.settings)
@@ -283,7 +269,6 @@ let package = Package(
                 .target(name: .goalDetail),
                 .target(name: .designSystem),
                 .target(name: .logging),
-                .target(name: .featureFlags),
                 .target(name: .repository),
                 .target(name: .model),
                 .target(name: .cache),
