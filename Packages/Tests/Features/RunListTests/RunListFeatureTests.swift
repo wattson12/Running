@@ -21,7 +21,6 @@ final class RunListFeatureTests: XCTestCase {
             initialState: .init(),
             reducer: RunListFeature.init,
             withDependencies: {
-                $0.userDefaults = .ephemeral()
                 $0.repository.runningWorkouts = .mock(runs: runs)
                 $0.date = .constant(date)
                 $0.calendar = .current
@@ -80,11 +79,7 @@ final class RunListFeatureTests: XCTestCase {
             ),
             reducer: RunListFeature.init,
             withDependencies: {
-                $0.featureFlags = .mock(
-                    enabled: [
-                        .showRunDetail,
-                    ]
-                )
+                $0.defaultAppStorage.set(true, forKey: "show_run_detail")
             }
         )
 
@@ -105,9 +100,7 @@ final class RunListFeatureTests: XCTestCase {
             ),
             reducer: RunListFeature.init,
             withDependencies: {
-                $0.featureFlags = .mock(
-                    enabled: []
-                )
+                $0.defaultAppStorage.set(false, forKey: "show_run_detail")
             }
         )
 
