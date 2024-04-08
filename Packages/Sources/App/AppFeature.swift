@@ -1,5 +1,4 @@
 import ComposableArchitecture
-import FeatureFlags
 import Foundation
 import GoalList
 import HealthKitServiceInterface
@@ -40,6 +39,8 @@ public struct AppFeature {
         var runList: RunListFeature.State
         var goalList: GoalListFeature.State
         var history: HistoryFeature.State?
+
+        @Shared(.appStorage("history_feature")) var showHistoryFeatureFlag: Bool = false
 
         @Presents var destination: Destination.State?
 
@@ -91,7 +92,6 @@ public struct AppFeature {
     @Dependency(\.repository.runningWorkouts) var runningWorkouts
     @Dependency(\.healthKit.observation) var observation
     @Dependency(\.userDefaults) var userDefaults
-    @Dependency(\.featureFlags) var featureFlags
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -108,13 +108,19 @@ public struct AppFeature {
                 return .none
             case let .deepLink(url):
                 return deepLink(url: url, state: &state)
-            case let .destination(action):
-                return destination(action, state: &state)
+            case .destination:
+                return .none
             }
         }
         .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
         .ifLet(\.history, action: \.history, then: HistoryFeature.init)
         .ifLet(\.$destination, action: \.destination, destination: Destination.init)
+        .onChange(of: \.showHistoryFeatureFlag) { _, _ in
+            Reduce { state, _ in
+                state.history = state.showHistoryFeatureFlag ? .init() : nil
+                return .none
+            }
+        }
 
         Scope(
             state: \.runList,
@@ -132,7 +138,7 @@ public struct AppFeature {
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            state.history = featureFlags[.history] ? .init() : nil
+            state.history = state.showHistoryFeatureFlag ? .init() : nil
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in
@@ -180,23 +186,5 @@ public struct AppFeature {
             state.tab = .runs
         }
         return .none
-    }
-
-    private func destination(_ action: PresentationAction<Destination.Action>, state: inout State) -> EffectOf<Self> {
-        guard case let .presented(action) = action else { return .none }
-        switch action {
-        case let .settings(action):
-            return settings(action, state: &state)
-        }
-    }
-
-    private func settings(_ action: SettingsFeature.Action, state: inout State) -> EffectOf<Self> {
-        guard case let .delegate(action) = action else { return .none }
-
-        switch action {
-        case .featureFlagsUpdated:
-            state.history = featureFlags[.history] ? .init() : nil
-            return .none
-        }
     }
 }

@@ -2,7 +2,6 @@ import Cache
 import ComposableArchitecture
 import CoreData
 import DependenciesAdditions
-import FeatureFlags
 import Foundation
 import Logging
 
@@ -31,8 +30,8 @@ public struct SettingsFeature {
 
         var loggingDisplayed: Bool = false
 
-        var showRunDetailFeatureFlag: Bool = false
-        var showHistoryFeatureFlag: Bool = false
+        @Shared(.appStorage("show_run_detail")) var showRunDetailFeatureFlag: Bool = false
+        @Shared(.appStorage("history_feature")) var showHistoryFeatureFlag: Bool = false
 
         @Presents var destination: Destination.State?
 
@@ -47,19 +46,13 @@ public struct SettingsFeature {
             case deleteAllRunsTapped
         }
 
-        public enum Delegate: Equatable {
-            case featureFlagsUpdated
-        }
-
         case view(View)
-        case delegate(Delegate)
         case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
     }
 
     @Dependency(\.bundleInfo) var bundleInfo
     @Dependency(\.userDefaults) var userDefaults
-    @Dependency(\.featureFlags) var featureFlags
     @Dependency(\.coreData) var coreData
 
     public init() {}
@@ -70,14 +63,6 @@ public struct SettingsFeature {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
-            case .delegate:
-                return .none
-            case .binding(\.showRunDetailFeatureFlag):
-                featureFlags[.showRunDetail] = state.showRunDetailFeatureFlag
-                return .send(.delegate(.featureFlagsUpdated))
-            case .binding(\.showHistoryFeatureFlag):
-                featureFlags[.history] = state.showHistoryFeatureFlag
-                return .send(.delegate(.featureFlagsUpdated))
             case .binding:
                 return .none
             case .destination:
@@ -92,8 +77,6 @@ public struct SettingsFeature {
         case .onAppear:
             state.versionNumber = bundleInfo.shortVersion
             state.buildNumber = bundleInfo.version
-            state.showRunDetailFeatureFlag = featureFlags[.showRunDetail]
-            state.showHistoryFeatureFlag = featureFlags[.history]
             return .none
         case .showLoggingButtonTapped:
             state.loggingDisplayed = true

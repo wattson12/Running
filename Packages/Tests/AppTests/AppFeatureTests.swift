@@ -12,8 +12,6 @@ final class AppFeatureTests: XCTestCase {
             initialState: .init(),
             reducer: AppFeature.init,
             withDependencies: {
-                $0.userDefaults = .ephemeral()
-
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
 
@@ -126,8 +124,7 @@ final class AppFeatureTests: XCTestCase {
             initialState: .init(history: nil),
             reducer: AppFeature.init,
             withDependencies: {
-                $0.featureFlags = .mock(enabled: [.history])
-                $0.userDefaults = .ephemeral()
+                $0.defaultAppStorage.set(true, forKey: "history_feature")
 
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
@@ -149,34 +146,6 @@ final class AppFeatureTests: XCTestCase {
 
         await store.send(.view(.onAppear)) {
             $0.history = .init()
-        }
-    }
-
-    func testSettingsDelegateForFeatureFlagUpdatedRefreshesHistoryState() async throws {
-        let historyFeatureFlag: LockIsolated<Bool> = .init(true)
-
-        let store = TestStore(
-            initialState: .init(
-                history: nil,
-                destination: .settings(.init())
-            ),
-            reducer: AppFeature.init,
-            withDependencies: {
-                $0.userDefaults = .ephemeral()
-                $0.featureFlags._get = { _ in
-                    historyFeatureFlag.value
-                }
-            }
-        )
-
-        await store.send(.destination(.presented(.settings(.delegate(.featureFlagsUpdated))))) {
-            $0.history = .init()
-        }
-
-        historyFeatureFlag.setValue(false)
-
-        await store.send(.destination(.presented(.settings(.delegate(.featureFlagsUpdated))))) {
-            $0.history = nil
         }
     }
 }

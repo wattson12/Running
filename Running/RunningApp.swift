@@ -13,6 +13,7 @@ struct RunningApp: App {
                 $0 = .preview
                 $0.date = .constant(.preview)
                 $0.updateForScreenshots()
+                $0.defaultAppStorage = .standard
             #endif
         }
     )
