@@ -33,6 +33,7 @@ public struct RunListFeature {
         var runs: IdentifiedArrayOf<Run> = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
+        @Shared(.appStorage("show_run_detail")) var showRunDetailFeatureFlag: Bool = false
         @Presents var destination: Destination.State?
 
         public init(
@@ -78,7 +79,6 @@ public struct RunListFeature {
 
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.widget) var widget
-    @Dependency(\.featureFlags) var featureFlags
 
     public var body: some ReducerOf<Self> {
         Reduce<State, Action> { state, action in
@@ -101,7 +101,7 @@ public struct RunListFeature {
         case .onAppear:
             return state.refresh()
         case let .runTapped(run):
-            guard featureFlags[.showRunDetail] else { return .none }
+            guard state.showRunDetailFeatureFlag else { return .none }
             state.destination = .detail(.init(run: run))
             return .none
         }

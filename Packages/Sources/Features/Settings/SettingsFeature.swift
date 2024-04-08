@@ -31,7 +31,7 @@ public struct SettingsFeature {
 
         var loggingDisplayed: Bool = false
 
-        var showRunDetailFeatureFlag: Bool = false
+        @Shared(.appStorage("show_run_detail")) var showRunDetailFeatureFlag: Bool = false
         @Shared(.appStorage("history_feature")) var showHistoryFeatureFlag: Bool = false
 
         @Presents var destination: Destination.State?
@@ -47,12 +47,7 @@ public struct SettingsFeature {
             case deleteAllRunsTapped
         }
 
-        public enum Delegate: Equatable {
-            case featureFlagsUpdated
-        }
-
         case view(View)
-        case delegate(Delegate)
         case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
     }
@@ -69,16 +64,7 @@ public struct SettingsFeature {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
-            case .delegate:
-                return .none
-//            case .binding(\.showRunDetailFeatureFlag):
-//                featureFlags[.showRunDetail] = state.showRunDetailFeatureFlag
-//                return .send(.delegate(.featureFlagsUpdated))
-//            case .binding(\.showHistoryFeatureFlag):
-//                featureFlags[.history] = state.showHistoryFeatureFlag
-//                return .send(.delegate(.featureFlagsUpdated))
             case .binding:
-                print("state", state.showHistoryFeatureFlag)
                 return .none
             case .destination:
                 return .none
