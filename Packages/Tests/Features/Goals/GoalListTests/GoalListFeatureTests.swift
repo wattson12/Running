@@ -326,7 +326,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.destination(.presented(.editGoal(.delegate(.goalUpdated(updatedGoal)))))) {
+        await store.send(\.destination.editGoal.delegate.goalUpdated, updatedGoal) {
             $0.weeklyGoal = updatedGoal
             $0.refreshRows()
             $0.destination = nil
@@ -366,7 +366,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.destination(.presented(.editGoal(.delegate(.goalUpdated(updatedGoal)))))) {
+        await store.send(\.destination.editGoal.delegate.goalUpdated, updatedGoal) {
             $0.monthlyGoal = updatedGoal
             $0.refreshRows()
             $0.destination = nil
@@ -406,7 +406,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.destination(.presented(.editGoal(.delegate(.goalUpdated(updatedGoal)))))) {
+        await store.send(\.destination.editGoal.delegate.goalUpdated, updatedGoal) {
             $0.yearlyGoal = updatedGoal
             $0.refreshRows()
             $0.destination = nil
@@ -443,7 +443,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.destination(.presented(.editGoal(.delegate(.goalCleared(.weekly)))))) {
+        await store.send(\.destination.editGoal.delegate.goalCleared, .weekly) {
             $0.weeklyGoal = updatedGoal
             $0.refreshRows()
             $0.destination = nil
@@ -480,7 +480,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.destination(.presented(.editGoal(.delegate(.goalCleared(.monthly)))))) {
+        await store.send(\.destination.editGoal.delegate.goalCleared, .monthly) {
             $0.monthlyGoal = updatedGoal
             $0.refreshRows()
             $0.destination = nil
@@ -520,7 +520,7 @@ final class GoalListFeatureTests: XCTestCase {
             }
         )
 
-        await store.send(.destination(.presented(.editGoal(.delegate(.goalCleared(.yearly)))))) {
+        await store.send(\.destination.editGoal.delegate.goalCleared, .yearly) {
             $0.yearlyGoal = updatedGoal
             $0.refreshRows()
             $0.destination = nil
