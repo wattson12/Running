@@ -1,8 +1,9 @@
 import ComposableArchitecture
 import SwiftUI
 
+@ViewAction(for: LogListFeature.self)
 public struct LogListView: View {
-    let store: StoreOf<LogListFeature>
+    public let store: StoreOf<LogListFeature>
 
     public init(
         store: StoreOf<LogListFeature>
@@ -15,7 +16,7 @@ public struct LogListView: View {
             List(store.logs) { log in
                 Button(
                     action: {
-                        store.send(.view(.logTapped(log)))
+                        send(.logTapped(log))
                     },
                     label: {
                         LogListRow(log: log)
@@ -34,7 +35,7 @@ public struct LogListView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(
                         action: {
-                            store.send(.view(.refreshButtonTapped))
+                            send(.refreshButtonTapped)
                         },
                         label: {
                             Image(systemName: "arrow.counterclockwise")
@@ -51,7 +52,7 @@ public struct LogListView: View {
             }
             .navigationTitle("Logs")
         }
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
     }
 }
 

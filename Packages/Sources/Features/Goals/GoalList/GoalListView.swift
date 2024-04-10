@@ -7,8 +7,9 @@ import Repository
 import Resources
 import SwiftUI
 
+@ViewAction(for: GoalListFeature.self)
 public struct GoalListView: View {
-    let store: StoreOf<GoalListFeature>
+    public let store: StoreOf<GoalListFeature>
 
     public init(
         store: StoreOf<GoalListFeature>
@@ -24,10 +25,10 @@ public struct GoalListView: View {
                         goal: row.goal,
                         distance: row.distance,
                         action: {
-                            store.send(.view(.goalTapped(row.goal)))
+                            send(.goalTapped(row.goal))
                         },
                         editAction: {
-                            store.send(.view(.editTapped(row.goal)))
+                            send(.editTapped(row.goal))
                         }
                     )
                     .customTint(row.goal.period.tint)
@@ -35,7 +36,7 @@ public struct GoalListView: View {
             }
         }
         .navigationTitle(L10n.App.Feature.goals)
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
         .navigationDestination(
             store: store.scope(
                 state: \.$destination.detail,

@@ -83,7 +83,7 @@ public struct HistoryFeature: Reducer {
     }
 
     @CasePathable
-    public enum Action: Equatable {
+    public enum Action: Equatable, ViewAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear

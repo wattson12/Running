@@ -3,8 +3,9 @@ import Model
 import Repository
 import SwiftUI
 
+@ViewAction(for: PermissionsFeature.self)
 public struct PermissionsView: View {
-    let store: StoreOf<PermissionsFeature>
+    public let store: StoreOf<PermissionsFeature>
 
     public init(store: StoreOf<PermissionsFeature>) {
         self.store = store
@@ -15,11 +16,11 @@ public struct PermissionsView: View {
             switch store.state.state {
             case .initial:
                 Color.clear
-                    .onAppear { store.send(.view(.onAppear)) }
+                    .onAppear { send(.onAppear) }
             case .requestPermissions:
                 RequestPermissionsView(
                     requestPermissionsTapped: {
-                        store.send(.view(.requestPermissionsButtonTapped))
+                        send(.requestPermissionsButtonTapped)
                     }
                 )
             case .healthKitNotAvailable:

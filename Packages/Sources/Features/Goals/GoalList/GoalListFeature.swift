@@ -180,7 +180,7 @@ public struct GoalListFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable {
+    public enum Action: Equatable, ViewAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear

@@ -6,8 +6,9 @@ import Resources
 import RunList
 import SwiftUI
 
+@ViewAction(for: GoalDetailFeature.self)
 public struct GoalDetailView: View {
-    let store: StoreOf<GoalDetailFeature>
+    public let store: StoreOf<GoalDetailFeature>
 
     @Environment(\.locale) var locale
 
@@ -138,7 +139,7 @@ public struct GoalDetailView: View {
             }
         }
         .navigationTitle(store.title)
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
         .customTint(store.goal.period.tint)
     }
 }

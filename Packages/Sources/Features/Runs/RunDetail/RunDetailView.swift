@@ -5,8 +5,9 @@ import Repository
 import Resources
 import SwiftUI
 
+@ViewAction(for: RunDetailFeature.self)
 public struct RunDetailView: View {
-    let store: StoreOf<RunDetailFeature>
+    public let store: StoreOf<RunDetailFeature>
 
     @Environment(\.locale) var locale
 
@@ -92,7 +93,7 @@ public struct RunDetailView: View {
             }
             .padding(.horizontal, 16)
         }
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
         .navigationTitle(store.run.distance.fullValue(locale: locale))
         .toolbar {
             if store.isLoading {

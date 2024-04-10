@@ -10,7 +10,7 @@ struct UpdatedGoalPreviewWrapperFeature {
     }
 
     @CasePathable
-    enum Action: Equatable {
+    enum Action: Equatable, ViewAction {
         @CasePathable
         enum View: Equatable {
             case onAppear
@@ -62,6 +62,7 @@ struct UpdatedGoalPreviewWrapperFeature {
     }
 }
 
+@ViewAction(for: UpdatedGoalPreviewWrapperFeature.self)
 struct UpdatedGoalPreviewWrapper: View {
     let store: StoreOf<UpdatedGoalPreviewWrapperFeature>
 
@@ -72,6 +73,6 @@ struct UpdatedGoalPreviewWrapper: View {
                 action: \.goalList
             )
         )
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
     }
 }

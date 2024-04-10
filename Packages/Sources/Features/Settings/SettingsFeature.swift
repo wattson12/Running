@@ -29,7 +29,7 @@ public struct SettingsFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, BindableAction {
+    public enum Action: Equatable, BindableAction, ViewAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear

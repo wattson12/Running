@@ -10,8 +10,9 @@ import RunList
 import Settings
 import SwiftUI
 
+@ViewAction(for: AppFeature.self)
 public struct AppView: View {
-    @State var store: StoreOf<AppFeature>
+    @State public var store: StoreOf<AppFeature>
 
     public init(store: StoreOf<AppFeature>) {
         _store = .init(initialValue: store)
@@ -35,7 +36,7 @@ public struct AppView: View {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(
                                 action: {
-                                    store.send(.view(.settingsButtonTapped))
+                                    send(.settingsButtonTapped)
                                 },
                                 label: {
                                     Image(systemName: "gearshape")
@@ -86,7 +87,7 @@ public struct AppView: View {
                     .tag(AppFeature.State.Tab.history)
                 }
             }
-            .onAppear { store.send(.view(.onAppear)) }
+            .onAppear { send(.onAppear) }
             .tint(Color(asset: Asset.blue))
         }
     }

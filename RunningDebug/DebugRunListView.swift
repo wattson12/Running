@@ -11,7 +11,7 @@ struct DebugRunListFeature: Reducer {
     }
 
     @CasePathable
-    enum Action: Equatable {
+    enum Action: Equatable, ViewAction {
         @CasePathable
         enum View: Equatable {
             case onAppear
@@ -25,7 +25,7 @@ struct DebugRunListFeature: Reducer {
         }
 
         case view(View)
-        case runs(Run.ID, DebugRunListItemFeature.Action)
+        case runs(IdentifiedActionOf<DebugRunListItemFeature>)
         case _internal(Internal)
     }
 
@@ -43,7 +43,7 @@ struct DebugRunListFeature: Reducer {
                 return _internal(action, state: &state)
             }
         }
-        .forEach(\.runs, action: /Action.runs, element: DebugRunListItemFeature.init)
+        .forEach(\.runs, action: \.runs, element: DebugRunListItemFeature.init)
     }
 
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
@@ -83,6 +83,7 @@ struct DebugRunListFeature: Reducer {
     }
 }
 
+@ViewAction(for: DebugRunListFeature.self)
 struct DebugRunListView: View {
     let store: StoreOf<DebugRunListFeature>
 
@@ -91,15 +92,15 @@ struct DebugRunListView: View {
             ForEachStore(
                 store.scope(
                     state: \.runs,
-                    action: DebugRunListFeature.Action.runs
+                    action: \.runs
                 ),
                 content: DebugRunListItemView.init
             )
         }
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Cancel") { store.send(.view(.cancelButtonTapped)) }
+                Button("Cancel") { send(.cancelButtonTapped) }
             }
         }
     }
