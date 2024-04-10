@@ -7,19 +7,9 @@ import Logging
 
 @Reducer
 public struct SettingsFeature {
-    @Reducer
-    public struct Destination {
-        public enum State: Equatable {
-            case logging(LogListFeature.State)
-        }
-
-        public enum Action: Equatable {
-            case logging(LogListFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.logging, action: /Action.logging, child: LogListFeature.init)
-        }
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case logging(LogListFeature)
     }
 
     @ObservableState
@@ -38,7 +28,9 @@ public struct SettingsFeature {
         public init() {}
     }
 
+    @CasePathable
     public enum Action: Equatable, BindableAction {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case showLoggingButtonTapped
@@ -69,7 +61,7 @@ public struct SettingsFeature {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
+        .ifLet(\.$destination, action: \.destination)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {

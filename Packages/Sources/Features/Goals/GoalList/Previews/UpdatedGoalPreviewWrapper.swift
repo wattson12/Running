@@ -9,7 +9,9 @@ struct UpdatedGoalPreviewWrapperFeature {
         var goalList: GoalListFeature.State
     }
 
+    @CasePathable
     enum Action: Equatable {
+        @CasePathable
         enum View: Equatable {
             case onAppear
         }

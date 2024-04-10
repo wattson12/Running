@@ -10,12 +10,15 @@ struct DebugAppFeature: Reducer {
         case runs(DebugRunListFeature.State)
     }
 
+    @CasePathable
     enum Action: Equatable {
+        @CasePathable
         enum View: Equatable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
+        @CasePathable
         enum Internal: Equatable {
             case permissionsFetched(TaskResult<AuthorizationRequestStatus>)
             case permissionsRequested(TaskResult<Bool>)

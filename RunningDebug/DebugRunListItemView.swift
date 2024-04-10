@@ -5,6 +5,7 @@ import Model
 import Repository
 import SwiftUI
 
+@Reducer
 struct DebugRunListItemFeature: Reducer {
     struct State: Equatable, Identifiable {
         let run: Run
@@ -15,13 +16,16 @@ struct DebugRunListItemFeature: Reducer {
         }
     }
 
+    @CasePathable
     enum Action: Equatable {
+        @CasePathable
         enum View: Equatable {
             case onAppear
             case cachedButtonTapped
             case remoteButtonTapped
         }
 
+        @CasePathable
         enum Internal: Equatable {
             case detailFetched(TaskResult<WorkoutDetail>)
             case runDetailFetched(TaskResult<Run>)

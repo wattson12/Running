@@ -4,17 +4,21 @@ import Model
 import Repository
 import SwiftUI
 
+@Reducer
 struct DebugRunListFeature: Reducer {
     struct State: Equatable {
         var runs: IdentifiedArrayOf<DebugRunListItemFeature.State> = []
     }
 
+    @CasePathable
     enum Action: Equatable {
+        @CasePathable
         enum View: Equatable {
             case onAppear
             case cancelButtonTapped
         }
 
+        @CasePathable
         enum Internal: Equatable {
             case runsFetched(TaskResult<[Run]>)
             case runFetched(Run)

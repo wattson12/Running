@@ -23,17 +23,21 @@ public struct PermissionsFeature {
         }
     }
 
+    @CasePathable
     public enum Action: Equatable {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
+        @CasePathable
         public enum Internal: Equatable {
             case requestPermissionsCompleted(TaskResult<Empty>)
             case authorizationRequestStatusCompleted(TaskResult<AuthorizationRequestStatus>)
         }
 
+        @CasePathable
         public enum Delegate: Equatable {
             case permissionsAvailable
         }

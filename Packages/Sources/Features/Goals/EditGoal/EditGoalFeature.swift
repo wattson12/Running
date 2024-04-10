@@ -21,6 +21,7 @@ public struct EditGoalFeature {
         }
     }
 
+    @CasePathable
     public enum Action: Equatable {
         @CasePathable
         public enum View: Equatable {

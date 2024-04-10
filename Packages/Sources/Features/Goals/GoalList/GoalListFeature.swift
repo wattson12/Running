@@ -25,30 +25,10 @@ struct GoalRow: Identifiable, Equatable {
 
 @Reducer
 public struct GoalListFeature {
-    @Reducer
-    public struct Destination {
-        public enum State: Equatable {
-            case editGoal(EditGoalFeature.State)
-            case detail(GoalDetailFeature.State)
-        }
-
-        public enum Action: Equatable {
-            case editGoal(EditGoalFeature.Action)
-            case detail(GoalDetailFeature.Action)
-        }
-
-        public var body: some Reducer<State, Action> {
-            Scope(
-                state: /State.editGoal,
-                action: /Action.editGoal,
-                child: EditGoalFeature.init
-            )
-            Scope(
-                state: /State.detail,
-                action: /Action.detail,
-                child: GoalDetailFeature.init
-            )
-        }
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case editGoal(EditGoalFeature)
+        case detail(GoalDetailFeature)
     }
 
     @ObservableState
@@ -199,7 +179,9 @@ public struct GoalListFeature {
         }
     }
 
+    @CasePathable
     public enum Action: Equatable {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case goalTapped(Goal)
@@ -225,7 +207,7 @@ public struct GoalListFeature {
                 return destination(action, state: &state)
             }
         }
-        .ifLet(\.$destination, action: \.destination) { Destination() }
+        .ifLet(\.$destination, action: \.destination)
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
