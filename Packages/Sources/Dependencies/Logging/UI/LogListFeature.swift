@@ -3,19 +3,9 @@ import Foundation
 
 @Reducer
 public struct LogListFeature {
-    @Reducer
-    public struct Destination {
-        public enum State: Equatable {
-            case detail(LogDetailFeature.State)
-        }
-
-        public enum Action: Equatable {
-            case detail(LogDetailFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.detail, action: /Action.detail, child: LogDetailFeature.init)
-        }
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case detail(LogDetailFeature)
     }
 
     @ObservableState
@@ -32,7 +22,9 @@ public struct LogListFeature {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case refreshButtonTapped
@@ -56,7 +48,7 @@ public struct LogListFeature {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
+        .ifLet(\.$destination, action: \.destination)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {

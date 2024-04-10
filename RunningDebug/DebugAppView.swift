@@ -3,6 +3,7 @@ import Model
 import Repository
 import SwiftUI
 
+@Reducer
 struct DebugAppFeature: Reducer {
     enum State: Equatable {
         case initial
@@ -10,12 +11,15 @@ struct DebugAppFeature: Reducer {
         case runs(DebugRunListFeature.State)
     }
 
-    enum Action: Equatable {
+    @CasePathable
+    enum Action: Equatable, ViewAction {
+        @CasePathable
         enum View: Equatable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
+        @CasePathable
         enum Internal: Equatable {
             case permissionsFetched(TaskResult<AuthorizationRequestStatus>)
             case permissionsRequested(TaskResult<Bool>)
@@ -89,6 +93,7 @@ struct DebugAppFeature: Reducer {
     }
 }
 
+@ViewAction(for: DebugAppFeature.self)
 struct DebugAppView: View {
     let store: StoreOf<DebugAppFeature>
 
@@ -99,12 +104,12 @@ struct DebugAppView: View {
                 case .initial:
                     ProgressView()
                         .progressViewStyle(.circular)
-                        .onAppear { store.send(.view(.onAppear)) }
+                        .onAppear { send(.onAppear) }
                 case .permissionRequired:
                     Button(
                         "Request Permissions",
                         action: {
-                            store.send(.view(.requestPermissionsButtonTapped))
+                            send(.requestPermissionsButtonTapped)
                         }
                     )
                     .buttonStyle(.borderedProminent)

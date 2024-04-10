@@ -28,15 +28,19 @@ public struct RunDetailFeature {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
         }
 
+        @CasePathable
         public enum Internal: Equatable {
             case runDetailFetched(TaskResult<Run>)
         }
 
+        @CasePathable
         public enum Delegate: Equatable {
             case runDetailFetched(Run)
         }

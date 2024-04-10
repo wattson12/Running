@@ -3,7 +3,7 @@ import Foundation
 import Model
 
 @Reducer
-public struct GoalDetailFeature {
+public struct GoalDetailFeature: Reducer {
     @ObservableState
     public struct State: Equatable {
         let goal: Goal
@@ -93,7 +93,8 @@ public struct GoalDetailFeature {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear

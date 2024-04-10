@@ -12,19 +12,9 @@ extension String {
 
 @Reducer
 public struct RunListFeature {
-    @Reducer
-    public struct Destination {
-        public enum State: Equatable {
-            case detail(RunDetailFeature.State)
-        }
-
-        public enum Action: Equatable {
-            case detail(RunDetailFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.detail, action: /Action.detail, child: RunDetailFeature.init)
-        }
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case detail(RunDetailFeature)
     }
 
     @ObservableState
@@ -54,16 +44,20 @@ public struct RunListFeature {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case runTapped(Run)
         }
 
+        @CasePathable
         public enum Internal: Equatable {
             case runsFetched(TaskResult<[Run]>)
         }
 
+        @CasePathable
         public enum Delegate: Equatable {
             case runsRefreshed
         }
@@ -92,7 +86,7 @@ public struct RunListFeature {
                 return destination(action, state: &state)
             }
         }
-        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
+        .ifLet(\.$destination, action: \.destination)
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {

@@ -43,19 +43,9 @@ extension HistorySummary {
 
 @Reducer
 public struct HistoryFeature: Reducer {
-    @Reducer
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case detail(GoalDetailFeature.State)
-        }
-
-        public enum Action: Equatable {
-            case detail(GoalDetailFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.detail, action: \.detail, child: GoalDetailFeature.init)
-        }
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case detail(GoalDetailFeature)
     }
 
     @ObservableState
@@ -92,7 +82,9 @@ public struct HistoryFeature: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
             case totalTapped(IntervalTotal)
@@ -118,7 +110,7 @@ public struct HistoryFeature: Reducer {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination, destination: Destination.init)
+//        .ifLet(\.$destination, action: \.destination)
     }
 
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {

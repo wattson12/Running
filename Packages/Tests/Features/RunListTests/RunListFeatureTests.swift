@@ -36,14 +36,14 @@ final class RunListFeatureTests: XCTestCase {
         }
 
         // refreshed from cache
-        await store.receive(.delegate(.runsRefreshed))
+        await store.receive(\.delegate.runsRefreshed)
 
-        await store.receive(._internal(.runsFetched(.success(runs)))) {
+        await store.receive(\._internal.runsFetched.success) {
             $0.isLoading = false
         }
 
         // refreshed from remote
-        await store.receive(.delegate(.runsRefreshed))
+        await store.receive(\.delegate.runsRefreshed)
     }
 
     func testRunsFetchedReloadsWidgets() async throws {

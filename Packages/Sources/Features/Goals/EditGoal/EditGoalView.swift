@@ -4,8 +4,9 @@ import Repository
 import Resources
 import SwiftUI
 
+@ViewAction(for: EditGoalFeature.self)
 public struct EditGoalView: View {
-    @State var store: StoreOf<EditGoalFeature>
+    @State public var store: StoreOf<EditGoalFeature>
 
     @FocusState var focussed: Bool
     @Environment(\.locale) var locale
@@ -23,7 +24,7 @@ public struct EditGoalView: View {
                         text: $store.target.sending(\.view.targetUpdated)
                     )
                     .onChange(of: store.target) { _, _ in
-                        store.send(.view(.validateTarget))
+                        send(.validateTarget)
                     }
                     .keyboardType(.numberPad)
                     .focused($focussed)
@@ -52,7 +53,7 @@ public struct EditGoalView: View {
 
                 Button(
                     action: {
-                        store.send(.view(.saveButtonTapped))
+                        send(.saveButtonTapped)
                     },
                     label: {
                         Text(
@@ -72,7 +73,7 @@ public struct EditGoalView: View {
                     Button(
                         role: .destructive,
                         action: {
-                            store.send(.view(.clearButtonTapped))
+                            send(.clearButtonTapped)
                         },
                         label: {
                             Text(L10n.Goals.Edit.Button.clear)
@@ -92,7 +93,7 @@ public struct EditGoalView: View {
             )
             .onAppear {
                 focussed = true
-                store.send(.view(.onAppear))
+                send(.onAppear)
             }
         }
         .tint(store.period.tint)

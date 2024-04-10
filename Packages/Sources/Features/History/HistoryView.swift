@@ -7,8 +7,9 @@ import Repository
 import Resources
 import SwiftUI
 
+@ViewAction(for: HistoryFeature.self)
 public struct HistoryView: View {
-    let store: StoreOf<HistoryFeature>
+    public let store: StoreOf<HistoryFeature>
 
     @Environment(\.locale) var locale
 
@@ -27,7 +28,7 @@ public struct HistoryView: View {
                             ForEach(store.totals) { total in
                                 Button(
                                     action: {
-                                        store.send(.view(.totalTapped(total)))
+                                        send(.totalTapped(total))
                                     },
                                     label: {
                                         HStack {
@@ -66,7 +67,7 @@ public struct HistoryView: View {
                             Section(L10n.History.Menu.Sort.title) {
                                 Button(
                                     action: {
-                                        store.send(.view(.sortByDateMenuButtonTapped))
+                                        send(.sortByDateMenuButtonTapped)
                                     },
                                     label: {
                                         HStack {
@@ -79,7 +80,7 @@ public struct HistoryView: View {
                                 )
                                 Button(
                                     action: {
-                                        store.send(.view(.sortByDistanceMenuButtonTapped))
+                                        send(.sortByDistanceMenuButtonTapped)
                                     },
                                     label: {
                                         HStack {
@@ -98,7 +99,7 @@ public struct HistoryView: View {
                 }
             }
         }
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
         .navigationTitle(L10n.History.title)
     }
 }

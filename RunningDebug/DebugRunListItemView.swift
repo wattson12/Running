@@ -5,7 +5,9 @@ import Model
 import Repository
 import SwiftUI
 
+@Reducer
 struct DebugRunListItemFeature: Reducer {
+    @ObservableState
     struct State: Equatable, Identifiable {
         let run: Run
         var isLoading: Bool = false
@@ -15,13 +17,16 @@ struct DebugRunListItemFeature: Reducer {
         }
     }
 
-    enum Action: Equatable {
+    @CasePathable
+    enum Action: Equatable, ViewAction {
+        @CasePathable
         enum View: Equatable {
             case onAppear
             case cachedButtonTapped
             case remoteButtonTapped
         }
 
+        @CasePathable
         enum Internal: Equatable {
             case detailFetched(TaskResult<WorkoutDetail>)
             case runDetailFetched(TaskResult<Run>)
@@ -113,38 +118,33 @@ struct DebugRunListItemFeature: Reducer {
     }
 }
 
+@ViewAction(for: DebugRunListItemFeature.self)
 struct DebugRunListItemView: View {
     let store: StoreOf<DebugRunListItemFeature>
 
     var body: some View {
-        WithViewStore(
-            store,
-            observe: { $0 },
-            send: DebugRunListItemFeature.Action.view
-        ) { viewStore in
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(viewStore.run.distance.formatted())
+        HStack {
+            VStack(alignment: .leading) {
+                Text(store.run.distance.formatted())
 
-                    HStack {
+                HStack {
 //                        Text(viewStore.run.locations.count.description)
-                        Text(viewStore.run.detail?.distanceSamples.count.description ?? "-")
-                    }
-                    .font(.caption2)
+                    Text(store.run.detail?.distanceSamples.count.description ?? "-")
                 }
+                .font(.caption2)
+            }
 
-                Spacer()
+            Spacer()
 
-                Button("Cached") { viewStore.send(.cachedButtonTapped) }
+            Button("Cached") { send(.cachedButtonTapped) }
 //                Button("Remote") { viewStore.send(.remoteButtonTapped) }
 
-                if viewStore.isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                }
+            if store.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
             }
-            .onAppear { viewStore.send(.onAppear) }
         }
+        .onAppear { send(.onAppear) }
     }
 }
 

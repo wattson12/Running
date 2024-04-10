@@ -3,8 +3,9 @@ import Logging
 import Resources
 import SwiftUI
 
+@ViewAction(for: SettingsFeature.self)
 public struct SettingsView: View {
-    @State var store: StoreOf<SettingsFeature>
+    @State public var store: StoreOf<SettingsFeature>
 
     public init(store: StoreOf<SettingsFeature>) {
         self.store = store
@@ -47,7 +48,7 @@ public struct SettingsView: View {
                 Section(
                     header: Text(L10n.Settings.Section.cache),
                     content: {
-                        Button(L10n.Settings.Section.Cache.deleteAllRuns) { store.send(.view(.deleteAllRunsTapped)) }
+                        Button(L10n.Settings.Section.Cache.deleteAllRuns) { send(.deleteAllRunsTapped) }
                     }
                 )
 
@@ -56,7 +57,7 @@ public struct SettingsView: View {
                     content: {
                         Button(
                             action: {
-                                store.send(.view(.showLoggingButtonTapped))
+                                send(.showLoggingButtonTapped)
                             },
                             label: {
                                 Text(L10n.Settings.Section.Debug.showLogging)
@@ -84,7 +85,7 @@ public struct SettingsView: View {
             )
             .buttonStyle(.plain)
             .navigationTitle(L10n.App.Feature.settings)
-            .onAppear { store.send(.view(.onAppear)) }
+            .onAppear { send(.onAppear) }
         }
     }
 

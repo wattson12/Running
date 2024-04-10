@@ -30,7 +30,7 @@ final class AppFeatureTests: XCTestCase {
 
         store.exhaustivity = .off
 
-        await store.send(.view(.onAppear))
+        await store.send(\.view.onAppear)
 
         await store.receive(.runList(.delegate(.runsRefreshed)))
     }

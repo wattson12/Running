@@ -4,8 +4,9 @@ import Resources
 import RunDetail
 import SwiftUI
 
+@ViewAction(for: RunListFeature.self)
 public struct RunListView: View {
-    let store: StoreOf<RunListFeature>
+    public let store: StoreOf<RunListFeature>
 
     @Environment(\.locale) var locale
 
@@ -23,7 +24,7 @@ public struct RunListView: View {
                         RunListItemView(
                             run: run,
                             tapped: {
-                                store.send(.view(.runTapped(run)))
+                                send(.runTapped(run))
                             }
                         )
                     }
@@ -41,7 +42,7 @@ public struct RunListView: View {
                 EmptyView()
             }
         }
-        .onAppear { store.send(.view(.onAppear)) }
+        .onAppear { send(.onAppear) }
         .navigationTitle(L10n.App.Feature.runs)
         .toolbar {
             if store.isLoading {

@@ -1,8 +1,9 @@
 import ComposableArchitecture
 import SwiftUI
 
+@ViewAction(for: LogDetailFeature.self)
 struct LogDetailView: View {
-    @State var store: StoreOf<LogDetailFeature>
+    @State public var store: StoreOf<LogDetailFeature>
 
     var body: some View {
         List {
@@ -32,7 +33,7 @@ struct LogDetailView: View {
                         Spacer()
 
                         Button("Toggle") {
-                            store.send(.view(.toggleActionExpandedTapped(true)))
+                            send(.toggleActionExpandedTapped(true))
                         }
                         .buttonStyle(.plain)
                     }
@@ -52,7 +53,7 @@ struct LogDetailView: View {
                             Spacer()
 
                             Button("Toggle") {
-                                store.send(.view(.toggleDiffExpandedTapped(true)))
+                                send(.toggleDiffExpandedTapped(true))
                             }
                             .buttonStyle(.plain)
                         }

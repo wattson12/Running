@@ -48,7 +48,8 @@ public struct LogDetailFeature {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
         @CasePathable
         public enum View: Equatable {
             case toggleActionExpandedTapped(Bool)

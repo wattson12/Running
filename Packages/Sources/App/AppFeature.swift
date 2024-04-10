@@ -10,19 +10,9 @@ import Settings
 
 @Reducer
 public struct AppFeature {
-    @Reducer
-    public struct Destination {
-        public enum State: Equatable {
-            case settings(SettingsFeature.State)
-        }
-
-        public enum Action: Equatable {
-            case settings(SettingsFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.settings, action: /Action.settings, child: SettingsFeature.init)
-        }
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case settings(SettingsFeature)
     }
 
     @ObservableState
@@ -69,7 +59,8 @@ public struct AppFeature {
         }
     }
 
-    public enum Action: Equatable {
+    @CasePathable
+    public enum Action: Equatable, ViewAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear
@@ -114,7 +105,7 @@ public struct AppFeature {
         }
         .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
         .ifLet(\.history, action: \.history, then: HistoryFeature.init)
-        .ifLet(\.$destination, action: \.destination, destination: Destination.init)
+        .ifLet(\.$destination, action: \.destination)
         .onChange(of: \.showHistoryFeatureFlag) { _, _ in
             Reduce { state, _ in
                 state.history = state.showHistoryFeatureFlag ? .init() : nil
