@@ -9,11 +9,13 @@ struct GoalChartView: View {
     let visibleColumnCount: Int
 
     @Environment(\.tintColor) var tint
+    @State var showTarget: Bool
 
     init(
         period: Goal.Period,
         runs: [Run],
-        goal: Measurement<UnitLength>?
+        goal: Measurement<UnitLength>?,
+        showTarget: Bool = true
     ) {
         switch period {
         case .weekly:
@@ -27,90 +29,97 @@ struct GoalChartView: View {
             visibleColumnCount = 12
         }
         self.goal = goal
+        self.showTarget = showTarget
     }
 
     var body: some View {
-        Chart {
-            ForEach(columns) { column in
-                if !column.runs.isEmpty {
-                    ForEach(column.runs) { run in
+        VStack {
+            Chart {
+                ForEach(columns) { column in
+                    if !column.runs.isEmpty {
+                        ForEach(column.runs) { run in
+                            BarMark(
+                                x: .value("index", column.index),
+                                yStart: .value("distance", run.start.converted(to: .primaryUnit()).value),
+                                yEnd: .value("distance", run.end.converted(to: .primaryUnit()).value)
+                            )
+                            .foregroundStyle(by: .value("run", run.id.uuidString))
+                            .cornerRadius(0)
+                        }
+                    } else {
                         BarMark(
                             x: .value("index", column.index),
-                            yStart: .value("distance", run.start.converted(to: .primaryUnit()).value),
-                            yEnd: .value("distance", run.end.converted(to: .primaryUnit()).value)
+                            y: .value("distance", 0)
                         )
-                        .foregroundStyle(by: .value("run", run.id.uuidString))
-                        .cornerRadius(0)
                     }
-                } else {
-                    BarMark(
-                        x: .value("index", column.index),
-                        y: .value("distance", 0)
-                    )
+
+                    if column.displayCumulativeDistance {
+                        LineMark(
+                            x: .value("index", column.index),
+                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                        )
+                        .foregroundStyle(tint)
+                        .interpolationMethod(.monotone)
+
+                        AreaMark(
+                            x: .value("index", column.index),
+                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                        )
+                        .interpolationMethod(.monotone)
+                        .foregroundStyle(
+                            .linearGradient(
+                                colors: [tint, .clear],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                    }
                 }
 
-                if column.displayCumulativeDistance {
+                if let goal, showTarget, let start = columns.first?.index, let end = columns.last?.index {
                     LineMark(
-                        x: .value("index", column.index),
-                        y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                        x: .value("index", start),
+                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                        series: .value("goal", "b")
                     )
                     .foregroundStyle(tint)
-                    .interpolationMethod(.monotone)
 
-                    AreaMark(
-                        x: .value("index", column.index),
-                        y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                    LineMark(
+                        x: .value("index", end),
+                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                        series: .value("goal", "b")
                     )
-                    .interpolationMethod(.monotone)
-                    .foregroundStyle(
-                        .linearGradient(
-                            colors: [tint, .clear],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
+                    .foregroundStyle(tint)
                 }
             }
-
-            if let goal, let start = columns.first?.index, let end = columns.last?.index {
-                LineMark(
-                    x: .value("index", start),
-                    y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                    series: .value("goal", "b")
-                )
-                .foregroundStyle(tint)
-
-                LineMark(
-                    x: .value("index", end),
-                    y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                    series: .value("goal", "b")
-                )
-                .foregroundStyle(tint)
-            }
-        }
-        .chartScrollableAxes([.horizontal])
-        .chartXVisibleDomain(length: visibleColumnCount)
-        .chartLegend(.hidden)
-        .chartXAxis {
-            AxisMarks { value in
-                if let stringValue = value.as(String.self) {
-                    if let index = Int(stringValue), columns.indices.contains(index) {
-                        AxisValueLabel(columns[index].label)
+            .chartScrollableAxes([.horizontal])
+            .chartXVisibleDomain(length: visibleColumnCount)
+            .chartLegend(.hidden)
+            .chartXAxis {
+                AxisMarks { value in
+                    if let stringValue = value.as(String.self) {
+                        if let index = Int(stringValue), columns.indices.contains(index) {
+                            AxisValueLabel(columns[index].label)
+                        }
                     }
                 }
             }
-        }
-        .chartForegroundStyleScale(
-            mapping: { (plottableValue: String) -> Color in
-                let matchingIndex = columns.compactMap { column -> Int? in
-                    guard let matchingRunIndex = column.runs.firstIndex(where: { $0.id.uuidString == plottableValue }) else { return nil }
-                    return matchingRunIndex
-                }
+            .chartForegroundStyleScale(
+                mapping: { (plottableValue: String) -> Color in
+                    let matchingIndex = columns.compactMap { column -> Int? in
+                        guard let matchingRunIndex = column.runs.firstIndex(where: { $0.id.uuidString == plottableValue }) else { return nil }
+                        return matchingRunIndex
+                    }
 
-                let colors: [Color] = [tint, tint.opacity(0.7)]
-                return colors[(matchingIndex.first ?? 0) % colors.count]
-            }
-        )
+                    let colors: [Color] = [tint, tint.opacity(0.7)]
+                    return colors[(matchingIndex.first ?? 0) % colors.count]
+                }
+            )
+            Toggle(isOn: $showTarget, label: {
+                Text("Show Target")
+            })
+        }
+        .animation(.default, value: showTarget)
     }
 }
 
@@ -118,7 +127,7 @@ struct GoalChartView: View {
     GoalChartView(
         period: .weekly,
         runs: .week,
-        goal: .init(value: 40, unit: .kilometers)
+        goal: .init(value: 140, unit: .kilometers)
     )
     .customTint(.green)
     .previewDisplayName("Weekly")
