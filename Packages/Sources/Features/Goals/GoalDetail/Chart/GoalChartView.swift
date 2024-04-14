@@ -1,6 +1,7 @@
 import Charts
 import DesignSystem
 import Model
+import Resources
 import SwiftUI
 
 struct GoalChartView: View {
@@ -120,7 +121,7 @@ struct GoalChartView: View {
                 HStack {
                     Spacer()
                     ChartButton(
-                        title: "Target",
+                        title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",
                         selected: $showTarget
                     )

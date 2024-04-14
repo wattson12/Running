@@ -27,6 +27,7 @@
 "goals.detail.summary.remaining" = "Remaining";
 "goals.detail.summary.title" = "Summary";
 "goals.detail.progress.title" = "Progress";
+"goals.detail.chart.target_button" = "Target";
 
 "permissions.health_kit_unavailable.title" = "Workouts not suppported";
 "permissions.health_kit_unavailable.message" = "We use running workouts to update your running goals. This device doesn't currently support importing workouts so we can't track your goals";
