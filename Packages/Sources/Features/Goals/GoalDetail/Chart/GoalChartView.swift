@@ -117,9 +117,15 @@ struct GoalChartView: View {
             )
 
             if goal != nil {
-                Toggle(isOn: $showTarget, label: {
-                    Text("Show Target")
-                })
+                HStack {
+                    Spacer()
+                    ChartButton(
+                        title: "Target",
+                        symbol: "target",
+                        selected: $showTarget
+                    )
+                }
+                .padding(.horizontal, 16)
             }
         }
         .animation(.default, value: showTarget)
