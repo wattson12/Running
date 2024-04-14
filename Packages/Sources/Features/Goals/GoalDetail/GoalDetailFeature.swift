@@ -10,14 +10,21 @@ public struct GoalDetailFeature: Reducer {
         let intervalDate: Date?
         var runs: [Run]?
         var emptyStateRuns: [Run]
-        var showTarget: Bool
+
+        var showTarget: Bool {
+            didSet {
+                // update shared value when show target is changed
+                @Shared(.appStorage("show_target_\(goal.period.rawValue)")) var sharedShowTarget: Bool = false
+                sharedShowTarget = showTarget
+            }
+        }
 
         public init(
             goal: Goal,
             intervalDate: Date? = nil,
             runs: [Run]? = nil,
             emptyStateRuns: [Run] = [],
-            showTarget: Bool = true
+            showTarget: Bool = false
         ) {
             self.goal = goal
             self.intervalDate = intervalDate
@@ -142,6 +149,9 @@ public struct GoalDetailFeature: Reducer {
                 state.runs = runsForGoal
                 state.updateEmptyStateRuns(calendar: calendar, date: date, uuid: uuid)
             }
+
+            @Shared(.appStorage("show_target_\(state.goal.period.rawValue)")) var sharedShowTarget = false
+            state.showTarget = sharedShowTarget
 
             return .run { [goal = state.goal, intervalDate = state.intervalDate] send in
                 let result = await TaskResult {
