@@ -42,7 +42,7 @@
       "location" : "git@github.com:pointfreeco/swift-composable-architecture.git",
       "state" : {
         "branch" : "shared-state-beta",
-        "revision" : "72471c65dbb71133f1f81fc041a3d569e1bdc2e9"
+        "revision" : "674f2d4af16cd6d634f85d4f02d1aa502428def1"
       }
     },
     {
