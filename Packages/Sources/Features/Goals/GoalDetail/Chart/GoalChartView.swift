@@ -115,38 +115,47 @@ struct GoalChartView: View {
                     return colors[(matchingIndex.first ?? 0) % colors.count]
                 }
             )
-            Toggle(isOn: $showTarget, label: {
-                Text("Show Target")
-            })
+
+            if goal != nil {
+                Toggle(isOn: $showTarget, label: {
+                    Text("Show Target")
+                })
+            }
         }
         .animation(.default, value: showTarget)
     }
 }
 
-#Preview {
+#Preview("Weekly") {
     GoalChartView(
         period: .weekly,
         runs: .week,
         goal: .init(value: 140, unit: .kilometers)
     )
     .customTint(.green)
-    .previewDisplayName("Weekly")
 }
 
-#Preview {
+#Preview("Weekly (No goal)") {
+    GoalChartView(
+        period: .weekly,
+        runs: .week,
+        goal: nil
+    )
+    .customTint(.green)
+}
+
+#Preview("Monthly") {
     GoalChartView(
         period: .monthly,
         runs: .month,
         goal: .init(value: 150, unit: .kilometers)
     )
-    .previewDisplayName("Monthly")
 }
 
-#Preview {
+#Preview("Yearly") {
     GoalChartView(
         period: .yearly,
         runs: .year,
         goal: .init(value: 1250, unit: .kilometers)
     )
-    .previewDisplayName("Yearly")
 }
