@@ -52,6 +52,8 @@ public enum L10n {
             public enum Chart {
                 /// No runs recorded for this goal
                 public static let noRunsOverlay = L10n.tr("Localizable", "goals.detail.chart.no_runs_overlay", fallback: "No runs recorded for this goal")
+                /// Target
+                public static let targetButton = L10n.tr("Localizable", "goals.detail.chart.target_button", fallback: "Target")
             }
 
             public enum Progress {

@@ -11,16 +11,26 @@ public struct GoalDetailFeature: Reducer {
         var runs: [Run]?
         var emptyStateRuns: [Run]
 
+        var showTarget: Bool {
+            didSet {
+                // update shared value when show target is changed
+                @Shared(.appStorage("show_target_\(goal.period.rawValue)")) var sharedShowTarget: Bool = false
+                sharedShowTarget = showTarget
+            }
+        }
+
         public init(
             goal: Goal,
             intervalDate: Date? = nil,
             runs: [Run]? = nil,
-            emptyStateRuns: [Run] = []
+            emptyStateRuns: [Run] = [],
+            showTarget: Bool = false
         ) {
             self.goal = goal
             self.intervalDate = intervalDate
             self.runs = runs
             self.emptyStateRuns = emptyStateRuns
+            self.showTarget = showTarget
         }
 
         var title: String {
@@ -94,7 +104,7 @@ public struct GoalDetailFeature: Reducer {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: Equatable, ViewAction, BindableAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear
@@ -107,6 +117,7 @@ public struct GoalDetailFeature: Reducer {
 
         case view(View)
         case _internal(Internal)
+        case binding(_ action: BindingAction<State>)
     }
 
     @Dependency(\.calendar) var calendar
@@ -118,12 +129,15 @@ public struct GoalDetailFeature: Reducer {
     public init() {}
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case let .view(action):
                 return view(action, state: &state)
             case let ._internal(action):
                 return _internal(action, state: &state)
+            case .binding:
+                return .none
             }
         }
     }
@@ -135,6 +149,9 @@ public struct GoalDetailFeature: Reducer {
                 state.runs = runsForGoal
                 state.updateEmptyStateRuns(calendar: calendar, date: date, uuid: uuid)
             }
+
+            @Shared(.appStorage("show_target_\(state.goal.period.rawValue)")) var sharedShowTarget = false
+            state.showTarget = sharedShowTarget
 
             return .run { [goal = state.goal, intervalDate = state.intervalDate] send in
                 let result = await TaskResult {
