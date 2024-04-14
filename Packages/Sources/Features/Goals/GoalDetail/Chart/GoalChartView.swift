@@ -10,13 +10,13 @@ struct GoalChartView: View {
     let visibleColumnCount: Int
 
     @Environment(\.tintColor) var tint
-    @State var showTarget: Bool
+    @Binding var showTarget: Bool
 
     init(
         period: Goal.Period,
         runs: [Run],
         goal: Measurement<UnitLength>?,
-        showTarget: Bool = true
+        showTarget: Binding<Bool>
     ) {
         switch period {
         case .weekly:
@@ -30,7 +30,7 @@ struct GoalChartView: View {
             visibleColumnCount = 12
         }
         self.goal = goal
-        self.showTarget = showTarget
+        _showTarget = showTarget
     }
 
     var body: some View {
@@ -133,36 +133,77 @@ struct GoalChartView: View {
     }
 }
 
+private struct GoalChartViewPreviewWrapper: View {
+    let columns: [ChartColumn]
+    let goal: Measurement<UnitLength>?
+    let visibleColumnCount: Int
+    @State var showTarget: Bool
+
+    init(
+        period: Goal.Period,
+        runs: [Run],
+        goal: Measurement<UnitLength>?,
+        showTarget: Bool
+    ) {
+        switch period {
+        case .weekly:
+            columns = .weekly(runs: runs)
+            visibleColumnCount = 7
+        case .monthly:
+            columns = .monthly(runs: runs)
+            visibleColumnCount = 20
+        case .yearly:
+            columns = .yearly(runs: runs)
+            visibleColumnCount = 12
+        }
+        self.goal = goal
+        self.showTarget = showTarget
+    }
+
+    var body: some View {
+        GoalChartView(
+            period: .weekly,
+            runs: .week,
+            goal: .init(value: 140, unit: .kilometers),
+            showTarget: $showTarget
+        )
+    }
+}
+
 #Preview("Weekly") {
-    GoalChartView(
+    GoalChartViewPreviewWrapper(
         period: .weekly,
         runs: .week,
-        goal: .init(value: 140, unit: .kilometers)
+        goal: .init(value: 140, unit: .kilometers),
+        showTarget: true
     )
     .customTint(.green)
 }
 
 #Preview("Weekly (No goal)") {
-    GoalChartView(
+    GoalChartViewPreviewWrapper(
         period: .weekly,
         runs: .week,
-        goal: nil
+        goal: nil,
+        showTarget: true
     )
     .customTint(.green)
 }
 
 #Preview("Monthly") {
-    GoalChartView(
+    GoalChartViewPreviewWrapper(
         period: .monthly,
         runs: .month,
-        goal: .init(value: 150, unit: .kilometers)
+        goal: .init(value: 150, unit: .kilometers),
+        showTarget: true
     )
 }
 
 #Preview("Yearly") {
-    GoalChartView(
+    GoalChartViewPreviewWrapper(
         period: .yearly,
         runs: .year,
-        goal: .init(value: 1250, unit: .kilometers)
+        goal: .init(value: 1250, unit: .kilometers),
+        showTarget: true
     )
 }

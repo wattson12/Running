@@ -10,17 +10,20 @@ public struct GoalDetailFeature: Reducer {
         let intervalDate: Date?
         var runs: [Run]?
         var emptyStateRuns: [Run]
+        var showTarget: Bool
 
         public init(
             goal: Goal,
             intervalDate: Date? = nil,
             runs: [Run]? = nil,
-            emptyStateRuns: [Run] = []
+            emptyStateRuns: [Run] = [],
+            showTarget: Bool = true
         ) {
             self.goal = goal
             self.intervalDate = intervalDate
             self.runs = runs
             self.emptyStateRuns = emptyStateRuns
+            self.showTarget = showTarget
         }
 
         var title: String {
@@ -94,7 +97,7 @@ public struct GoalDetailFeature: Reducer {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: Equatable, ViewAction, BindableAction {
         @CasePathable
         public enum View: Equatable {
             case onAppear
@@ -107,6 +110,7 @@ public struct GoalDetailFeature: Reducer {
 
         case view(View)
         case _internal(Internal)
+        case binding(_ action: BindingAction<State>)
     }
 
     @Dependency(\.calendar) var calendar
@@ -118,12 +122,15 @@ public struct GoalDetailFeature: Reducer {
     public init() {}
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case let .view(action):
                 return view(action, state: &state)
             case let ._internal(action):
                 return _internal(action, state: &state)
+            case .binding:
+                return .none
             }
         }
     }
