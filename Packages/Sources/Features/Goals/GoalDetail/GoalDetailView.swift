@@ -105,10 +105,7 @@ public struct GoalDetailView: View {
                                 period: store.goal.period,
                                 runs: runs,
                                 goal: store.goal.target,
-                                showTarget: .init(
-                                    get: { store.showTarget.wrappedValue },
-                                    set: { store.showTarget.wrappedValue = $0 }
-                                )
+                                showTarget: $store.showTarget
                             )
                             .frame(height: 250)
                         }
@@ -122,10 +119,7 @@ public struct GoalDetailView: View {
                                 period: store.goal.period,
                                 runs: store.emptyStateRuns,
                                 goal: store.goal.target,
-                                showTarget: .init(
-                                    get: { store.showTarget.wrappedValue },
-                                    set: { store.showTarget.wrappedValue = $0 }
-                                )
+                                showTarget: $store.showTarget
                             )
                             .blur(radius: 5)
                             .frame(height: 250)

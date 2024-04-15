@@ -11,7 +11,7 @@ public struct GoalDetailFeature: Reducer {
         var runs: [Run]?
         var emptyStateRuns: [Run]
 
-        var showTarget: Shared<Bool>
+        @Shared var showTarget: Bool
 
         public init(
             goal: Goal,
@@ -25,7 +25,7 @@ public struct GoalDetailFeature: Reducer {
             self.runs = runs
             self.emptyStateRuns = emptyStateRuns
 
-            self.showTarget = .init(wrappedValue: showTarget, .appStorage("show_target_\(goal.period.rawValue)"))
+            _showTarget = .init(wrappedValue: showTarget, .appStorage("show_target_\(goal.period.rawValue)"))
         }
 
         var title: String {
