@@ -137,7 +137,7 @@ private struct GoalChartViewPreviewWrapper: View {
     let columns: [ChartColumn]
     let goal: Measurement<UnitLength>?
     let visibleColumnCount: Int
-    @State var showTarget: Bool
+    @State var showTarget: Bool = false
 
     init(
         period: Goal.Period,
