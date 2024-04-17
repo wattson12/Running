@@ -127,6 +127,7 @@ struct GoalChartView: View {
                     )
                 }
                 .padding(.horizontal, 16)
+                .padding(.bottom, 4)
             }
         }
         .animation(.default, value: showTarget)
