@@ -4,6 +4,7 @@ struct ChartButton: View {
     let title: String
     let symbol: String
     @Binding var selected: Bool
+    @Environment(\.tintColor) var tint
 
     var body: some View {
         HStack(spacing: 4) {
@@ -24,25 +25,25 @@ struct ChartButton: View {
 
     var foregroundColor: Color {
         if selected {
-            Color.primary
+            .primary
         } else {
-            Color.secondary
+            .secondary
         }
     }
 
     var borderColor: Color {
         if selected {
-            Color.accentColor
+            tint
         } else {
-            Color.secondary
+            .secondary
         }
     }
 
     var fillColor: Color {
         if selected {
-            Color.accentColor.opacity(0.25)
+            tint.opacity(0.25)
         } else {
-            Color.clear
+            .clear
         }
     }
 }
