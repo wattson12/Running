@@ -6,6 +6,7 @@ import SwiftUI
 
 @Reducer
 struct DebugRunListFeature: Reducer {
+    @ObservableState
     struct State: Equatable {
         var runs: IdentifiedArrayOf<DebugRunListItemFeature.State> = []
     }
@@ -89,13 +90,12 @@ struct DebugRunListView: View {
 
     var body: some View {
         List {
-            ForEachStore(
-                store.scope(
-                    state: \.runs,
-                    action: \.runs
-                ),
-                content: DebugRunListItemView.init
-            )
+            ForEach(
+                store.scope(state: \.runs, action: \.runs),
+                id: \.state.id
+            ) { store in
+                DebugRunListItemView(store: store)
+            }
         }
         .onAppear { send(.onAppear) }
         .toolbar {

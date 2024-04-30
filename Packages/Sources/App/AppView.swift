@@ -13,10 +13,10 @@ import SwiftUI
 
 @ViewAction(for: AppFeature.self)
 public struct AppView: View {
-    @State public var store: StoreOf<AppFeature>
+    @Bindable public var store: StoreOf<AppFeature>
 
     public init(store: StoreOf<AppFeature>) {
-        _store = .init(initialValue: store)
+        self.store = store
     }
 
     public var body: some View {
@@ -46,8 +46,8 @@ public struct AppView: View {
                         }
                     }
                     .sheet(
-                        store: store.scope(
-                            state: \.$destination.settings,
+                        item: $store.scope(
+                            state: \.destination?.settings,
                             action: \.destination.settings
                         ),
                         content: SettingsView.init

@@ -9,7 +9,7 @@ import SwiftUI
 
 @ViewAction(for: HistoryFeature.self)
 public struct HistoryView: View {
-    public let store: StoreOf<HistoryFeature>
+    @Bindable public var store: StoreOf<HistoryFeature>
 
     @Environment(\.locale) var locale
 
@@ -55,8 +55,8 @@ public struct HistoryView: View {
                 }
                 .animation(.default, value: store.sortType)
                 .navigationDestination(
-                    store: store.scope(
-                        state: \.$destination.detail,
+                    item: $store.scope(
+                        state: \.destination?.detail,
                         action: \.destination.detail
                     ),
                     destination: GoalDetailView.init

@@ -5,6 +5,7 @@ import SwiftUI
 
 @Reducer
 struct DebugAppFeature: Reducer {
+    @ObservableState
     enum State: Equatable {
         case initial
         case permissionRequired
@@ -99,8 +100,8 @@ struct DebugAppView: View {
 
     var body: some View {
         NavigationStack {
-            SwitchStore(store) { state in
-                switch state {
+            Group {
+                switch store.state {
                 case .initial:
                     ProgressView()
                         .progressViewStyle(.circular)
@@ -114,11 +115,9 @@ struct DebugAppView: View {
                     )
                     .buttonStyle(.borderedProminent)
                 case .runs:
-                    CaseLet(
-                        /DebugAppFeature.State.runs,
-                        action: DebugAppFeature.Action.runs,
-                        then: DebugRunListView.init
-                    )
+                    if let store = store.scope(state: \.runs, action: \.runs) {
+                        DebugRunListView(store: store)
+                    }
                 }
             }
             .navigationTitle("Debug")
