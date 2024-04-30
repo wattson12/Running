@@ -58,6 +58,8 @@ extension String {
     
     static let history: Self = "History"
     
+    static let program: Self = "Program"
+    
     static func feature(_ name: String, in domain: String? = nil) -> Self {
         ["Sources", "Features", domain, name].compactMap { $0 }.joined(separator: "/")
     }
@@ -88,6 +90,7 @@ let package = Package(
         .library(name: .goalDetail),
         .library(name: .settings),
         .library(name: .history),
+        .library(name: .program),
         .library(name: .repository),
         .library(name: .resources),
         .library(name: .healthKitServiceInterface),
@@ -182,6 +185,7 @@ let package = Package(
                 .target(name: .permissions),
                 .target(name: .settings),
                 .target(name: .history),
+                .target(name: .program),
             ]
         ),
         .target(
@@ -276,6 +280,20 @@ let package = Package(
             path: .feature(.history)
         ),
         .target(
+            name: .program,
+            dependencies: [
+                .composableArchitecture,
+                .dependencies,
+                .dependenciesAdditions,
+                .target(name: .designSystem),
+                .target(name: .logging),
+                .target(name: .repository),
+                .target(name: .model),
+                .target(name: .cache),
+            ],
+            path: .feature(.program)
+        ),
+        .target(
             name: .permissions,
             dependencies: [
                 .composableArchitecture,
@@ -357,6 +375,11 @@ let package = Package(
             name: .history.tests,
             dependencies: [.byName(name: .history)],
             path: .featureTests(.history)
+        ),
+        .testTarget(
+            name: .program.tests,
+            dependencies: [.byName(name: .program)],
+            path: .featureTests(.program)
         ),
     ]
 )

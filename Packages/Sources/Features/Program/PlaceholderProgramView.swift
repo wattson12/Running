@@ -1,11 +1,12 @@
 import SwiftUI
 
-struct SwiftUIView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+public struct PlaceholderProgramView: View {
+    public init() {}
+    public var body: some View {
+        Text("Program")
     }
 }
 
 #Preview {
-    SwiftUIView()
+    PlaceholderProgramView()
 }
