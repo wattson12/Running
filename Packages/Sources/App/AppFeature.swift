@@ -4,6 +4,7 @@ import GoalList
 import HealthKitServiceInterface
 import History
 import Permissions
+import Program
 import Repository
 import RunList
 import Settings
@@ -21,6 +22,7 @@ public struct AppFeature {
             case goals
             case runs
             case history
+            case program
         }
 
         var permissions: PermissionsFeature.State?
@@ -29,8 +31,10 @@ public struct AppFeature {
         var runList: RunListFeature.State
         var goalList: GoalListFeature.State
         var history: HistoryFeature.State?
+        var program: PlaceholderProgramFeature.State?
 
-        @Shared(.appStorage("history_feature")) var showHistoryFeatureFlag: Bool = false
+        @Shared(.appStorage("history_feature")) var showHistory: Bool = false
+        @Shared(.appStorage("program_feature")) var showProgram: Bool = false
 
         @Presents var destination: Destination.State?
 
@@ -73,6 +77,7 @@ public struct AppFeature {
         case runList(RunListFeature.Action)
         case goalList(GoalListFeature.Action)
         case history(HistoryFeature.Action)
+        case program(PlaceholderProgramFeature.Action)
         case deepLink(URL)
         case destination(PresentationAction<Destination.Action>)
     }
@@ -97,6 +102,8 @@ public struct AppFeature {
                 return .none
             case .history:
                 return .none
+            case .program:
+                return .none
             case let .deepLink(url):
                 return deepLink(url: url, state: &state)
             case .destination:
@@ -105,10 +112,17 @@ public struct AppFeature {
         }
         .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
         .ifLet(\.history, action: \.history, then: HistoryFeature.init)
+        .ifLet(\.program, action: \.program, then: PlaceholderProgramFeature.init)
         .ifLet(\.$destination, action: \.destination)
-        .onChange(of: \.showHistoryFeatureFlag) { _, _ in
+        .onChange(of: \.showHistory) { _, _ in
             Reduce { state, _ in
-                state.history = state.showHistoryFeatureFlag ? .init() : nil
+                state.history = state.showHistory ? .init() : nil
+                return .none
+            }
+        }
+        .onChange(of: \.program) { _, _ in
+            Reduce { state, _ in
+                state.program = state.showProgram ? .init() : nil
                 return .none
             }
         }
@@ -129,7 +143,8 @@ public struct AppFeature {
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            state.history = state.showHistoryFeatureFlag ? .init() : nil
+            state.history = state.showHistory ? .init() : nil
+            state.program = state.showProgram ? .init() : nil
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in

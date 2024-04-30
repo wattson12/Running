@@ -42,6 +42,7 @@ public struct SettingsView: View {
                     content: {
                         Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.showRunDetailFeatureFlag)
                         Toggle(L10n.Settings.Section.BetaFeatures.history, isOn: $store.showHistoryFeatureFlag)
+                        Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: $store.showProgramFeatureFlag)
                     }
                 )
 

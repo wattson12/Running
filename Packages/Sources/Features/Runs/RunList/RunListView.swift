@@ -6,7 +6,7 @@ import SwiftUI
 
 @ViewAction(for: RunListFeature.self)
 public struct RunListView: View {
-    public let store: StoreOf<RunListFeature>
+    @Bindable public var store: StoreOf<RunListFeature>
 
     @Environment(\.locale) var locale
 
@@ -30,8 +30,8 @@ public struct RunListView: View {
                     }
                 }
                 .navigationDestination(
-                    store: store.scope(
-                        state: \.$destination.detail,
+                    item: $store.scope(
+                        state: \.destination?.detail,
                         action: \.destination.detail
                     ),
                     destination: RunDetailView.init

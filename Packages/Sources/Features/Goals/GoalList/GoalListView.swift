@@ -9,7 +9,7 @@ import SwiftUI
 
 @ViewAction(for: GoalListFeature.self)
 public struct GoalListView: View {
-    public let store: StoreOf<GoalListFeature>
+    @Bindable public var store: StoreOf<GoalListFeature>
 
     public init(
         store: StoreOf<GoalListFeature>
@@ -38,15 +38,15 @@ public struct GoalListView: View {
         .navigationTitle(L10n.App.Feature.goals)
         .onAppear { send(.onAppear) }
         .navigationDestination(
-            store: store.scope(
-                state: \.$destination.detail,
+            item: $store.scope(
+                state: \.destination?.detail,
                 action: \.destination.detail
             ),
             destination: GoalDetailView.init
         )
         .sheet(
-            store: store.scope(
-                state: \.$destination.editGoal,
+            item: $store.scope(
+                state: \.destination?.editGoal,
                 action: \.destination.editGoal
             ),
             content: { store in

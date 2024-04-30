@@ -21,6 +21,8 @@ public enum L10n {
             public static let goals = L10n.tr("Localizable", "app.feature.goals", fallback: "Goals")
             /// History
             public static let history = L10n.tr("Localizable", "app.feature.history", fallback: "History")
+            /// Program
+            public static let program = L10n.tr("Localizable", "app.feature.program", fallback: "Program")
             /// Runs
             public static let runs = L10n.tr("Localizable", "app.feature.runs", fallback: "Runs")
             /// About
@@ -218,6 +220,8 @@ public enum L10n {
             public enum BetaFeatures {
                 /// History
                 public static let history = L10n.tr("Localizable", "settings.section.beta_features.history", fallback: "History")
+                /// Program
+                public static let program = L10n.tr("Localizable", "settings.section.beta_features.program", fallback: "Program")
                 /// Run detail
                 public static let runDetail = L10n.tr("Localizable", "settings.section.beta_features.run_detail", fallback: "Run detail")
             }

@@ -11,6 +11,7 @@
 "app.feature.debug" = "Debug";
 "app.feature.settings" = "About";
 "app.feature.history" = "History";
+"app.feature.program" = "Program";
 
 "goal.period.weekly.display_name" = "Weekly";
 "goal.period.monthly.display_name" = "Monthly";
@@ -68,6 +69,7 @@
 "settings.section.beta_features" = "Beta features";
 "settings.section.beta_features.run_detail" = "Run detail";
 "settings.section.beta_features.history" = "History";
+"settings.section.beta_features.program" = "Program";
 "settings.section.cache" = "Cache";
 "settings.section.cache.delete_all_runs" = "Delete all runs";
 

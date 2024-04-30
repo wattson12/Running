@@ -3,7 +3,7 @@ import SwiftUI
 
 @ViewAction(for: LogListFeature.self)
 public struct LogListView: View {
-    public let store: StoreOf<LogListFeature>
+    @Bindable public var store: StoreOf<LogListFeature>
 
     public init(
         store: StoreOf<LogListFeature>
@@ -25,8 +25,8 @@ public struct LogListView: View {
                 .buttonStyle(.plain)
             }
             .navigationDestination(
-                store: store.scope(
-                    state: \.$destination.detail,
+                item: $store.scope(
+                    state: \.destination?.detail,
                     action: \.destination.detail
                 ),
                 destination: LogDetailView.init

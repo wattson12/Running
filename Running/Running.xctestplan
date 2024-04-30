@@ -106,6 +106,13 @@
         "identifier" : "HistoryTests",
         "name" : "HistoryTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages",
+        "identifier" : "ProgramTests",
+        "name" : "ProgramTests"
+      }
     }
   ],
   "version" : 1

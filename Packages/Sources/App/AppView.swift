@@ -4,6 +4,7 @@ import GoalList
 import History
 import Model
 import Permissions
+import Program
 import Repository
 import Resources
 import RunList
@@ -12,10 +13,10 @@ import SwiftUI
 
 @ViewAction(for: AppFeature.self)
 public struct AppView: View {
-    @State public var store: StoreOf<AppFeature>
+    @Bindable public var store: StoreOf<AppFeature>
 
     public init(store: StoreOf<AppFeature>) {
-        _store = .init(initialValue: store)
+        self.store = store
     }
 
     public var body: some View {
@@ -45,8 +46,8 @@ public struct AppView: View {
                         }
                     }
                     .sheet(
-                        store: store.scope(
-                            state: \.$destination.settings,
+                        item: $store.scope(
+                            state: \.destination?.settings,
                             action: \.destination.settings
                         ),
                         content: SettingsView.init
@@ -70,12 +71,7 @@ public struct AppView: View {
                 }
                 .tag(AppFeature.State.Tab.runs)
 
-                IfLetStore(
-                    store.scope(
-                        state: \.history,
-                        action: \.history
-                    )
-                ) { store in
+                if let store = store.scope(state: \.history, action: \.history) {
                     NavigationStack {
                         HistoryView(
                             store: store
@@ -85,6 +81,16 @@ public struct AppView: View {
                         Label(L10n.App.Feature.history, systemImage: "clock.arrow.circlepath")
                     }
                     .tag(AppFeature.State.Tab.history)
+                }
+
+                if let store = store.scope(state: \.program, action: \.program) {
+                    NavigationStack {
+                        PlaceholderProgramView(store: store)
+                    }
+                    .tabItem {
+                        Label(L10n.App.Feature.program, systemImage: "pencil.and.list.clipboard")
+                    }
+                    .tag(AppFeature.State.Tab.program)
                 }
             }
             .onAppear { send(.onAppear) }
