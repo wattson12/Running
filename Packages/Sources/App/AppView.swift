@@ -83,9 +83,9 @@ public struct AppView: View {
                     .tag(AppFeature.State.Tab.history)
                 }
 
-                if store.showProgram {
+                if let store = store.scope(state: \.program, action: \.program) {
                     NavigationStack {
-                        PlaceholderProgramView()
+                        PlaceholderProgramView(store: store)
                     }
                     .tabItem {
                         Label(L10n.App.Feature.program, systemImage: "pencil.and.list.clipboard")
