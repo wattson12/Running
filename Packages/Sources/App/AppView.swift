@@ -4,6 +4,7 @@ import GoalList
 import History
 import Model
 import Permissions
+import Program
 import Repository
 import Resources
 import RunList
@@ -70,12 +71,7 @@ public struct AppView: View {
                 }
                 .tag(AppFeature.State.Tab.runs)
 
-                IfLetStore(
-                    store.scope(
-                        state: \.history,
-                        action: \.history
-                    )
-                ) { store in
+                if let store = store.scope(state: \.history, action: \.history) {
                     NavigationStack {
                         HistoryView(
                             store: store
@@ -85,6 +81,16 @@ public struct AppView: View {
                         Label(L10n.App.Feature.history, systemImage: "clock.arrow.circlepath")
                     }
                     .tag(AppFeature.State.Tab.history)
+                }
+
+                if store.showProgram {
+                    NavigationStack {
+                        PlaceholderProgramView()
+                    }
+                    .tabItem {
+                        Label(L10n.App.Feature.program, systemImage: "pencil.and.list.clipboard")
+                    }
+                    .tag(AppFeature.State.Tab.program)
                 }
             }
             .onAppear { send(.onAppear) }

@@ -11,6 +11,7 @@
 "app.feature.debug" = "Debug";
 "app.feature.settings" = "About";
 "app.feature.history" = "History";
+"app.feature.program" = "Program";
 
 "goal.period.weekly.display_name" = "Weekly";
 "goal.period.monthly.display_name" = "Monthly";
