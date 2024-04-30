@@ -1,5 +1,4 @@
 import ComposableArchitecture
-import Logging
 import Resources
 import SwiftUI
 
@@ -52,38 +51,7 @@ public struct SettingsView: View {
                         Button(L10n.Settings.Section.Cache.deleteAllRuns) { send(.deleteAllRunsTapped) }
                     }
                 )
-
-                Section(
-                    header: Text(L10n.Settings.Section.Debug.title),
-                    content: {
-                        Button(
-                            action: {
-                                send(.showLoggingButtonTapped)
-                            },
-                            label: {
-                                Text(L10n.Settings.Section.Debug.showLogging)
-                            }
-                        )
-                    }
-                )
             }
-            .sheet(
-                isPresented: .constant(false),
-                //                    isPresented: $store.loggingDisplayed.sending(\.loggingDisplayed),
-                content: {
-                    LogListView(
-                        store: .init(
-                            initialState: .init(),
-                            reducer: LogListFeature.init,
-                            withDependencies: {
-                                #if targetEnvironment(simulator)
-                                    $0 = .preview
-                                #endif
-                            }
-                        )
-                    )
-                }
-            )
             .buttonStyle(.plain)
             .navigationTitle(L10n.App.Feature.settings)
             .onAppear { send(.onAppear) }
