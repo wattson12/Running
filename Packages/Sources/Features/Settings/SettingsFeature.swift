@@ -22,6 +22,7 @@ public struct SettingsFeature {
 
         @Shared(.appStorage("show_run_detail")) var showRunDetailFeatureFlag: Bool = false
         @Shared(.appStorage("history_feature")) var showHistoryFeatureFlag: Bool = false
+        @Shared(.appStorage("program_feature")) var showProgramFeatureFlag: Bool = false
 
         @Presents var destination: Destination.State?
 

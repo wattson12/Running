@@ -218,6 +218,8 @@ public enum L10n {
             public enum BetaFeatures {
                 /// History
                 public static let history = L10n.tr("Localizable", "settings.section.beta_features.history", fallback: "History")
+                /// Program
+                public static let program = L10n.tr("Localizable", "settings.section.beta_features.program", fallback: "Program")
                 /// Run detail
                 public static let runDetail = L10n.tr("Localizable", "settings.section.beta_features.run_detail", fallback: "Run detail")
             }
