@@ -8,8 +8,8 @@ import Repository
 import Widgets
 import XCTest
 
-@MainActor
 final class GoalListFeatureTests: XCTestCase {
+    @MainActor
     func testGoalsPopulatedHappyPath() async throws {
         let weeklyRun: Run = .mock()
         let monthlyRun: Run = .mock()
@@ -89,6 +89,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testGoalsPopulatedWhenSomeGoalsHaveNoRuns() async throws {
         let weeklyRun: Run = .mock()
         let yearlyRun: Run = .mock()
@@ -166,6 +167,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testGoalsPopulatedWhenFetchingSomeGoalsFails() async throws {
         let weeklyRun: Run = .mock()
         let yearlyRun: Run = .mock()
@@ -238,6 +240,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testDestinationIsCorrectWhenTappingGoalWithTarget() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -256,6 +259,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testDestinationIsCorrectWhenTappingGoalWithoutTarget() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -274,6 +278,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testDestinationIsCorrectWhenEditGoalTapped() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -292,6 +297,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testEdiyGoalGoalUpdatedDelegateUpdatesStateAndCacheForWeeklyGoal() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -335,6 +341,7 @@ final class GoalListFeatureTests: XCTestCase {
         await fulfillment(of: [updateGoalCalled, reloadTimelinesCalled])
     }
 
+    @MainActor
     func testEdiyGoalGoalUpdatedDelegateUpdatesStateAndCacheForMonthlyGoal() async throws {
         let goal: Goal = .mock(
             period: .monthly,
@@ -375,6 +382,7 @@ final class GoalListFeatureTests: XCTestCase {
         await fulfillment(of: [updateGoalCalled])
     }
 
+    @MainActor
     func testEdiyGoalGoalUpdatedDelegateUpdatesStateAndCacheForYearlyGoal() async throws {
         let goal: Goal = .mock(
             period: .yearly,
@@ -415,6 +423,7 @@ final class GoalListFeatureTests: XCTestCase {
         await fulfillment(of: [updateGoalCalled])
     }
 
+    @MainActor
     func testEditGoalGoalClearedDelegateUpdatesStateAndCacheForWeeklyGoal() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -452,6 +461,7 @@ final class GoalListFeatureTests: XCTestCase {
         await fulfillment(of: [updateGoalCalled])
     }
 
+    @MainActor
     func testEdiyGoalGoalClearedDelegateUpdatesStateAndCacheForMonthlyGoal() async throws {
         let goal: Goal = .mock(
             period: .monthly,
@@ -489,6 +499,7 @@ final class GoalListFeatureTests: XCTestCase {
         await fulfillment(of: [updateGoalCalled])
     }
 
+    @MainActor
     func testEdiyGoalGoalClearedDelegateUpdatesStateAndCacheForYearlyGoal() async throws {
         let goal: Goal = .mock(
             period: .yearly,
@@ -529,6 +540,7 @@ final class GoalListFeatureTests: XCTestCase {
         await fulfillment(of: [updateGoalCalled, reloadTimelinesCalled])
     }
 
+    @MainActor
     func testDeepLinkHandling() {
         let weekly: Goal = .mock(
             period: .weekly,
@@ -589,6 +601,7 @@ final class GoalListFeatureTests: XCTestCase {
         XCTAssertEqual(sut.destination, .editGoal(.init(goal: yearly)))
     }
 
+    @MainActor
     func testDeepLinkHandlingWhenGoalIsNotFound() {
         var sut: GoalListFeature.State = .init(
             weeklyGoal: nil,

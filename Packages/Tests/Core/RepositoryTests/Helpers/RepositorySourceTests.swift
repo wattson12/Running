@@ -1,8 +1,8 @@
 @testable import Repository
 import XCTest
 
-@MainActor
 final class RepositorySourceTests: XCTestCase {
+    @MainActor
     func testCacheHelperReturnsCorrectValue() {
         let cacheInput: Int = .random(in: 1 ..< 10000)
         let cacheResult: Int = .random(in: 1 ..< 10000)
@@ -19,6 +19,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(response, cacheResult)
     }
 
+    @MainActor
     func testRemoteHelperReturnsCorrectValue() async throws {
         let remoteInput: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
@@ -35,6 +36,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(response, remoteResult)
     }
 
+    @MainActor
     func testRemoteHelperForwardsErrorOnFailure() async throws {
         let remoteError: NSError = .init(domain: #fileID, code: #line)
 
@@ -51,6 +53,7 @@ final class RepositorySourceTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testStreamWhenCacheIsAvailable() async throws {
         let input: Int = .random(in: 1 ..< 10000)
         let cacheResult: Int = .random(in: 1 ..< 10000)
@@ -75,6 +78,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(values, [cacheResult, remoteResult])
     }
 
+    @MainActor
     func testStreamWhenNoCacheIsAvailable() async throws {
         let input: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
@@ -92,6 +96,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(values, [remoteResult])
     }
 
+    @MainActor
     func testStreamWhenRemoteRequestFails() async throws {
         let input: Int = .random(in: 1 ..< 10000)
         let remoteError: NSError = .init(domain: #fileID, code: #line)
@@ -115,6 +120,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(values, [])
     }
 
+    @MainActor
     func testCacheOrRemoteWhenCacheIsPresent() async throws {
         let cacheResult: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
@@ -128,6 +134,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(result, cacheResult)
     }
 
+    @MainActor
     func testCacheOrRemoteWhenCacheIsNotPresent() async throws {
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
@@ -140,6 +147,7 @@ final class RepositorySourceTests: XCTestCase {
         XCTAssertEqual(result, remoteResult)
     }
 
+    @MainActor
     func testVoidInputHelpers() async throws {
         let cacheResult: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)

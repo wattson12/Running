@@ -3,8 +3,8 @@ import Model
 @testable import Permissions
 import XCTest
 
-@MainActor
 final class PermissionsFeatureTests: XCTestCase {
+    @MainActor
     func testFlowWithPermissionsAlreadyAccepted() async throws {
         let store = TestStore(
             initialState: .init(state: .initial),
@@ -23,6 +23,7 @@ final class PermissionsFeatureTests: XCTestCase {
         await store.receive(.delegate(.permissionsAvailable))
     }
 
+    @MainActor
     func testPermissionRequestHappyPath() async throws {
         let store = TestStore(
             initialState: .init(state: .initial),
@@ -61,6 +62,7 @@ final class PermissionsFeatureTests: XCTestCase {
         await store.receive(.delegate(.permissionsAvailable))
     }
 
+    @MainActor
     func testFlowWithHealthKitUnavailable() async throws {
         let store = TestStore(
             initialState: .init(state: .initial),
