@@ -1,13 +1,12 @@
 import App
 import ComposableArchitecture
-import Logging
 import SwiftUI
 
 @main
 struct RunningApp: App {
     let store: StoreOf<AppFeature> = .init(
         initialState: .init(),
-        reducer: { AppFeature()._logging() },
+        reducer: { AppFeature() },
         withDependencies: {
             #if targetEnvironment(simulator)
                 $0 = .preview
