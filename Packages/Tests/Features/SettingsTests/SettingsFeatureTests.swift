@@ -3,8 +3,8 @@ import DependenciesAdditions
 @testable import Settings
 import XCTest
 
-@MainActor
 final class SettingsFeatureTests: XCTestCase {
+    @MainActor
     func testInitialStateSetupIsCorrect() async throws {
         let buildNumber: String = UUID().uuidString
         let versionNumber: String = UUID().uuidString

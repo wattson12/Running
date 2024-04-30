@@ -5,8 +5,8 @@ import Model
 import Repository
 import XCTest
 
-@MainActor
 final class HistoryFeatureTests: XCTestCase {
+    @MainActor
     func testHistoryIsSetCorrectlyOnAppearanceWhenCachedRunsAreEmpty() async throws {
         let store = TestStore(
             initialState: .init(),
@@ -21,6 +21,7 @@ final class HistoryFeatureTests: XCTestCase {
         await store.send(.view(.onAppear))
     }
 
+    @MainActor
     func testHistoryIsSetCorrectlyOnAppearanceWhenThereAreCachedRuns() async throws {
         let runs: [Run] = [
             .init(
@@ -67,6 +68,7 @@ final class HistoryFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testSortByDateUpdatesSortCorrectly() async throws {
         let total1: IntervalTotal = .init(
             id: .init(),
@@ -100,6 +102,7 @@ final class HistoryFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testSortBySistanceUpdatesSortCorrectly() async throws {
         let total1: IntervalTotal = .init(
             id: .init(),

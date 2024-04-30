@@ -6,8 +6,8 @@ import Repository
 @testable import RunList
 import XCTest
 
-@MainActor
 final class RunListFeatureTests: XCTestCase {
+    @MainActor
     func testRunsFetchedHappyPath() async throws {
         let date = Date(timeIntervalSinceReferenceDate: 765_123_456) // March 2025
         let allRuns: [Run] = withDependencies {
@@ -46,6 +46,7 @@ final class RunListFeatureTests: XCTestCase {
         await store.receive(\.delegate.runsRefreshed)
     }
 
+    @MainActor
     func testRunsFetchedReloadsWidgets() async throws {
         let reloadTimelinesCalled = expectation(description: "reload timelines called")
 
@@ -67,6 +68,7 @@ final class RunListFeatureTests: XCTestCase {
         await fulfillment(of: [reloadTimelinesCalled])
     }
 
+    @MainActor
     func testTappingOnRunSetsCorrectDestinationWithFeatureFlagEnabled() async throws {
         let run: Run = .mock()
         let store = TestStore(
@@ -88,6 +90,7 @@ final class RunListFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testTappingOnRunDoesNothingWithFeatureFlagDisabled() async throws {
         let run: Run = .mock()
         let store = TestStore(

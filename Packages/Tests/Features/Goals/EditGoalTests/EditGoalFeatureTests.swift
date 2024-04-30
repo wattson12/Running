@@ -4,8 +4,8 @@ import Model
 import Repository
 import XCTest
 
-@MainActor
 final class EditGoalFeatureTests: XCTestCase {
+    @MainActor
     func testEditingExistingGoalFlow() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -58,6 +58,7 @@ final class EditGoalFeatureTests: XCTestCase {
         await store.receive(.delegate(.goalUpdated(updatedGoal)))
     }
 
+    @MainActor
     func testClearingExistingGoalFlow() async throws {
         let goal: Goal = .mock(
             period: .weekly,
@@ -83,6 +84,7 @@ final class EditGoalFeatureTests: XCTestCase {
         await store.receive(.delegate(.goalCleared(.weekly)))
     }
 
+    @MainActor
     func testSettingNewGoalFlow() async throws {
         let goal: Goal = .mock(
             period: .weekly,

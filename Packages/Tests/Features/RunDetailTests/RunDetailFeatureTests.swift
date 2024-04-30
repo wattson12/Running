@@ -4,8 +4,8 @@ import Repository
 @testable import RunDetail
 import XCTest
 
-@MainActor
 final class RunDetailFeatureTests: XCTestCase {
+    @MainActor
     func testRunIsFetchedWithLoadingStateIfRunHasNoDetail() async throws {
         let initialRun: Run = .mock(detail: nil)
         let runWithDetail: Run = .mock(detail: .mock())
@@ -54,6 +54,7 @@ final class RunDetailFeatureTests: XCTestCase {
         await store.receive(.delegate(.runDetailFetched(runWithDetail)))
     }
 
+    @MainActor
     func testRunIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
         let initialRun: Run = .mock(detail: .mock())
         let updatedRun: Run = .mock(detail: .mock())
@@ -92,6 +93,7 @@ final class RunDetailFeatureTests: XCTestCase {
         await store.receive(.delegate(.runDetailFetched(updatedRun)))
     }
 
+    @MainActor
     func testFailedDetailFetchClearsLoadingState() async throws {
         let store = TestStore(
             initialState: .init(

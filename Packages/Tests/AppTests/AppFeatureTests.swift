@@ -5,8 +5,8 @@ import RunList
 import Widgets
 import XCTest
 
-@MainActor
 final class AppFeatureTests: XCTestCase {
+    @MainActor
     func testRunListIsRefreshedOnAppearance() async throws {
         let store = TestStore(
             initialState: .init(),
@@ -35,6 +35,7 @@ final class AppFeatureTests: XCTestCase {
         await store.receive(.runList(.delegate(.runsRefreshed)))
     }
 
+    @MainActor
     func testRunListRunsRefreshedDelegateRefreshesGoalList() async throws {
         let store = TestStore(
             initialState: .init(),
@@ -70,6 +71,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testPermissionsStateIsClearedOncePermissionsAreAvailable() async throws {
         let store = TestStore(
             initialState: .init(
@@ -85,6 +87,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testDeepLinkHandlingForGoalsDeepLink() async throws {
         let store = TestStore(
             initialState: .init(
@@ -102,6 +105,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testDeepLinkHandlingForRunsDeepLink() async throws {
         let store = TestStore(
             initialState: .init(
@@ -119,6 +123,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testHistoryIsEnabledOnAppearIfFeatureFlagIsTrue() async throws {
         let store = TestStore(
             initialState: .init(history: nil),

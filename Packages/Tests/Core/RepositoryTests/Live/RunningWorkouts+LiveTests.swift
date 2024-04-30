@@ -7,8 +7,8 @@ import Model
 @testable import Repository
 import XCTest
 
-@MainActor
 final class RunningWorkouts_LiveTests: XCTestCase {
+    @MainActor
     func testCachedRunningWorkoutsReturnsNilWhenThereAreNoRuns() {
         let sut: RunningWorkouts = withDependencies {
             $0.coreData = .stack(inMemory: true)
@@ -19,6 +19,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertNil(sut.allRunningWorkouts.cache())
     }
 
+    @MainActor
     func testCachedRunningWorkoutsReturnsCorrectRuns() throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
@@ -47,6 +48,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(cachedRuns.count, cacheRunCount)
     }
 
+    @MainActor
     func testRemoteRunningWorkoutsReturnsCorrectRunsAndUpdatesCache() async throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
@@ -74,6 +76,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(fetchedRuns, remoteRuns.count)
     }
 
+    @MainActor
     func testFetchingRemoteRunsUpdatesValuesForExistingRun() async throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
@@ -132,51 +135,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         }
     }
 
-    func testFetchingRemoteRunsUpdatesValuesForExistingRunWithoutLocationOrDistanceSamples() async throws {
-        throw XCTSkip()
-        let coreData: CoreDataStack = .stack(inMemory: true)
-
-        let id: UUID = .init()
-        try coreData.performWork { context in
-            let run = Cache.RunEntity(context: context)
-            run.id = id
-            run.startDate = .now
-            run.distance = 0
-            run.duration = 0
-            run.detail = nil
-        }
-
-        let duration: Double = .random(in: 1 ..< 100)
-        let distance: Double = .random(in: 1 ..< 100)
-        let healthKitRuns: [MockWorkoutType] = [
-            .init(
-                uuid: id,
-                duration: duration,
-                distance: distance
-            ),
-        ]
-
-        let sut: RunningWorkouts = withDependencies {
-            $0.coreData = coreData
-            $0.healthKit.runningWorkouts._allRunningWorkouts = { healthKitRuns }
-        } operation: {
-            .live()
-        }
-
-        let allRuns = try await sut.allRunningWorkouts.remote()
-
-        let fetchedRuns = try coreData.performWork { context in
-            try context.fetch(RunEntity.makeFetchRequest())
-        }
-
-        let updatedRun = try XCTUnwrap(fetchedRuns.first)
-        XCTAssertEqual(updatedRun.distance, distance * 1000)
-        XCTAssertEqual(updatedRun.duration, duration * 60)
-
-        let firstRun = try XCTUnwrap(allRuns.first)
-        XCTAssertNil(firstRun.detail)
-    }
-
+    @MainActor
     func testFetchingRemoteRunsDeletesRunsInCacheButNotInResponse() async throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
@@ -224,6 +183,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(fetchedRunsCount, 1)
     }
 
+    @MainActor
     func testRunsWithinGoalReturnsEmptyListWhenNoRunsFound() async throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
@@ -244,6 +204,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssert(remoteRuns.isEmpty)
     }
 
+    @MainActor
     func testRunsWithinGoalReturnsMatchingRunsOnly() throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
@@ -293,6 +254,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(remoteRuns.count, 1)
     }
 
+    @MainActor
     func testRunDetailThrowsHealthKitErrorWhenDetailFails() async throws {
         let healthKitError = NSError(domain: #fileID, code: #line)
 
@@ -310,6 +272,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testRunDetailThrowsCorrectErrorWhenRunDoesntExistInCache() async throws {
         let sut: RunningWorkouts = withDependencies {
             $0.coreData = .stack(inMemory: true)
@@ -329,6 +292,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         } catch {}
     }
 
+    @MainActor
     func testRemoteDetailsAreUpdatedOnExistingCacheValue() async throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
         let id: UUID = .init()
@@ -382,6 +346,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         XCTAssertEqual(run.detail?.distanceSamples.first?.startDate, samples.first?.startDate)
     }
 
+    @MainActor
     func testRemoteDetailsAreSavedToContext() async throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
