@@ -7,12 +7,30 @@ struct Split: Identifiable, Equatable {
     let distance: String
     let duration: TimeInterval
 
+    init(distance: String, duration: TimeInterval) {
+        self.distance = distance
+        self.duration = duration / 60
+    }
+
     var id: String { distance }
+}
+
+extension [Split] {
+    var domain: [TimeInterval] {
+        let durations = map(\.duration)
+        var minDuration: TimeInterval = .greatestFiniteMagnitude
+        var maxDuration: TimeInterval = .leastNormalMagnitude
+        for duration in durations {
+            minDuration = Swift.min(minDuration, duration)
+            maxDuration = Swift.max(maxDuration, duration)
+        }
+        return [floor(minDuration - 0.5), ceil(maxDuration + 0.5)]
+    }
 }
 
 extension TimeInterval {
     var formattedDuration: String {
-        let integerDuration = Int(self)
+        let integerDuration = Int(self * 60)
 
         let seconds = integerDuration % 60
         let minutes = (integerDuration / 60) % 60
@@ -57,6 +75,7 @@ extension [DistanceSample] {
 
 struct DistanceSplitView: View {
     let splits: [Split]
+    let domain: [TimeInterval]
 
     var splitSymbol: String {
         UnitLength.primaryUnit(locale: locale).symbol
@@ -68,38 +87,39 @@ struct DistanceSplitView: View {
         splits: [Split]
     ) {
         self.splits = splits
+        domain = splits.domain
     }
 
     var body: some View {
-        GeometryReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                Chart(splits) { sample in
-                    BarMark(
-                        x: .value("Split", sample.distance),
-                        y: .value("Duration", sample.duration)
-                    )
-                    .cornerRadius(6)
-                    .foregroundStyle(Color.blue)
-                }
-                .chartYAxis {
-                    AxisMarks(values: .automatic) { value in
-                        if let duration = value.as(Double.self), duration != 0 {
-                            AxisValueLabel(duration.formattedDuration)
-                        }
-                        AxisGridLine()
-                        AxisTick()
-                    }
-                }
-                .chartXAxis {
-                    AxisMarks(values: .automatic) { value in
-                        if let split = value.as(String.self) {
-                            AxisValueLabel(split + splitSymbol)
-                        }
-                    }
-                }
-                .frame(width: max(50 * CGFloat(splits.count), proxy.size.width))
+        Chart {
+            ForEach(splits) { sample in
+                BarMark(
+                    x: .value("Split", sample.distance),
+                    y: .value("Duration", sample.duration)
+                )
+                .cornerRadius(6)
+                .foregroundStyle(Color.blue)
             }
         }
+        .chartYAxis {
+            AxisMarks(values: .automatic) { value in
+                if let duration = value.as(Double.self), duration != 0 {
+                    AxisValueLabel(duration.formattedDuration)
+                }
+                AxisGridLine()
+                AxisTick()
+            }
+        }
+        .chartXAxis {
+            AxisMarks(values: .automatic) { value in
+                if let split = value.as(String.self) {
+                    AxisValueLabel(split + splitSymbol)
+                }
+            }
+        }
+        .chartXVisibleDomain(length: min(splits.count, 7))
+        .chartScrollableAxes(.horizontal)
+        .chartYScale(domain: domain)
     }
 }
 
