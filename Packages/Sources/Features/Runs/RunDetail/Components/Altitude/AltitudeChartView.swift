@@ -62,6 +62,7 @@ struct AltitudeChartView: View {
                 }
             }
         }
+        .chartScrollableAxes(.horizontal)
     }
 
     private func labelForXAxis(value: AxisValue) -> String {
