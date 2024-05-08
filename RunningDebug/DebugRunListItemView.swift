@@ -87,34 +87,54 @@ struct DebugRunListItemFeature: Reducer {
             return .none
         case let .runDetailFetched(.success(run)):
             state.isLoading = false
-//            print("repository", run.detail?.locations.count)
-//            print("repository", run.detail?.distanceSamples.count)
-            guard let _samples = run.detail?.distanceSamples else { return .none }
-            let samples = _samples.sorted(by: { $0.startDate < $1.startDate })
-            print("-----")
-            print("public extension [DistanceSample] {")
-            print("    static var preview: [DistanceSample] {")
-            print("        [")
-            for (index, sample) in samples.enumerated() {
-                guard index % 2 == 0 else { continue }
-                print("            .init(startDate: Date(timeIntervalSinceReferenceDate: \(sample.startDate.timeIntervalSinceReferenceDate)), distance: .init(value: \(sample.distance.converted(to: .meters).value), unit: .meters)),")
-            }
-            print("        ]")
-            print("    }")
-            print("}")
-//            public extension DistanceSample {
-//                static var preview: [DistanceSample] {
-//                    [
-//                        .init(startDate: Date(), distance: .init(value: 1, unit: .meters))
-//                    ]
-//                }
-//            }
+
+            logJSON(for: run)
+
             return .none
         case let .runDetailFetched(.failure(error)):
             print("repository", error)
             state.isLoading = false
             return .none
         }
+    }
+
+    private func logJSON(for run: Run) {
+        var run = run
+        if var detail = run.detail, !detail.locations.isEmpty {
+            let samples = detail.locations.sorted(by: { $0.timestamp < $1.timestamp })
+
+            let referenceCoordinate = Location.Coordinate(
+                latitude: -32.91829430734193,
+                longitude: 151.7259057948816
+            )
+
+            let startingCoordinate = samples[0]
+            let latitudeOffset = startingCoordinate.coordinate.latitude - referenceCoordinate.latitude
+            let longitudeOffset = startingCoordinate.coordinate.longitude - referenceCoordinate.longitude
+
+            func obfuscateCoordinate(_ coordinate: Location.Coordinate) -> Location.Coordinate {
+                .init(
+                    latitude: coordinate.latitude - latitudeOffset,
+                    longitude: coordinate.longitude - longitudeOffset
+                )
+            }
+
+            let obfuscatedSamples = samples.map { location in
+                Location(
+                    coordinate: obfuscateCoordinate(location.coordinate),
+                    altitude: location.altitude,
+                    timestamp: location.timestamp
+                )
+            }
+            detail.locations = obfuscatedSamples
+            run.detail = detail
+        }
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted]
+        guard let data = try? encoder.encode(run) else { return }
+        guard let json = String(data: data, encoding: .utf8) else { return }
+        print(json)
     }
 }
 
