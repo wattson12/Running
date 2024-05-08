@@ -1,7 +1,7 @@
 import Foundation
 
-public struct Location: Equatable, Hashable, Identifiable {
-    public struct Coordinate: Equatable, Hashable {
+public struct Location: Equatable, Hashable, Identifiable, Codable {
+    public struct Coordinate: Equatable, Hashable, Codable {
         public let latitude: Double
         public let longitude: Double
 

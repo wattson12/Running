@@ -1,7 +1,7 @@
 import Foundation
 
 public extension Run {
-    struct Detail: Equatable, Hashable {
+    struct Detail: Equatable, Hashable, Codable {
         public var locations: [Location]
         public var distanceSamples: [DistanceSample]
 
