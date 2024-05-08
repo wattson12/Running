@@ -221,3 +221,23 @@ public struct RunDetailView: View {
         .environment(\.locale, .init(identifier: "en_AU"))
     }
 }
+
+#Preview("Live data") {
+    let run: Run = .content("long_run")
+    return NavigationStack {
+        RunDetailView(
+            store: .init(
+                initialState: .init(run: run),
+                reducer: RunDetailFeature.init,
+                withDependencies: {
+                    $0.repository.runningWorkouts._runDetail = { _ in
+                        try await Task.sleep(for: .seconds(1))
+                        return run
+                    }
+                    $0.locale = .init(identifier: "en_AU")
+                }
+            )
+        )
+        .environment(\.locale, .init(identifier: "en_AU"))
+    }
+}

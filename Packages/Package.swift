@@ -136,7 +136,10 @@ let package = Package(
                 .dependencies,
                 .target(name: .resources),
             ],
-            path: .core(.model)
+            path: .core(.model),
+            resources: [
+                .copy("Preview/Content/long_run.json")
+            ]
         ),
         .target(
             name: .healthKitServiceInterface,
