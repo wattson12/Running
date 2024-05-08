@@ -89,3 +89,11 @@ struct AltitudeChartView: View {
         splits: run.detail?.distanceSamples.splits(locale: .init(identifier: "en_AU")) ?? []
     )
 }
+
+#Preview("Long run") {
+    let run: Run = .preview("long_run")
+    return AltitudeChartView(
+        locations: run.detail?.locations ?? [],
+        splits: run.detail?.distanceSamples.splits(locale: .init(identifier: "en_AU")) ?? []
+    )
+}

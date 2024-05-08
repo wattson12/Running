@@ -222,10 +222,8 @@ public struct RunDetailView: View {
     }
 }
 
-#Preview("Preview") {
-    let url = Bundle.module.url(forResource: "long_run", withExtension: "json")!
-    let data = try! Data(contentsOf: url)
-    let run = try! JSONDecoder().decode(Run.self, from: data)
+#Preview("Live data") {
+    let run: Run = .preview("long_run")
     return NavigationStack {
         RunDetailView(
             store: .init(
