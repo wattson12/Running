@@ -221,3 +221,25 @@ public struct RunDetailView: View {
         .environment(\.locale, .init(identifier: "en_AU"))
     }
 }
+
+#Preview("Preview") {
+    let url = Bundle.module.url(forResource: "long_run", withExtension: "json")!
+    let data = try! Data(contentsOf: url)
+    let run = try! JSONDecoder().decode(Run.self, from: data)
+    return NavigationStack {
+        RunDetailView(
+            store: .init(
+                initialState: .init(run: run),
+                reducer: RunDetailFeature.init,
+                withDependencies: {
+                    $0.repository.runningWorkouts._runDetail = { _ in
+                        try await Task.sleep(for: .seconds(1))
+                        return run
+                    }
+                    $0.locale = .init(identifier: "en_AU")
+                }
+            )
+        )
+        .environment(\.locale, .init(identifier: "en_AU"))
+    }
+}

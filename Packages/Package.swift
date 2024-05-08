@@ -128,7 +128,10 @@ let package = Package(
                 .target(name: .repository),
                 .target(name: .designSystem),
             ],
-            path: .feature(.runDetail, in: .runs)
+            path: .feature(.runDetail, in: .runs),
+            resources: [
+                .copy("Preview/long_run.json")
+            ]
         ),
         .target(
             name: .model,
