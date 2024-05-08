@@ -223,7 +223,7 @@ public struct RunDetailView: View {
 }
 
 #Preview("Live data") {
-    let run: Run = .preview("long_run")
+    let run: Run = .content("long_run")
     return NavigationStack {
         RunDetailView(
             store: .init(

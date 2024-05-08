@@ -128,10 +128,7 @@ let package = Package(
                 .target(name: .repository),
                 .target(name: .designSystem),
             ],
-            path: .feature(.runDetail, in: .runs),
-            resources: [
-                .copy("Preview/long_run.json")
-            ]
+            path: .feature(.runDetail, in: .runs)
         ),
         .target(
             name: .model,
@@ -139,7 +136,10 @@ let package = Package(
                 .dependencies,
                 .target(name: .resources),
             ],
-            path: .core(.model)
+            path: .core(.model),
+            resources: [
+                .copy("Preview/Content/long_run.json")
+            ]
         ),
         .target(
             name: .healthKitServiceInterface,
