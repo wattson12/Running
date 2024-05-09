@@ -75,7 +75,6 @@ public struct RunDetailView: View {
                             splits: splits
                         )
                         .frame(height: 200)
-                        .allowsHitTesting(false)
                         .cornerRadius(8)
                     }
                     .customTint(Color(asset: Asset.purple))
