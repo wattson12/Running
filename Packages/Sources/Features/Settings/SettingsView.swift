@@ -87,7 +87,7 @@ public struct SettingsView: View {
         )
 
         Link(
-            destination: URL(string: "https://wattson12.github.io/Running/terms/terms.html")!,
+            destination: URL(string: "https://wattson12.github.io/Running/terms/terms-and-conditions.html")!,
             label: {
                 HStack {
                     Text(L10n.Settings.Section.Links.terms)
