@@ -31,7 +31,7 @@ struct AltitudeChartView: View {
         var splitTimes: [Date] = []
         var runningTime: TimeInterval = 0
         for split in splits {
-            runningTime += split.duration
+            runningTime += split.duration * 60
             splitTimes.append(startTime.addingTimeInterval(runningTime))
         }
         self.splitTimes = splitTimes
@@ -88,6 +88,7 @@ struct AltitudeChartView: View {
         locations: run.detail?.locations ?? [],
         splits: run.detail?.distanceSamples.splits(locale: .init(identifier: "en_AU")) ?? []
     )
+    .environment(\.locale, .init(identifier: "en_AU"))
 }
 
 #Preview("Long run") {
@@ -96,4 +97,5 @@ struct AltitudeChartView: View {
         locations: run.detail?.locations ?? [],
         splits: run.detail?.distanceSamples.splits(locale: .init(identifier: "en_AU")) ?? []
     )
+    .environment(\.locale, .init(identifier: "en_AU"))
 }

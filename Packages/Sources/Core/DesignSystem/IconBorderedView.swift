@@ -47,10 +47,12 @@ public struct IconBorderedView<Content: View>: View {
                 Spacer()
             }
 
-            content()
-                .cornerRadius(6)
-                .padding(.top, 12)
-                .padding(/*@START_MENU_TOKEN@*/ .all/*@END_MENU_TOKEN@*/, 8)
+            VStack {
+                Spacer().frame(height: 16)
+                content()
+            }
+            .cornerRadius(6)
+            .padding(/*@START_MENU_TOKEN@*/ .all/*@END_MENU_TOKEN@*/, 8)
         }
         .fixedSize(horizontal: false, vertical: true)
     }
