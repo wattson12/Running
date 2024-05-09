@@ -88,6 +88,7 @@ struct AltitudeChartView: View {
         locations: run.detail?.locations ?? [],
         splits: run.detail?.distanceSamples.splits(locale: .init(identifier: "en_AU")) ?? []
     )
+    .environment(\.locale, .init(identifier: "en_AU"))
 }
 
 #Preview("Long run") {
@@ -96,4 +97,5 @@ struct AltitudeChartView: View {
         locations: run.detail?.locations ?? [],
         splits: run.detail?.distanceSamples.splits(locale: .init(identifier: "en_AU")) ?? []
     )
+    .environment(\.locale, .init(identifier: "en_AU"))
 }
