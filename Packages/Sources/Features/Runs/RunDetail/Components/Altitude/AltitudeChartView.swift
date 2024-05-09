@@ -31,7 +31,7 @@ struct AltitudeChartView: View {
         var splitTimes: [Date] = []
         var runningTime: TimeInterval = 0
         for split in splits {
-            runningTime += split.duration
+            runningTime += split.duration * 60
             splitTimes.append(startTime.addingTimeInterval(runningTime))
         }
         self.splitTimes = splitTimes
