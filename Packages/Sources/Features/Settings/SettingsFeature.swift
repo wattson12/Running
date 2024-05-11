@@ -13,8 +13,7 @@ public struct SettingsFeature {
         var buildNumber: String = ""
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
 
-        @Shared(.appStorage("show_run_detail")) var showRunDetailFeatureFlag: Bool = false
-
+        @Shared(.featureFlag(.runDetail)) var runDetailEnabled: Bool = false
         @Shared(.featureFlag(FeatureFlagKey.history)) var historyEnabled: Bool = false
         @Shared(.featureFlag(.program)) var programEnabled: Bool = false
 

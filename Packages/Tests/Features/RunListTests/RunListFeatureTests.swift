@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 import Foundation
 import Model
 import Repository
@@ -81,7 +82,7 @@ final class RunListFeatureTests: XCTestCase {
             ),
             reducer: RunListFeature.init,
             withDependencies: {
-                $0.defaultAppStorage.set(true, forKey: "show_run_detail")
+                $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.runDetail.name)
             }
         )
 
@@ -103,7 +104,7 @@ final class RunListFeatureTests: XCTestCase {
             ),
             reducer: RunListFeature.init,
             withDependencies: {
-                $0.defaultAppStorage.set(false, forKey: "show_run_detail")
+                $0.defaultAppStorage.set(false, forKey: FeatureFlagKey.runDetail.name)
             }
         )
 

@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 import Foundation
 import Model
 import Repository
@@ -22,7 +23,7 @@ public struct RunListFeature {
         var runs: IdentifiedArrayOf<Run> = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
-        @Shared(.appStorage("show_run_detail")) var showRunDetailFeatureFlag: Bool = false
+        @Shared(.featureFlag(.runDetail)) var runDetailEnabled: Bool = false
         @Presents var destination: Destination.State?
 
         public init(
@@ -94,7 +95,7 @@ public struct RunListFeature {
         case .onAppear:
             return state.refresh()
         case let .runTapped(run):
-            guard state.showRunDetailFeatureFlag else { return .none }
+            guard state.runDetailEnabled else { return .none }
             state.destination = .detail(.init(run: run))
             return .none
         }
