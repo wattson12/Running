@@ -181,6 +181,7 @@ let package = Package(
                 .target(name: .settings),
                 .target(name: .history),
                 .target(name: .program),
+                .target(name: .featureFlags),
             ]
         ),
         .target(
@@ -265,6 +266,7 @@ let package = Package(
                 .dependenciesAdditions,
                 .target(name: .designSystem),
                 .target(name: .cache),
+                .target(name: .featureFlags),
             ],
             path: .feature(.settings)
         ),

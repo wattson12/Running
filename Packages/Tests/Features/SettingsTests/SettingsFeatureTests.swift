@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 @testable import Settings
 import XCTest
 
@@ -25,7 +26,7 @@ final class SettingsFeatureTests: XCTestCase {
                 )
 
                 $0.defaultAppStorage.set(showRunDetail, forKey: "show_run_detail")
-                $0.defaultAppStorage.set(showHistory, forKey: "history_feature")
+                $0.defaultAppStorage.set(showHistory, forKey: FeatureFlagKey.history.name)
             }
         )
 
@@ -33,7 +34,7 @@ final class SettingsFeatureTests: XCTestCase {
             $0.versionNumber = versionNumber
             $0.buildNumber = buildNumber
             $0.showRunDetailFeatureFlag = showRunDetail
-            $0.showHistoryFeatureFlag = showHistory
+            $0.historyEnabled = showHistory
         }
     }
 }
