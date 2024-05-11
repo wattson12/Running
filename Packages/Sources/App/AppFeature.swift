@@ -61,6 +61,11 @@ public struct AppFeature {
             goalList = .init()
             history = nil
         }
+
+        mutating func refreshFeatureFlagState() {
+            history = showHistory ? .init() : nil
+            program = showProgram ? .init() : nil
+        }
     }
 
     @CasePathable
@@ -139,8 +144,7 @@ public struct AppFeature {
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            state.history = state.showHistory ? .init() : nil
-            state.program = state.showProgram ? .init() : nil
+            state.refreshFeatureFlagState()
 
             return .merge(
                 state.runList.refresh().map(Action.runList),
@@ -163,9 +167,7 @@ public struct AppFeature {
     private func _internal(_ action: Action.Internal, state: inout State) -> EffectOf<Self> {
         switch action {
         case .refreshFeatureFlagState:
-            print("__debug", state.showProgram)
-            state.history = state.showHistory ? .init() : nil
-            state.program = state.showProgram ? .init() : nil
+            state.refreshFeatureFlagState()
             return .none
         }
     }
