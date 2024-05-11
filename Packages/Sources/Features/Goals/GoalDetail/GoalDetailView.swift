@@ -102,10 +102,8 @@ public struct GoalDetailView: View {
                             title: L10n.Goals.Detail.Progress.title
                         ) {
                             GoalChartView(
-                                period: store.goal.period,
-                                runs: runs,
-                                goal: store.goal.target,
-                                showTarget: $store.showTarget
+                                store: store,
+                                runs: runs
                             )
                             .frame(height: 250)
                         }
@@ -116,10 +114,8 @@ public struct GoalDetailView: View {
                             title: L10n.Goals.Detail.Progress.title
                         ) {
                             GoalChartView(
-                                period: store.goal.period,
-                                runs: store.emptyStateRuns,
-                                goal: store.goal.target,
-                                showTarget: $store.showTarget
+                                store: store,
+                                runs: store.emptyStateRuns
                             )
                             .blur(radius: 5)
                             .frame(height: 250)
@@ -213,7 +209,7 @@ extension GoalDetailView {
     private static func target(from period: Goal.Period) -> Measurement<UnitLength> {
         switch period {
         case .weekly:
-            return .init(value: 20, unit: .kilometers)
+            return .init(value: 120, unit: .kilometers)
         case .monthly:
             return .init(value: 100, unit: .kilometers)
         case .yearly:

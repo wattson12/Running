@@ -1,24 +1,23 @@
 import Charts
+import ComposableArchitecture
 import DesignSystem
 import Model
 import Resources
 import SwiftUI
 
 struct GoalChartView: View {
+    @Bindable public var store: StoreOf<GoalDetailFeature>
     let columns: [ChartColumn]
-    let goal: Measurement<UnitLength>?
     let visibleColumnCount: Int
-
     @Environment(\.tintColor) var tint
-    @Binding var showTarget: Bool
 
     init(
-        period: Goal.Period,
-        runs: [Run],
-        goal: Measurement<UnitLength>?,
-        showTarget: Binding<Bool>
+        store: StoreOf<GoalDetailFeature>,
+        runs: [Run]
     ) {
-        switch period {
+        self.store = store
+
+        switch store.goal.period {
         case .weekly:
             columns = .weekly(runs: runs)
             visibleColumnCount = 7
@@ -29,8 +28,6 @@ struct GoalChartView: View {
             columns = .yearly(runs: runs)
             visibleColumnCount = 12
         }
-        self.goal = goal
-        _showTarget = showTarget
     }
 
     var body: some View {
@@ -77,7 +74,7 @@ struct GoalChartView: View {
                     }
                 }
 
-                if let goal, showTarget, let start = columns.first?.index, let end = columns.last?.index {
+                if let goal = store.goal.target, store.showTarget, let start = columns.first?.index, let end = columns.last?.index {
                     LineMark(
                         x: .value("index", start),
                         y: .value("distance", goal.converted(to: .primaryUnit()).value),
@@ -117,94 +114,85 @@ struct GoalChartView: View {
                 }
             )
 
-            if goal != nil {
+            if store.goal.target != nil {
                 HStack {
                     Spacer()
                     ChartButton(
                         title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",
-                        selected: $showTarget
+                        selected: $store.showTarget
                     )
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 4)
             }
         }
-        .animation(.default, value: showTarget)
-    }
-}
-
-private struct GoalChartViewPreviewWrapper: View {
-    let columns: [ChartColumn]
-    let goal: Measurement<UnitLength>?
-    let visibleColumnCount: Int
-    @State var showTarget: Bool = false
-
-    init(
-        period: Goal.Period,
-        runs: [Run],
-        goal: Measurement<UnitLength>?,
-        showTarget: Bool
-    ) {
-        switch period {
-        case .weekly:
-            columns = .weekly(runs: runs)
-            visibleColumnCount = 7
-        case .monthly:
-            columns = .monthly(runs: runs)
-            visibleColumnCount = 20
-        case .yearly:
-            columns = .yearly(runs: runs)
-            visibleColumnCount = 12
-        }
-        self.goal = goal
-        self.showTarget = showTarget
-    }
-
-    var body: some View {
-        GoalChartView(
-            period: .weekly,
-            runs: .week,
-            goal: .init(value: 140, unit: .kilometers),
-            showTarget: $showTarget
-        )
+        .animation(.default, value: store.showTarget)
     }
 }
 
 #Preview("Weekly") {
-    GoalChartViewPreviewWrapper(
-        period: .weekly,
-        runs: .week,
-        goal: .init(value: 140, unit: .kilometers),
-        showTarget: true
+    GoalChartView(
+        store: .init(
+            initialState: GoalDetailFeature.State(
+                goal: .mock(
+                    period: .weekly,
+                    target: .init(value: 140, unit: .kilometers)
+                ),
+                showTarget: true
+            ),
+            reducer: GoalDetailFeature.init
+        ),
+        runs: .week
     )
     .customTint(.green)
 }
 
 #Preview("Weekly (No goal)") {
-    GoalChartViewPreviewWrapper(
-        period: .weekly,
-        runs: .week,
-        goal: nil,
-        showTarget: true
+    GoalChartView(
+        store: .init(
+            initialState: GoalDetailFeature.State(
+                goal: .mock(
+                    period: .weekly,
+                    target: nil
+                ),
+                showTarget: true
+            ),
+            reducer: GoalDetailFeature.init
+        ),
+        runs: .week
     )
     .customTint(.green)
 }
 
 #Preview("Monthly") {
-    GoalChartViewPreviewWrapper(
-        period: .monthly,
-        runs: .month,
-        goal: .init(value: 150, unit: .kilometers),
-        showTarget: true
+    GoalChartView(
+        store: .init(
+            initialState: GoalDetailFeature.State(
+                goal: .mock(
+                    period: .monthly,
+                    target: .init(value: 150, unit: .kilometers)
+                ),
+                showTarget: true
+            ),
+            reducer: GoalDetailFeature.init
+        ),
+        runs: .month
     )
 }
 
 #Preview("Yearly") {
-    GoalChartViewPreviewWrapper(
-        period: .yearly,
-        runs: .year,
-        goal: .init(value: 1250, unit: .kilometers),
-        showTarget: true
+    GoalChartView(
+        store: .init(
+            initialState: GoalDetailFeature.State(
+                goal: .mock(
+                    period: .yearly,
+                    target: .init(value: 1250, unit: .kilometers)
+                ),
+                showTarget: true
+            ),
+            reducer: GoalDetailFeature.init
+        ),
+        runs: .year
     )
 }
