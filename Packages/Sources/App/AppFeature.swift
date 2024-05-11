@@ -1,3 +1,4 @@
+import Combine
 import ComposableArchitecture
 import Foundation
 import GoalList
@@ -152,8 +153,13 @@ public struct AppFeature {
                     try await observation.enableBackgroundDelivery()
                     try await observation.observeWorkouts()
                 },
-                .publisher { state.$showProgram.publisher.map { _ in ._internal(.refreshFeatureFlagState) }},
-                .publisher { state.$showHistory.publisher.map { _ in ._internal(.refreshFeatureFlagState) }}
+                .publisher {
+                    Publishers.Merge(
+                        state.$showProgram.publisher.dropFirst(),
+                        state.$showHistory.publisher.dropFirst()
+                    )
+                    .map { _ in ._internal(.refreshFeatureFlagState) }
+                }
             )
         case .settingsButtonTapped:
             state.destination = .settings(.init())
