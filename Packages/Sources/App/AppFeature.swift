@@ -122,18 +122,6 @@ public struct AppFeature {
         .ifLet(\.history, action: \.history, then: HistoryFeature.init)
         .ifLet(\.program, action: \.program, then: PlaceholderProgramFeature.init)
         .ifLet(\.$destination, action: \.destination)
-        .onChange(of: \.showHistory) { _, _ in
-            Reduce { state, _ in
-                state.history = state.showHistory ? .init() : nil
-                return .none
-            }
-        }
-        .onChange(of: \.program) { _, _ in
-            Reduce { state, _ in
-                state.program = state.showProgram ? .init() : nil
-                return .none
-            }
-        }
 
         Scope(
             state: \.runList,
