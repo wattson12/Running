@@ -72,7 +72,13 @@ public struct AppFeature {
             case updateTab(State.Tab)
         }
 
+        @CasePathable
+        public enum Internal: Equatable {
+            case refreshFeatureFlagState
+        }
+
         case view(View)
+        case _internal(Internal)
         case permissions(PermissionsFeature.Action)
         case runList(RunListFeature.Action)
         case goalList(GoalListFeature.Action)
@@ -94,6 +100,8 @@ public struct AppFeature {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case let ._internal(action):
+                return _internal(action, state: &state)
             case let .permissions(action):
                 return permissions(action, state: &state)
             case let .runList(action):
@@ -157,6 +165,16 @@ public struct AppFeature {
             return .none
         case let .updateTab(tab):
             state.tab = tab
+            return .none
+        }
+    }
+
+    private func _internal(_ action: Action.Internal, state: inout State) -> EffectOf<Self> {
+        switch action {
+        case .refreshFeatureFlagState:
+            print("__debug", state.showProgram)
+            state.history = state.showHistory ? .init() : nil
+            state.program = state.showProgram ? .init() : nil
             return .none
         }
     }
