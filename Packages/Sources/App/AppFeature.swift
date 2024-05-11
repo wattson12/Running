@@ -1,3 +1,4 @@
+import Combine
 import ComposableArchitecture
 import Foundation
 import GoalList
@@ -61,6 +62,11 @@ public struct AppFeature {
             goalList = .init()
             history = nil
         }
+
+        mutating func refreshFeatureFlagState() {
+            history = showHistory ? .init() : nil
+            program = showProgram ? .init() : nil
+        }
     }
 
     @CasePathable
@@ -72,7 +78,13 @@ public struct AppFeature {
             case updateTab(State.Tab)
         }
 
+        @CasePathable
+        public enum Internal: Equatable {
+            case refreshFeatureFlagState
+        }
+
         case view(View)
+        case _internal(Internal)
         case permissions(PermissionsFeature.Action)
         case runList(RunListFeature.Action)
         case goalList(GoalListFeature.Action)
@@ -94,6 +106,8 @@ public struct AppFeature {
             switch action {
             case let .view(action):
                 return view(action, state: &state)
+            case let ._internal(action):
+                return _internal(action, state: &state)
             case let .permissions(action):
                 return permissions(action, state: &state)
             case let .runList(action):
@@ -114,18 +128,6 @@ public struct AppFeature {
         .ifLet(\.history, action: \.history, then: HistoryFeature.init)
         .ifLet(\.program, action: \.program, then: PlaceholderProgramFeature.init)
         .ifLet(\.$destination, action: \.destination)
-        .onChange(of: \.showHistory) { _, _ in
-            Reduce { state, _ in
-                state.history = state.showHistory ? .init() : nil
-                return .none
-            }
-        }
-        .onChange(of: \.program) { _, _ in
-            Reduce { state, _ in
-                state.program = state.showProgram ? .init() : nil
-                return .none
-            }
-        }
 
         Scope(
             state: \.runList,
@@ -143,13 +145,20 @@ public struct AppFeature {
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
         switch action {
         case .onAppear:
-            state.history = state.showHistory ? .init() : nil
-            state.program = state.showProgram ? .init() : nil
+            state.refreshFeatureFlagState()
+
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in
                     try await observation.enableBackgroundDelivery()
                     try await observation.observeWorkouts()
+                },
+                .publisher {
+                    Publishers.Merge(
+                        state.$showProgram.publisher.dropFirst(),
+                        state.$showHistory.publisher.dropFirst()
+                    )
+                    .map { _ in ._internal(.refreshFeatureFlagState) }
                 }
             )
         case .settingsButtonTapped:
@@ -157,6 +166,14 @@ public struct AppFeature {
             return .none
         case let .updateTab(tab):
             state.tab = tab
+            return .none
+        }
+    }
+
+    private func _internal(_ action: Action.Internal, state: inout State) -> EffectOf<Self> {
+        switch action {
+        case .refreshFeatureFlagState:
+            state.refreshFeatureFlagState()
             return .none
         }
     }
