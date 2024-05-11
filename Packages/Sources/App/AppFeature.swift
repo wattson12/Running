@@ -153,12 +153,15 @@ public struct AppFeature {
         case .onAppear:
             state.history = state.showHistory ? .init() : nil
             state.program = state.showProgram ? .init() : nil
+
             return .merge(
                 state.runList.refresh().map(Action.runList),
                 .run { _ in
                     try await observation.enableBackgroundDelivery()
                     try await observation.observeWorkouts()
-                }
+                },
+                .publisher { state.$showProgram.publisher.map { _ in ._internal(.refreshFeatureFlagState) }},
+                .publisher { state.$showHistory.publisher.map { _ in ._internal(.refreshFeatureFlagState) }}
             )
         case .settingsButtonTapped:
             state.destination = .settings(.init())
