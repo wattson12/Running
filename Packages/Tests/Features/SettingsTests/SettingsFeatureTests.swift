@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DependenciesAdditions
+import FeatureFlags
 @testable import Settings
 import XCTest
 
@@ -24,16 +25,16 @@ final class SettingsFeatureTests: XCTestCase {
                     version: buildNumber
                 )
 
-                $0.defaultAppStorage.set(showRunDetail, forKey: "show_run_detail")
-                $0.defaultAppStorage.set(showHistory, forKey: "history_feature")
+                $0.defaultAppStorage.set(showRunDetail, forKey: FeatureFlagKey.runDetail.name)
+                $0.defaultAppStorage.set(showHistory, forKey: FeatureFlagKey.history.name)
             }
         )
 
         await store.send(.view(.onAppear)) {
             $0.versionNumber = versionNumber
             $0.buildNumber = buildNumber
-            $0.showRunDetailFeatureFlag = showRunDetail
-            $0.showHistoryFeatureFlag = showHistory
+            $0.runDetailEnabled = showRunDetail
+            $0.historyEnabled = showHistory
         }
     }
 }

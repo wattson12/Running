@@ -1,5 +1,6 @@
 import Combine
 import ComposableArchitecture
+import FeatureFlags
 import Foundation
 import GoalList
 import HealthKitServiceInterface
@@ -34,8 +35,8 @@ public struct AppFeature {
         var history: HistoryFeature.State?
         var program: PlaceholderProgramFeature.State?
 
-        @Shared(.appStorage("history_feature")) var showHistory: Bool = false
-        @Shared(.appStorage("program_feature")) var showProgram: Bool = false
+        @Shared(.featureFlag(.history)) var historyEnabled: Bool = false
+        @Shared(.featureFlag(.program)) var programEnabled: Bool = false
 
         @Presents var destination: Destination.State?
 
@@ -64,8 +65,8 @@ public struct AppFeature {
         }
 
         mutating func refreshFeatureFlagState() {
-            history = showHistory ? .init() : nil
-            program = showProgram ? .init() : nil
+            history = historyEnabled ? .init() : nil
+            program = programEnabled ? .init() : nil
         }
     }
 
@@ -155,8 +156,8 @@ public struct AppFeature {
                 },
                 .publisher {
                     Publishers.Merge(
-                        state.$showProgram.publisher.dropFirst(),
-                        state.$showHistory.publisher.dropFirst()
+                        state.$historyEnabled.publisher.dropFirst(),
+                        state.$programEnabled.publisher.dropFirst()
                     )
                     .map { _ in ._internal(.refreshFeatureFlagState) }
                 }

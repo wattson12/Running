@@ -1,5 +1,6 @@
 @testable import App
 import ComposableArchitecture
+import FeatureFlags
 @testable import GoalList
 import RunList
 import Widgets
@@ -129,7 +130,7 @@ final class AppFeatureTests: XCTestCase {
             initialState: .init(history: nil),
             reducer: AppFeature.init,
             withDependencies: {
-                $0.defaultAppStorage.set(true, forKey: "history_feature")
+                $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.history.name)
 
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }

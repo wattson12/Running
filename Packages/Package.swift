@@ -27,6 +27,7 @@ extension String {
     static let model: Self = "Model"
     static let repository: Self = "Repository"
     static let resources: Self = "Resources"
+    static let featureFlags: Self = "FeatureFlags"
     
     static func core(_ package: String) -> Self {
         "Sources/Core/\(package)"
@@ -92,6 +93,7 @@ let package = Package(
         .library(name: .program),
         .library(name: .repository),
         .library(name: .resources),
+        .library(name: .featureFlags),
         .library(name: .healthKitServiceInterface),
         .library(name: .healthKitServiceLive),
         .library(name: .widgets),
@@ -116,6 +118,7 @@ let package = Package(
                 .target(name: .repository),
                 .target(name: .designSystem),
                 .target(name: .widgets),
+                .target(name: .featureFlags),
             ],
             path: .feature(.runList, in: .runs)
         ),
@@ -179,6 +182,7 @@ let package = Package(
                 .target(name: .settings),
                 .target(name: .history),
                 .target(name: .program),
+                .target(name: .featureFlags),
             ]
         ),
         .target(
@@ -207,6 +211,16 @@ let package = Package(
                 
             ],
             path: .core(.cache)
+        ),
+        .target(
+            name: .featureFlags,
+            dependencies: [
+                .composableArchitecture,
+                .dependencies,
+                .dependenciesMacros,
+                
+            ],
+            path: .core(.featureFlags)
         ),
         .target(
             name: .goalList,
@@ -253,6 +267,7 @@ let package = Package(
                 .dependenciesAdditions,
                 .target(name: .designSystem),
                 .target(name: .cache),
+                .target(name: .featureFlags),
             ],
             path: .feature(.settings)
         ),
