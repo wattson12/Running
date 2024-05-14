@@ -5,9 +5,11 @@ import Model
 import Resources
 import SwiftUI
 
+@ViewAction(for: GoalDetailFeature.self)
 struct GoalChartView: View {
     @Bindable public var store: StoreOf<GoalDetailFeature>
     let columns: [ChartColumn]
+    @State var displayColumnData: [Bool]
     let visibleColumnCount: Int
     @Environment(\.tintColor) var tint
 
@@ -28,18 +30,23 @@ struct GoalChartView: View {
             columns = .yearly(runs: runs)
             visibleColumnCount = 12
         }
+
+        displayColumnData = .init(repeating: !store.allowAnimation, count: columns.count)
     }
 
     var body: some View {
         VStack {
             Chart {
-                ForEach(columns) { column in
+                ForEach(
+                    Array(columns.enumerated()),
+                    id: \.element.id
+                ) { index, column in
                     if !column.runs.isEmpty {
                         ForEach(column.runs) { run in
                             BarMark(
                                 x: .value("index", column.index),
-                                yStart: .value("distance", run.start.converted(to: .primaryUnit()).value),
-                                yEnd: .value("distance", run.end.converted(to: .primaryUnit()).value)
+                                yStart: .value("distance", displayColumnData[index] ? run.start.converted(to: .primaryUnit()).value : 0),
+                                yEnd: .value("distance", displayColumnData[index] ? run.end.converted(to: .primaryUnit()).value : 0)
                             )
                             .foregroundStyle(by: .value("run", run.id.uuidString))
                             .cornerRadius(0)
@@ -54,14 +61,14 @@ struct GoalChartView: View {
                     if column.displayCumulativeDistance {
                         LineMark(
                             x: .value("index", column.index),
-                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                            y: .value("distance", displayColumnData[index] ? column.cumulativeDistance.converted(to: .primaryUnit()).value : 0)
                         )
                         .foregroundStyle(tint)
                         .interpolationMethod(.monotone)
 
                         AreaMark(
                             x: .value("index", column.index),
-                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                            y: .value("distance", displayColumnData[index] ? column.cumulativeDistance.converted(to: .primaryUnit()).value : 0)
                         )
                         .interpolationMethod(.monotone)
                         .foregroundStyle(
@@ -127,7 +134,23 @@ struct GoalChartView: View {
                 .padding(.bottom, 4)
             }
         }
-        .animation(.default, value: store.showTarget)
+        .task {
+            // short delay to allow for push
+            try? await Task.sleep(for: .seconds(0.25))
+
+            guard store.allowAnimation else { return }
+            send(.animationShown)
+
+            // animate each column with slightly longer delay
+            for index in 0 ..< columns.count {
+                withAnimation(
+                    .interpolatingSpring(stiffness: 150, damping: 10)
+                        .delay(Double(index + 1) * 1 / Double(columns.count))
+                ) {
+                    displayColumnData[index] = true
+                }
+            }
+        }
     }
 }
 
