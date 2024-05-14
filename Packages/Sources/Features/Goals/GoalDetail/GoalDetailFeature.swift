@@ -11,6 +11,7 @@ public struct GoalDetailFeature: Reducer {
         var runs: [Run]?
         var emptyStateRuns: [Run]
 
+        @Shared var allowAnimation: Bool
         @Shared var showTarget: Bool
 
         public init(
@@ -25,6 +26,7 @@ public struct GoalDetailFeature: Reducer {
             self.runs = runs
             self.emptyStateRuns = emptyStateRuns
 
+            _allowAnimation = .init(wrappedValue: true, .inMemory("goal_detail.animation_\(goal.period.rawValue)"))
             _showTarget = .init(wrappedValue: showTarget, .appStorage("show_target_\(goal.period.rawValue)"))
         }
 
