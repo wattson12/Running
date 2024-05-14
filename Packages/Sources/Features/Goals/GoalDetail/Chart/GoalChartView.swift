@@ -36,13 +36,16 @@ struct GoalChartView: View {
     var body: some View {
         VStack {
             Chart {
-                ForEach(columns) { column in
+                ForEach(
+                    Array(columns.enumerated()),
+                    id: \.element.id
+                ) { index, column in
                     if !column.runs.isEmpty {
                         ForEach(column.runs) { run in
                             BarMark(
                                 x: .value("index", column.index),
-                                yStart: .value("distance", run.start.converted(to: .primaryUnit()).value),
-                                yEnd: .value("distance", run.end.converted(to: .primaryUnit()).value)
+                                yStart: .value("distance", displayColumnData[index] ? run.start.converted(to: .primaryUnit()).value : 0),
+                                yEnd: .value("distance", displayColumnData[index] ? run.end.converted(to: .primaryUnit()).value : 0)
                             )
                             .foregroundStyle(by: .value("run", run.id.uuidString))
                             .cornerRadius(0)
@@ -57,14 +60,14 @@ struct GoalChartView: View {
                     if column.displayCumulativeDistance {
                         LineMark(
                             x: .value("index", column.index),
-                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                            y: .value("distance", displayColumnData[index] ? column.cumulativeDistance.converted(to: .primaryUnit()).value : 0)
                         )
                         .foregroundStyle(tint)
                         .interpolationMethod(.monotone)
 
                         AreaMark(
                             x: .value("index", column.index),
-                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
+                            y: .value("distance", displayColumnData[index] ? column.cumulativeDistance.converted(to: .primaryUnit()).value : 0)
                         )
                         .interpolationMethod(.monotone)
                         .foregroundStyle(
@@ -130,7 +133,6 @@ struct GoalChartView: View {
                 .padding(.bottom, 4)
             }
         }
-//        .animation(.interactiveSpring, value: store.showTarget)
         .onAppear {
             for index in 0 ..< columns.count {
                 withAnimation(.interactiveSpring.delay(Double(index + 1) * 0.1)) {
