@@ -8,6 +8,7 @@ import SwiftUI
 struct GoalChartView: View {
     @Bindable public var store: StoreOf<GoalDetailFeature>
     let columns: [ChartColumn]
+    @State var displayColumnData: [Bool]
     let visibleColumnCount: Int
     @Environment(\.tintColor) var tint
 
@@ -28,6 +29,8 @@ struct GoalChartView: View {
             columns = .yearly(runs: runs)
             visibleColumnCount = 12
         }
+
+        displayColumnData = .init(repeating: false, count: columns.count)
     }
 
     var body: some View {
@@ -127,7 +130,14 @@ struct GoalChartView: View {
                 .padding(.bottom, 4)
             }
         }
-        .animation(.default, value: store.showTarget)
+//        .animation(.interactiveSpring, value: store.showTarget)
+        .onAppear {
+            for index in 0 ..< columns.count {
+                withAnimation(.interactiveSpring.delay(Double(index + 1) * 0.1)) {
+                    displayColumnData[index] = true
+                }
+            }
+        }
     }
 }
 
