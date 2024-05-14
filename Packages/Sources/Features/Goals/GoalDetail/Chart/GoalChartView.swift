@@ -5,6 +5,7 @@ import Model
 import Resources
 import SwiftUI
 
+@ViewAction(for: GoalDetailFeature.self)
 struct GoalChartView: View {
     @Bindable public var store: StoreOf<GoalDetailFeature>
     let columns: [ChartColumn]
@@ -30,7 +31,7 @@ struct GoalChartView: View {
             visibleColumnCount = 12
         }
 
-        displayColumnData = .init(repeating: false, count: columns.count)
+        displayColumnData = .init(repeating: !store.allowAnimation, count: columns.count)
     }
 
     var body: some View {
@@ -133,9 +134,16 @@ struct GoalChartView: View {
                 .padding(.bottom, 4)
             }
         }
-        .onAppear {
+        .task {
+            // short delay to allow for push
+            try? await Task.sleep(for: .seconds(0.25))
+
+            guard store.allowAnimation else { return }
+            send(.animationShown)
+
+            // animate each column with slightly longer delay
             for index in 0 ..< columns.count {
-                withAnimation(.interactiveSpring.delay(Double(index + 1) * 0.1)) {
+                withAnimation(.interactiveSpring.delay(Double(index + 1) * 1 / Double(columns.count))) {
                     displayColumnData[index] = true
                 }
             }

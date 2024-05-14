@@ -105,6 +105,7 @@ public struct GoalDetailFeature: Reducer {
         @CasePathable
         public enum View: Equatable {
             case onAppear
+            case animationShown
         }
 
         @CasePathable
@@ -154,6 +155,9 @@ public struct GoalDetailFeature: Reducer {
                 }
                 await send(._internal(.runsFetched(result)))
             }
+        case .animationShown:
+            state.allowAnimation = false
+            return .none
         }
     }
 
