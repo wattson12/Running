@@ -19,6 +19,7 @@ struct GoalChartView: View {
     ) {
         self.store = store
 
+        let columns: [ChartColumn]
         switch store.goal.period {
         case .weekly:
             columns = .weekly(runs: runs)
@@ -30,6 +31,7 @@ struct GoalChartView: View {
             columns = .yearly(runs: runs)
             visibleColumnCount = 12
         }
+        self.columns = columns
 
         displayColumnData = .init(repeating: !store.allowAnimation, count: columns.count)
     }
