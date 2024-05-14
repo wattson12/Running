@@ -143,7 +143,10 @@ struct GoalChartView: View {
 
             // animate each column with slightly longer delay
             for index in 0 ..< columns.count {
-                withAnimation(.interactiveSpring.delay(Double(index + 1) * 1 / Double(columns.count))) {
+                withAnimation(
+                    .interpolatingSpring(stiffness: 150, damping: 10)
+                        .delay(Double(index + 1) * 1 / Double(columns.count))
+                ) {
                     displayColumnData[index] = true
                 }
             }
