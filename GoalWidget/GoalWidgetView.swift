@@ -87,6 +87,7 @@ public struct GoalWidgetView: View {
             }
             .padding(8)
         }
+        .animation(.default, value: entry.progress)
         .widgetURL(widgetURL)
     }
 
