@@ -74,6 +74,7 @@ public struct GoalWidgetView: View {
                             .precision(.fractionLength(0 ..< 2))
                     )
                     .font(.title2.bold())
+                    .contentTransition(.numericText())
                 } else {
                     Text("Tap to set goal")
                         .multilineTextAlignment(.center)
@@ -86,6 +87,7 @@ public struct GoalWidgetView: View {
             }
             .padding(8)
         }
+        .animation(.default, value: entry.progress)
         .widgetURL(widgetURL)
     }
 
