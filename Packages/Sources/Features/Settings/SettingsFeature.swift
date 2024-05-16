@@ -17,7 +17,7 @@ public struct SettingsFeature {
         @Shared(.featureFlag(FeatureFlagKey.history)) var historyEnabled: Bool = false
         @Shared(.featureFlag(.program)) var programEnabled: Bool = false
 
-        var displayFeatureFlags: Bool = ProcessInfo.processInfo.environment["ENV.TESTFLIGHT"] != nil
+        var displayFeatureFlags: Bool = ProcessInfo.processInfo.environment["ENV.TESTFLIGHT"] != nil || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
 
         public init() {}
     }
