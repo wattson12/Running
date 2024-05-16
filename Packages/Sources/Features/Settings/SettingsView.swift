@@ -36,14 +36,16 @@ public struct SettingsView: View {
                     buildInfoSection()
                 }
 
-                Section(
-                    header: Text(L10n.Settings.Section.betaFeatures),
-                    content: {
-                        Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.runDetailEnabled)
-                        Toggle(L10n.Settings.Section.BetaFeatures.history, isOn: $store.historyEnabled)
-                        Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: $store.programEnabled)
-                    }
-                )
+                if store.displayFeatureFlags {
+                    Section(
+                        header: Text(L10n.Settings.Section.betaFeatures),
+                        content: {
+                            Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.runDetailEnabled)
+                            Toggle(L10n.Settings.Section.BetaFeatures.history, isOn: $store.historyEnabled)
+                            Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: $store.programEnabled)
+                        }
+                    )
+                }
 
                 Section(
                     header: Text(L10n.Settings.Section.cache),
