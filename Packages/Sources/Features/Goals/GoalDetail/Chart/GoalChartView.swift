@@ -101,6 +101,7 @@ struct GoalChartView: View {
             }
             .chartScrollableAxes([.horizontal])
             .chartXVisibleDomain(length: visibleColumnCount)
+            .chartYScale(domain: distanceRange)
             .chartLegend(.hidden)
             .chartXAxis {
                 AxisMarks { value in
@@ -153,6 +154,24 @@ struct GoalChartView: View {
                 }
             }
         }
+    }
+
+    var distanceRange: ClosedRange<Int> {
+        let min = 0
+        let maxValue: Int
+        let goalValue: Int
+        if store.showTarget, let goal = store.goal.target?.converted(to: .primaryUnit()) {
+            goalValue = Int(ceil(goal.value))
+        } else {
+            goalValue = store.showTarget ? 0 : 20
+        }
+
+        if let cumulativeDistance = columns.last?.cumulativeDistance {
+            maxValue = max(goalValue, Int(cumulativeDistance.converted(to: .primaryUnit()).value))
+        } else {
+            maxValue = goalValue
+        }
+        return min ... (maxValue + 10)
     }
 }
 
