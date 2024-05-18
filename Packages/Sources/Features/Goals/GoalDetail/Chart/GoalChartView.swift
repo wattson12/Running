@@ -130,7 +130,7 @@ struct GoalChartView: View {
                     ChartButton(
                         title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",
-                        selected: $store.showTarget
+                        selected: $store.showTarget.animation()
                     )
                 }
                 .padding(.horizontal, 16)
