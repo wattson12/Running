@@ -19,7 +19,7 @@ public struct SettingsFeature {
 
         var displayFeatureFlags: Bool {
             @Dependency(\.processInfo) var processInfo
-            let testflight = processInfo.environment["ENV.TESTFLIGHT"] != nil
+            let testflight = processInfo.environment["ENV_TESTFLIGHT"] != nil
             let preview = processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
             return testflight || preview
         }
