@@ -137,20 +137,21 @@ struct GoalChartView: View {
                 .padding(.bottom, 4)
             }
         }
-        .task {
-            // short delay to allow for push
-            try? await Task.sleep(for: .seconds(0.25))
+        .onAppear {
+            Task { @MainActor in
+                // short delay to allow for push (should be shorted but animations break if much shorted than this)
+                try? await Task.sleep(for: .seconds(1.25))
 
-            guard store.allowAnimation else { return }
-            send(.animationShown)
+                guard store.allowAnimation else { return }
+                send(.animationShown)
 
-            // animate each column with slightly longer delay
-            for index in 0 ..< columns.count {
-                withAnimation(
-                    .interpolatingSpring(stiffness: 150, damping: 10)
-                        .delay(Double(index + 1) * 1 / Double(columns.count))
-                ) {
-                    displayColumnData[index] = true
+                // animate each column with slightly longer delay
+                for index in 0 ..< columns.count {
+                    withAnimation(
+                        .interpolatingSpring(stiffness: 150, damping: 10)
+                    ) {
+                        displayColumnData[index] = true
+                    }
                 }
             }
         }
