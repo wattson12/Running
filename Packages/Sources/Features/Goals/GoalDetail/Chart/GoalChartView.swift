@@ -101,6 +101,7 @@ struct GoalChartView: View {
             }
             .chartScrollableAxes([.horizontal])
             .chartXVisibleDomain(length: visibleColumnCount)
+            .chartYScale(domain: distanceRange)
             .chartLegend(.hidden)
             .chartXAxis {
                 AxisMarks { value in
@@ -129,30 +130,49 @@ struct GoalChartView: View {
                     ChartButton(
                         title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",
-                        selected: $store.showTarget
+                        selected: $store.showTarget.animation()
                     )
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 4)
             }
         }
-        .task {
-            // short delay to allow for push
-            try? await Task.sleep(for: .seconds(0.25))
+        .onAppear {
+            Task { @MainActor in
+                // short delay to allow for push (should be shorted but animations break if much shorted than this)
+                try? await Task.sleep(for: .seconds(1.25))
 
-            guard store.allowAnimation else { return }
-            send(.animationShown)
+                guard store.allowAnimation else { return }
+                send(.animationShown)
 
-            // animate each column with slightly longer delay
-            for index in 0 ..< columns.count {
-                withAnimation(
-                    .interpolatingSpring(stiffness: 150, damping: 10)
-                        .delay(Double(index + 1) * 1 / Double(columns.count))
-                ) {
-                    displayColumnData[index] = true
+                // animate each column with slightly longer delay
+                for index in 0 ..< columns.count {
+                    withAnimation(
+                        .interpolatingSpring(stiffness: 150, damping: 10)
+                    ) {
+                        displayColumnData[index] = true
+                    }
                 }
             }
         }
+    }
+
+    var distanceRange: ClosedRange<Int> {
+        let min = 0
+        let maxValue: Int
+        let goalValue: Int
+        if store.showTarget, let goal = store.goal.target?.converted(to: .primaryUnit()) {
+            goalValue = Int(ceil(goal.value))
+        } else {
+            goalValue = store.showTarget ? 0 : 20
+        }
+
+        if let cumulativeDistance = columns.last?.cumulativeDistance {
+            maxValue = max(goalValue, Int(cumulativeDistance.converted(to: .primaryUnit()).value))
+        } else {
+            maxValue = goalValue
+        }
+        return min ... (maxValue + 10)
     }
 }
 

@@ -70,7 +70,7 @@
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "ENV.TESTFLIGHT"
+            key = "ENV_TESTFLIGHT"
             value = "YES"
             isEnabled = "YES">
          </EnvironmentVariable>

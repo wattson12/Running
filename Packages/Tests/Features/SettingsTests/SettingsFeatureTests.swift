@@ -48,7 +48,7 @@ final class SettingsFeatureTests: XCTestCase {
 
         for (testflight, preview, expected, line) in inputs {
             let environment: [String: String?] = [
-                "ENV.TESTFLIGHT": testflight,
+                "ENV_TESTFLIGHT": testflight,
                 "XCODE_RUNNING_FOR_PREVIEWS": preview,
             ]
             let sut: SettingsFeature.State = .init()
