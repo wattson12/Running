@@ -14,6 +14,7 @@ import SwiftUI
 @ViewAction(for: AppFeature.self)
 public struct AppView: View {
     @Bindable public var store: StoreOf<AppFeature>
+    @Environment(\.scenePhase) var scenePhase
 
     public init(store: StoreOf<AppFeature>) {
         self.store = store
@@ -95,6 +96,9 @@ public struct AppView: View {
             }
             .onAppear { send(.onAppear) }
             .tint(Color(asset: Asset.blue))
+            .onChange(of: scenePhase) { old, new in
+                send(.scenePhaseUpdated(old, new))
+            }
         }
     }
 }

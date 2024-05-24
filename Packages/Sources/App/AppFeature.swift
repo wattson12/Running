@@ -10,6 +10,7 @@ import Program
 import Repository
 import RunList
 import Settings
+import SwiftUI
 
 @Reducer
 public struct AppFeature {
@@ -77,6 +78,7 @@ public struct AppFeature {
             case onAppear
             case settingsButtonTapped
             case updateTab(State.Tab)
+            case scenePhaseUpdated(ScenePhase, ScenePhase)
         }
 
         @CasePathable
@@ -168,6 +170,9 @@ public struct AppFeature {
         case let .updateTab(tab):
             state.tab = tab
             return .none
+        case let .scenePhaseUpdated(old, new):
+            guard old != .active, new == .active else { return .none }
+            return state.runList.refresh().map(Action.runList)
         }
     }
 
