@@ -14,14 +14,19 @@ public extension RunListFeature.State {
 
         isLoading = true
 
+        let cachedRunsEffect: Effect<RunListFeature.Action>
         if let cachedRuns = runningWorkouts.allRunningWorkouts.cache() {
             runs = .init(uniqueElements: cachedRuns)
+            cachedRunsEffect = .send(.delegate(.runsRefreshed))
         } else if userDefaults.bool(forKey: .initialImportCompleted) != true {
             isInitialImport = true
+            cachedRunsEffect = .none
+        } else {
+            cachedRunsEffect = .none
         }
 
         return .concatenate(
-            .send(.delegate(.runsRefreshed)),
+            cachedRunsEffect,
             .run { send in
                 do {
                     let runs = try await runningWorkouts.allRunningWorkouts.remote()
