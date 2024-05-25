@@ -38,6 +38,7 @@ extension NumberFormatter {
 
 public struct GoalWidgetView: View {
     public var entry: GoalTimelineProvider.Entry
+    @Environment(\.locale) var locale
 
     public init(
         entry: GoalTimelineProvider.Entry
@@ -74,6 +75,14 @@ public struct GoalWidgetView: View {
                             .precision(.fractionLength(0 ..< 2))
                     )
                     .font(.title2.bold())
+                    .foregroundStyle(.primary)
+                    .contentTransition(.numericText())
+
+                    Text(
+                        entry.distance.fullValue(locale: locale)
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
                 } else {
                     Text("Tap to set goal")
