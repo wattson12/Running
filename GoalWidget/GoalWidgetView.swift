@@ -38,6 +38,7 @@ extension NumberFormatter {
 
 public struct GoalWidgetView: View {
     public var entry: GoalTimelineProvider.Entry
+    @Environment(\.locale) var locale
 
     public init(
         entry: GoalTimelineProvider.Entry
@@ -74,6 +75,14 @@ public struct GoalWidgetView: View {
                             .precision(.fractionLength(0 ..< 2))
                     )
                     .font(.title2.bold())
+                    .foregroundStyle(.primary)
+                    .contentTransition(.numericText())
+
+                    Text(
+                        entry.distance.fullValue(locale: locale)
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
                 } else {
                     Text("Tap to set goal")
@@ -100,6 +109,22 @@ public struct GoalWidgetView: View {
             return URL(string: "running://_/goals/\(entry.period.rawValue)")
         }
     }
+}
+
+#Preview(
+    "With Goal",
+    as: .systemSmall
+) {
+    GoalWidget()
+} timeline: {
+    GoalEntry(
+        date: .now,
+        period: .weekly,
+        progress: 0.5,
+        distance: .init(value: 50, unit: .kilometers),
+        target: .init(value: 100, unit: .kilometers),
+        missingPermissions: false
+    )
 }
 
 #Preview(
