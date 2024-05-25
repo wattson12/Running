@@ -9,7 +9,6 @@ import SwiftUI
 struct GoalChartView: View {
     @Bindable public var store: StoreOf<GoalDetailFeature>
     let columns: [ChartColumn]
-    @State var displayColumnData: [Bool]
     let visibleColumnCount: Int
     @Environment(\.tintColor) var tint
 
@@ -32,8 +31,6 @@ struct GoalChartView: View {
             visibleColumnCount = 12
         }
         self.columns = columns
-
-        displayColumnData = .init(repeating: !store.allowAnimation, count: columns.count)
     }
 
     var body: some View {
@@ -42,13 +39,13 @@ struct GoalChartView: View {
                 ForEach(
                     Array(columns.enumerated()),
                     id: \.element.id
-                ) { index, column in
+                ) { _, column in
                     if !column.runs.isEmpty {
                         ForEach(column.runs) { run in
                             BarMark(
                                 x: .value("index", column.index),
-                                yStart: .value("distance", displayColumnData[index] ? run.start.converted(to: .primaryUnit()).value : 0),
-                                yEnd: .value("distance", displayColumnData[index] ? run.end.converted(to: .primaryUnit()).value : 0)
+                                yStart: .value("distance", run.start.converted(to: .primaryUnit()).value),
+                                yEnd: .value("distance", run.end.converted(to: .primaryUnit()).value)
                             )
                             .foregroundStyle(by: .value("run", run.id.uuidString))
                             .cornerRadius(0)
@@ -63,14 +60,14 @@ struct GoalChartView: View {
                     if column.displayCumulativeDistance {
                         LineMark(
                             x: .value("index", column.index),
-                            y: .value("distance", displayColumnData[index] ? column.cumulativeDistance.converted(to: .primaryUnit()).value : 0)
+                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
                         )
                         .foregroundStyle(tint)
                         .interpolationMethod(.monotone)
 
                         AreaMark(
                             x: .value("index", column.index),
-                            y: .value("distance", displayColumnData[index] ? column.cumulativeDistance.converted(to: .primaryUnit()).value : 0)
+                            y: .value("distance", column.cumulativeDistance.converted(to: .primaryUnit()).value)
                         )
                         .interpolationMethod(.monotone)
                         .foregroundStyle(
