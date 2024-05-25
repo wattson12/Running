@@ -109,9 +109,11 @@ struct GoalRowView: View {
                             .font(.title.bold())
                             .foregroundColor(.primary)
 
-                        Text(subtitle)
-                            .font(.callout)
-                            .foregroundColor(.secondary)
+                        ForEach(Array(subtitles.enumerated()), id: \.offset) { _, subtitle in
+                            Text(subtitle)
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                        }
 
                         Spacer()
 
@@ -137,15 +139,22 @@ struct GoalRowView: View {
         )
     }
 
-    var subtitle: String {
+    var subtitles: [String] {
         switch state {
         case .noGoal:
-            return "No goal set"
+            return [
+                "No goal set",
+            ]
         case let .goalSet(distance, target) where distance < target:
             let remaining = target - distance
-            return formattedRemaining(remaining: remaining)
+            return [
+                formattedDistance(distance: distance),
+                formattedRemaining(remaining: remaining),
+            ]
         case let .goalSet(distance, _):
-            return formattedDistance(distance: distance)
+            return [
+                formattedDistance(distance: distance),
+            ]
         }
     }
 
