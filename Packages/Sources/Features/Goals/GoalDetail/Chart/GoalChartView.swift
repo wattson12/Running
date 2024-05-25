@@ -134,24 +134,6 @@ struct GoalChartView: View {
                 .padding(.bottom, 4)
             }
         }
-        .onAppear {
-            Task { @MainActor in
-                // short delay to allow for push (should be shorted but animations break if much shorted than this)
-                try? await Task.sleep(for: .seconds(1.25))
-
-                guard store.allowAnimation else { return }
-                send(.animationShown)
-
-                // animate each column with slightly longer delay
-                for index in 0 ..< columns.count {
-                    withAnimation(
-                        .interpolatingSpring(stiffness: 150, damping: 10)
-                    ) {
-                        displayColumnData[index] = true
-                    }
-                }
-            }
-        }
     }
 
     var distanceRange: ClosedRange<Int> {
