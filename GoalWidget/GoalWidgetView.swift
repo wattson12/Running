@@ -112,6 +112,22 @@ public struct GoalWidgetView: View {
 }
 
 #Preview(
+    "With Goal",
+    as: .systemSmall
+) {
+    GoalWidget()
+} timeline: {
+    GoalEntry(
+        date: .now,
+        period: .weekly,
+        progress: 0.5,
+        distance: .init(value: 50, unit: .kilometers),
+        target: .init(value: 100, unit: .kilometers),
+        missingPermissions: false
+    )
+}
+
+#Preview(
     "Missing Target",
     as: .systemSmall
 ) {
