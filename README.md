@@ -7,7 +7,7 @@ This is an iOS app which allows a user to:
 - Set distance based goals (e.g. a weekly running target)
 - View a summary of goals in widget(s)
 
-The app is built as a combination of a place to experiment with new TCA / iOS features and to create a simple app I wanted to use. The app is available on the [App Store](https://apps.apple.com/gb/app/running-goals/id6463000485) but it might not be up to date there since I mostly install via TestFlight
+The app is built as a combination of a place to experiment with new features (iOS / TCA) and to create a simple app I wanted to use. The app is available on the [App Store](https://apps.apple.com/gb/app/running-goals/id6463000485) but it might not be up to date there since I mostly install via TestFlight
 
 ### Features 
 
