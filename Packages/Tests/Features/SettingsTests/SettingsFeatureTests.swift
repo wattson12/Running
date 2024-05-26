@@ -42,20 +42,24 @@ final class SettingsFeatureTests: XCTestCase {
         let inputs: [(String?, String?, Bool, UInt)] = [
             (nil, nil, false, #line),
             (nil, "1", true, #line),
-            ("1", nil, true, #line),
-            ("1", "1", true, #line),
+            ("YES", nil, true, #line),
+            ("YES", "1", true, #line),
+            ("NO", nil, false, #line),
+            (UUID().uuidString, nil, false, #line),
         ]
 
         for (testflight, preview, expected, line) in inputs {
             let environment: [String: String?] = [
-                "ENV_TESTFLIGHT": testflight,
                 "XCODE_RUNNING_FOR_PREVIEWS": preview,
+            ]
+            let bundleInfo: [String: Any]? = [
+                "IS_TESTFLIGHT_BUILD": testflight as Any,
             ]
             let sut: SettingsFeature.State = .init()
             let displayFeatureFlags = withDependencies {
                 $0.processInfo.$environment = environment.compactMapValues { $0 }
             } operation: {
-                sut.displayFeatureFlags
+                sut._displayFeatureFlags(bundleInfo: bundleInfo)
             }
             XCTAssertEqual(displayFeatureFlags, expected, line: line)
         }

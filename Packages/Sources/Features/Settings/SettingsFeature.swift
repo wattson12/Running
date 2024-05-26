@@ -17,9 +17,11 @@ public struct SettingsFeature {
         @Shared(.featureFlag(FeatureFlagKey.history)) var historyEnabled: Bool = false
         @Shared(.featureFlag(.program)) var programEnabled: Bool = false
 
-        var displayFeatureFlags: Bool {
+        var displayFeatureFlags: Bool { _displayFeatureFlags() }
+
+        func _displayFeatureFlags(bundleInfo: [String: Any]? = Bundle.main.infoDictionary) -> Bool {
             @Dependency(\.processInfo) var processInfo
-            let testflight = processInfo.environment["ENV_TESTFLIGHT"] != nil
+            let testflight = (bundleInfo?["IS_TESTFLIGHT_BUILD"] as? String) == "YES"
             let preview = processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
             return testflight || preview
         }
