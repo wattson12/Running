@@ -7,6 +7,8 @@ This is an iOS app which allows a user to:
 - Set distance based goals (e.g. a weekly running target)
 - View a summary of goals in widget(s)
 
+The app is built as a combination of a place to experiment with new TCA / iOS features and to create a simple app I wanted to use. The app is available on the [App Store](https://apps.apple.com/gb/app/running-goals/id6463000485) but it might not be up to date there since I mostly install via TestFlight
+
 ### Features 
 
 | Goals | Goal Detail | Runs | Widget |
@@ -19,9 +21,9 @@ This is an iOS app which allows a user to:
 
 The app is architected using [The Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) and generally follows the "TCA Style" which includes:
 - Small frameworks (e.g. one framework per screen)
-- SPM used for framework creation with a simple Xcodeproj importing local packages
-- Controlled dependencies (HealthKit is abstracted as a dependency allowing the app to run more predictably in a preview / simulator)
-- Unit tests for feature logic (including navigation)
+- SPM used for framework creation with a simple Xcode project importing local packages
+- Controlled dependencies (e.g. HealthKit is abstracted as a dependency allowing the app to run more predictably in a preview / simulator)
+- Unit tests (not as much as I would write if I was getting paid for this, but some basics are covered)
 
 All UI is in SwiftUI 
 
