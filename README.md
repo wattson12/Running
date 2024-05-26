@@ -29,13 +29,3 @@ All UI is in SwiftUI
 
 - [SwiftGen](https://github.com/SwiftGen/SwiftGen) for creating type safe references to resources
 - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (via git hook) to format the code
-
-### Support
-
-The app runs on iOS 17+. The main reason for this limitation is to use SwiftData as a caching layer  
-
-### Development 
-
-I work on most of the features by opening the SPM package (`xed Packages`), selecting the target for the feature I'm working on and developing via previews / tests. You can open the full app with `xed Running.xcodeproj`
-
-Running in the simulator will use preview dependency values and running on a device will use live values
