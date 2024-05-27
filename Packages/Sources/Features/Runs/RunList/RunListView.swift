@@ -24,7 +24,7 @@ public struct RunListView: View {
                         RunListItemView(
                             run: run,
                             tapped: {
-                                send(.runTapped(run))
+                                send(.runTapped(run.run))
                             }
                         )
                     }

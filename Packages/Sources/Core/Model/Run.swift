@@ -64,8 +64,16 @@ public extension Run {
         @Dependency(\.date) var date
         @Dependency(\.calendar) var calendar
 
+        let startDate: Date
+        if days == 0, ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] != nil {
+            let currentDayStartDate = calendar.date(byAdding: .day, value: days, to: date.now)!
+            startDate = calendar.date(byAdding: .hour, value: -2, to: currentDayStartDate)!
+        } else {
+            startDate = calendar.date(byAdding: .day, value: days, to: date.now)!
+        }
+
         return .mock(
-            startDate: calendar.date(byAdding: .day, value: days, to: date.now)!,
+            startDate: startDate,
             distance: .init(value: distance, unit: unit),
             duration: .init(value: pace * distance, unit: .minutes)
         )

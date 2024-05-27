@@ -32,7 +32,7 @@ final class RunListFeatureTests: XCTestCase {
 
         // fetch runs and setup sections on appearance
         await store.send(.view(.onAppear)) {
-            $0.runs = .init(uniqueElements: runs)
+            $0.runs = .init(uniqueElements: runs.map(RunState.init))
             $0.isLoading = true
         }
 
@@ -82,6 +82,7 @@ final class RunListFeatureTests: XCTestCase {
             ),
             reducer: RunListFeature.init,
             withDependencies: {
+                $0.date = .constant(.now)
                 $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.runDetail.name)
             }
         )
@@ -104,6 +105,7 @@ final class RunListFeatureTests: XCTestCase {
             ),
             reducer: RunListFeature.init,
             withDependencies: {
+                $0.date = .constant(.now)
                 $0.defaultAppStorage.set(false, forKey: FeatureFlagKey.runDetail.name)
             }
         )

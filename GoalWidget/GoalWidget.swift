@@ -13,12 +13,29 @@ public struct GoalWidget: Widget {
             content: { entry in
                 GoalWidgetView(entry: entry)
                     .containerBackground(.regularMaterial, for: .widget)
+                    .localeForScreenshots()
             }
         )
         .configurationDisplayName("Goal Progress")
         .description("Shows an overview of progress within a current goal")
         .supportedFamilies([.systemSmall])
     }
+}
+
+private extension View {
+    #if targetEnvironment(simulator)
+        @ViewBuilder func localeForScreenshots() -> some View {
+            if let screenshotLocale = ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] {
+                environment(\.locale, .init(identifier: screenshotLocale))
+            } else {
+                environment(\.locale, .init(identifier: "en_AU"))
+            }
+        }
+    #else
+        @ViewBuilder func localeForScreenshots() -> some View {
+            self
+        }
+    #endif
 }
 
 #Preview(

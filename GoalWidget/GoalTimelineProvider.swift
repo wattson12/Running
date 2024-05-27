@@ -31,10 +31,20 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
 
     public func timeline(for configuration: GoalWidgetIntent, in context: Context) async -> Timeline<GoalEntry> {
         do {
-            let entries: [GoalEntry] = try await withDependencies {
+            let entries: [GoalEntry] = try await withDependencies { dependencyValues in
                 #if targetEnvironment(simulator)
-                    $0 = .preview
-                    $0.date = .constant(.preview)
+                    dependencyValues = .preview
+                    dependencyValues.date = .constant(.preview)
+                    // Make sure date is using preview value when creating screenshot mock data
+                    if ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] != nil {
+                        dependencyValues.date = .constant(.screenshots)
+                        withDependencies {
+                            $0.date = .constant(.screenshots)
+                        } operation: {
+                            dependencyValues.updateForScreenshots()
+                        }
+                    }
+                    dependencyValues.defaultAppStorage = .standard
                 #endif
             } operation: {
                 try await timelineEntries(for: configuration, in: context)
@@ -88,5 +98,24 @@ extension Date {
     func endOfWeek(calendar: Calendar) -> Date? {
         guard let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self)) else { return nil }
         return calendar.date(byAdding: .weekOfYear, value: 1, to: startOfWeek)
+    }
+}
+
+private extension DependencyValues {
+    mutating func updateForScreenshots() {
+        guard let screenshotLocale = ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] else { return }
+        let locale = Locale(identifier: screenshotLocale)
+
+        repository.runningWorkouts = .mock(
+            runs: .screenshots(unit: locale.primaryUnit)
+        )
+        repository.goals = .mock(
+            goals: [
+                .init(period: .weekly, target: .init(value: 50, unit: locale.primaryUnit)),
+                .init(period: .monthly, target: nil),
+                .init(period: .yearly, target: .init(value: 1000, unit: locale.primaryUnit)),
+            ]
+        )
+        self.locale = locale
     }
 }

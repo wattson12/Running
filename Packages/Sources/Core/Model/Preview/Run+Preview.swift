@@ -214,12 +214,28 @@ public extension [Run] {
         @Dependency(\.date) var date
         @Dependency(\.calendar) var calendar
 
+        func randomPace() -> Double {
+            if unit == .kilometers {
+                return .random(in: 5 ..< 7)
+            } else {
+                return .random(in: 8 ..< 11)
+            }
+        }
+
+        func randomDistance() -> Double {
+            if unit == .kilometers {
+                return .random(in: 6 ..< 10)
+            } else {
+                return .random(in: 3 ..< 5)
+            }
+        }
+
         let runsThisWeek: [Run] = [
-            .mock(offset: 0, distance: 5.5, pace: 5, unit: unit), // Sun 18th
-            .mock(offset: -1, distance: 7.2, pace: 5, unit: unit), // Sat 17th
-            .mock(offset: -2, distance: 10, pace: 5, unit: unit), // Fri 16th
-            .mock(offset: -4, distance: 5, pace: 5, unit: unit), // Wed 14th
-            .mock(offset: -6, distance: 12, pace: 5, unit: unit), // Mon 12th
+            .mock(offset: 0, distance: 5.5, pace: randomPace(), unit: unit), // Sun 18th
+            .mock(offset: -1, distance: 7.2, pace: randomPace(), unit: unit), // Sat 17th
+            .mock(offset: -2, distance: 10, pace: randomPace(), unit: unit), // Fri 16th
+            .mock(offset: -4, distance: 5.01, pace: randomPace(), unit: unit), // Wed 14th
+            .mock(offset: -6, distance: 12.2, pace: randomPace(), unit: unit), // Mon 12th
         ]
 
         let startOfScreenshotYear = Date(timeIntervalSince1970: 1_672_574_400) // 01/01/2023
@@ -228,7 +244,7 @@ public extension [Run] {
         var offset = 2
         while offset < numberOfDaysRemaining {
             runsInYear.append(
-                .mock(offset: -6 - offset, distance: 6.35, pace: 5.25, unit: unit)
+                .mock(offset: -6 - offset, distance: randomDistance(), pace: randomPace(), unit: unit)
             )
             offset += 2
         }
