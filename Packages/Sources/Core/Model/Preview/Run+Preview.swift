@@ -212,19 +212,28 @@ public extension [Run] {
 
     static func screenshots(unit: UnitLength = .kilometers) -> [Run] {
         @Dependency(\.date) var date
-        return [
-            .mock(offset: 0, distance: 5.5, pace: 5, unit: unit),
-            .mock(offset: -1, distance: 7.2, pace: 5, unit: unit),
-            .mock(offset: -2, distance: 10, pace: 5, unit: unit),
-            .mock(offset: -4, distance: 5, pace: 5, unit: unit),
-            .mock(offset: -5, distance: 8, pace: 5, unit: unit),
-            .mock(offset: -6, distance: 12, pace: 5, unit: unit),
-            .mock(offset: -9, distance: 13.1, pace: 5, unit: unit),
-            .mock(offset: -12, distance: 5.1, pace: 5, unit: unit),
-            .mock(offset: -14, distance: 7.2, pace: 5, unit: unit),
-            .mock(offset: -16, distance: 8.4, pace: 5, unit: unit),
-            .mock(offset: -18, distance: 9.0, pace: 5, unit: unit),
+        @Dependency(\.calendar) var calendar
+
+        let runsThisWeek: [Run] = [
+            .mock(offset: 0, distance: 5.5, pace: 5, unit: unit), // Sun 18th
+            .mock(offset: -1, distance: 7.2, pace: 5, unit: unit), // Sat 17th
+            .mock(offset: -2, distance: 10, pace: 5, unit: unit), // Fri 16th
+            .mock(offset: -4, distance: 5, pace: 5, unit: unit), // Wed 14th
+            .mock(offset: -6, distance: 12, pace: 5, unit: unit), // Mon 12th
         ]
+
+        let startOfScreenshotYear = Date(timeIntervalSince1970: 1_672_574_400) // 01/01/2023
+        let numberOfDaysRemaining = calendar.dateComponents([.day], from: startOfScreenshotYear, to: date.now).day ?? 0
+        var runsInYear: [Run] = []
+        var offset = 2
+        while offset < numberOfDaysRemaining {
+            runsInYear.append(
+                .mock(offset: -6 - offset, distance: 6.35, pace: 5.25, unit: unit)
+            )
+            offset += 2
+        }
+
+        return runsThisWeek + runsInYear
     }
 }
 

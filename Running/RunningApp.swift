@@ -6,16 +6,19 @@ import SwiftUI
 struct RunningApp: App {
     let store: StoreOf<AppFeature> = .init(
         initialState: .init(),
-        reducer: { AppFeature() },
+        reducer: AppFeature.init,
         withDependencies: { dependencyValues in
             #if targetEnvironment(simulator)
                 dependencyValues = .preview
                 dependencyValues.date = .constant(.preview)
                 // Make sure date is using preview value when creating screenshot mock data
-                withDependencies {
-                    $0.date = .constant(.preview)
-                } operation: {
-                    dependencyValues.updateForScreenshots()
+                if ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] != nil {
+                    dependencyValues.date = .constant(.screenshots)
+                    withDependencies {
+                        $0.date = .constant(.screenshots)
+                    } operation: {
+                        dependencyValues.updateForScreenshots()
+                    }
                 }
                 dependencyValues.defaultAppStorage = .standard
             #endif
