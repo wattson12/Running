@@ -1,6 +1,7 @@
 import DesignSystem
 import Model
 import Repository
+import Resources
 import SwiftUI
 
 struct CircularProgressView: View {
@@ -197,7 +198,10 @@ struct GoalRowView: View {
         let distanceWithoutUnit = numberformatter.string(from: NSNumber(value: distance.converted(to: .primaryUnit(locale: locale)).value))
         let distanceWithUnit = formatter.string(from: distance.converted(to: .primaryUnit(locale: locale)))
         let target = formatter.string(from: target.converted(to: .primaryUnit(locale: locale)))
-        return "\(distanceWithoutUnit ?? distanceWithUnit) of \(target)"
+        return L10n.Goal.Row.DistanceOfTarget.format(
+            distanceWithoutUnit ?? distanceWithUnit,
+            target
+        )
     }
 }
 
