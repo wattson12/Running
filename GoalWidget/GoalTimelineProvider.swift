@@ -34,15 +34,11 @@ public struct GoalTimelineProvider: AppIntentTimelineProvider {
             let entries: [GoalEntry] = try await withDependencies { dependencyValues in
                 #if targetEnvironment(simulator)
                     dependencyValues = .preview
-                    dependencyValues.date = .constant(.preview)
-                    // Make sure date is using preview value when creating screenshot mock data
-                    if ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] != nil {
-                        dependencyValues.date = .constant(.screenshots)
-                        withDependencies {
-                            $0.date = .constant(.screenshots)
-                        } operation: {
-                            dependencyValues.updateForScreenshots()
-                        }
+                    dependencyValues.date = .constant(.screenshots)
+                    withDependencies {
+                        $0.date = .constant(.screenshots)
+                    } operation: {
+                        dependencyValues.updateForScreenshots()
                     }
                     dependencyValues.defaultAppStorage = .standard
                 #endif
@@ -103,8 +99,7 @@ extension Date {
 
 private extension DependencyValues {
     mutating func updateForScreenshots() {
-        guard let screenshotLocale = ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] else { return }
-        let locale = Locale(identifier: screenshotLocale)
+        let locale = Locale(identifier: "en_AU")
 
         repository.runningWorkouts = .mock(
             runs: .screenshots(unit: locale.primaryUnit)
