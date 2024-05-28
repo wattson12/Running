@@ -17,6 +17,8 @@
 "goal.period.monthly.display_name" = "Monthly";
 "goal.period.yearly.display_name" = "Yearly";
 
+"goal.row.distance_of_target.format" = "%@ of %@";
+
 "goals.edit.set_goal" = "Set goal";
 "goals.edit.update_goal" = "Update goal";
 "goals.edit.button.clear" = "Clear goal";
@@ -82,7 +84,6 @@
 "history.summary.distance_format" = "Total distance: %@";
 "history.summary.duration_format" = "Total duration: %@";
 "history.summary.count_format" = "Total runs: %d";
-
 
 "history.empty.title" = "No history (yet)";
 "history.empty.message" = "Track a running workout in the Health app (or an app linked to the Health app) and the run will be added here. Your history will be updated automatically";

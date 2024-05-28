@@ -6,13 +6,21 @@ import SwiftUI
 struct RunningApp: App {
     let store: StoreOf<AppFeature> = .init(
         initialState: .init(),
-        reducer: { AppFeature() },
-        withDependencies: {
+        reducer: AppFeature.init,
+        withDependencies: { dependencyValues in
             #if targetEnvironment(simulator)
-                $0 = .preview
-                $0.date = .constant(.preview)
-                $0.updateForScreenshots()
-                $0.defaultAppStorage = .standard
+                dependencyValues = .preview
+                dependencyValues.date = .constant(.preview)
+                // Make sure date is using preview value when creating screenshot mock data
+                if ProcessInfo.processInfo.environment["SCREENSHOT_LOCALE"] != nil {
+                    dependencyValues.date = .constant(.screenshots)
+                    withDependencies {
+                        $0.date = .constant(.screenshots)
+                    } operation: {
+                        dependencyValues.updateForScreenshots()
+                    }
+                }
+                dependencyValues.defaultAppStorage = .standard
             #endif
         }
     )
@@ -56,9 +64,9 @@ private extension DependencyValues {
         )
         repository.goals = .mock(
             goals: [
-                .init(period: .weekly, target: .init(value: 30, unit: locale.primaryUnit)),
+                .init(period: .weekly, target: .init(value: 50, unit: locale.primaryUnit)),
                 .init(period: .monthly, target: nil),
-                .init(period: .yearly, target: .init(value: 250, unit: locale.primaryUnit)),
+                .init(period: .yearly, target: .init(value: 1000, unit: locale.primaryUnit)),
             ]
         )
         self.locale = locale

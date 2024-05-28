@@ -16,7 +16,7 @@ public extension RunListFeature.State {
 
         let cachedRunsEffect: Effect<RunListFeature.Action>
         if let cachedRuns = runningWorkouts.allRunningWorkouts.cache() {
-            runs = .init(uniqueElements: cachedRuns)
+            runs = .init(uniqueElements: cachedRuns.map(RunState.init))
             cachedRunsEffect = .send(.delegate(.runsRefreshed))
         } else if userDefaults.bool(forKey: .initialImportCompleted) != true {
             isInitialImport = true

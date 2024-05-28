@@ -11,6 +11,33 @@ extension String {
     static let initialImportCompleted: Self = "initial_import_completed"
 }
 
+@dynamicMemberLookup
+public struct RunState: Identifiable, Equatable {
+    let run: Run
+    let relativeStartDate: String
+
+    init(run: Run) {
+        self.run = run
+
+        @Dependency(\.date) var dateGenerator
+
+        // show relative dates within the last 2 weeks only
+        if dateGenerator.now.timeIntervalSince(run.startDate) > 14 * 24 * 60 * 60 {
+            self.relativeStartDate = DateFormatter.run.string(from: run.startDate)
+        } else {
+            self.relativeStartDate = RelativeDateTimeFormatter.run.localizedString(for: run.startDate, relativeTo: dateGenerator.now)
+        }
+    }
+
+    public var id: Run.ID {
+        run.id
+    }
+
+    subscript<T>(dynamicMember keyPath: KeyPath<Run, T>) -> T {
+        run[keyPath: keyPath]
+    }
+}
+
 @Reducer
 public struct RunListFeature {
     @Reducer(state: .equatable, action: .equatable)
@@ -20,7 +47,7 @@ public struct RunListFeature {
 
     @ObservableState
     public struct State: Equatable {
-        var runs: IdentifiedArrayOf<Run> = []
+        var runs: IdentifiedArrayOf<RunState> = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
         @Shared(.featureFlag(.runDetail)) var runDetailEnabled: Bool = false
@@ -29,7 +56,7 @@ public struct RunListFeature {
         public init(
             runs: [Run] = []
         ) {
-            self.runs = .init(uniqueElements: runs)
+            self.runs = .init(uniqueElements: runs.map(RunState.init))
         }
 
         init(
@@ -38,7 +65,7 @@ public struct RunListFeature {
             isLoading: Bool = false,
             destination: Destination.State? = nil
         ) {
-            self.runs = .init(uniqueElements: runs)
+            self.runs = .init(uniqueElements: runs.map(RunState.init))
             self.isInitialImport = isInitialImport
             self.isLoading = isLoading
             self.destination = destination
@@ -106,7 +133,7 @@ public struct RunListFeature {
         case let .runsFetched(.success(runs)):
             clearInitialImportFlag(state: &state)
             state.isLoading = false
-            state.runs = .init(uniqueElements: runs)
+            state.runs = .init(uniqueElements: runs.map(RunState.init))
             return .merge(
                 .run { _ in widget.reloadAllTimelines() },
                 .send(.delegate(.runsRefreshed))
@@ -137,7 +164,7 @@ public struct RunListFeature {
         guard case let .delegate(action) = action else { return .none }
         switch action {
         case let .runDetailFetched(run):
-            state.runs[id: run.id] = run
+            state.runs[id: run.id] = .init(run: run)
             return .none
         }
     }

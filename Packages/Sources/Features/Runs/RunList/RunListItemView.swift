@@ -1,19 +1,9 @@
+import Dependencies
 import Model
 import SwiftUI
 
-extension Formatter {
-    static func runListItemDateFormatter(for date: Date, now: Date = .now) -> Formatter {
-        // show relative dates within the last 2 weeks only
-        if now.timeIntervalSince(date) > 14 * 24 * 60 * 60 {
-            return DateFormatter.run
-        } else {
-            return RelativeDateTimeFormatter.run
-        }
-    }
-}
-
 struct RunListItemView: View {
-    let run: Run
+    let run: RunState
     let tapped: () -> Void
 
     @Environment(\.locale) var locale
@@ -27,7 +17,7 @@ struct RunListItemView: View {
                         Text(run.distance.fullValue(locale: locale))
                             .font(.title)
 
-                        Text(run.startDate, formatter: .runListItemDateFormatter(for: run.startDate))
+                        Text(run.relativeStartDate)
                             .font(.footnote)
                             .foregroundColor(.secondary)
                     }
@@ -38,7 +28,7 @@ struct RunListItemView: View {
                         Text(run.duration.fullValue(locale: locale))
                             .font(.title2)
 
-                        Text(run.formattedPace(locale: locale))
+                        Text(run.run.formattedPace(locale: locale))
                             .font(.footnote)
                             .foregroundColor(.secondary)
                     }
@@ -53,10 +43,12 @@ struct RunListItemView: View {
 struct RunListItemView_Previews: PreviewProvider {
     static var previews: some View {
         RunListItemView(
-            run: .mock(
-                offset: 1,
-                distance: 10,
-                duration: 62.23
+            run: .init(run:
+                .mock(
+                    offset: 1,
+                    distance: 10,
+                    duration: 62.23
+                )
             ),
             tapped: { print("tapped") }
         )

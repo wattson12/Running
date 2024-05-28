@@ -47,6 +47,15 @@ public enum L10n {
                 public static let displayName = L10n.tr("Localizable", "goal.period.yearly.display_name", fallback: "Yearly")
             }
         }
+
+        public enum Row {
+            public enum DistanceOfTarget {
+                /// %@ of %@
+                public static func format(_ p1: Any, _ p2: Any) -> String {
+                    L10n.tr("Localizable", "goal.row.distance_of_target.format", String(describing: p1), String(describing: p2), fallback: "%@ of %@")
+                }
+            }
+        }
     }
 
     public enum Goals {
