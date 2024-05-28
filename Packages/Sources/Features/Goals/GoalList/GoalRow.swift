@@ -148,12 +148,12 @@ struct GoalRowView: View {
         case let .goalSet(distance, target) where distance < target:
             let remaining = target - distance
             return [
-                formattedDistance(distance: distance),
+                formattedDistance(distance: distance, target: target),
                 formattedRemaining(remaining: remaining),
             ]
-        case let .goalSet(distance, _):
+        case let .goalSet(distance, target):
             return [
-                formattedDistance(distance: distance),
+                formattedDistance(distance: distance, target: target),
             ]
         }
     }
@@ -183,7 +183,7 @@ struct GoalRowView: View {
         return "\(formattedRemaining) remaining"
     }
 
-    func formattedDistance(distance: Measurement<UnitLength>) -> String {
+    func formattedDistance(distance: Measurement<UnitLength>, target: Measurement<UnitLength>) -> String {
         let formatter = MeasurementFormatter()
         formatter.unitOptions = .providedUnit
         formatter.locale = locale
@@ -194,7 +194,10 @@ struct GoalRowView: View {
         numberformatter.maximumFractionDigits = 2
         formatter.numberFormatter = numberformatter
 
-        return formatter.string(from: distance.converted(to: .primaryUnit(locale: locale)))
+        let distanceWithoutUnit = numberformatter.string(from: NSNumber(value: distance.converted(to: .primaryUnit(locale: locale)).value))
+        let distanceWithUnit = formatter.string(from: distance.converted(to: .primaryUnit(locale: locale)))
+        let target = formatter.string(from: target.converted(to: .primaryUnit(locale: locale)))
+        return "\(distanceWithoutUnit ?? distanceWithUnit) of \(target)"
     }
 }
 
