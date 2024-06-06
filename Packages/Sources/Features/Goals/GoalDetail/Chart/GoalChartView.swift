@@ -80,20 +80,42 @@ struct GoalChartView: View {
                     }
                 }
 
-                if let goal = store.goal.target, store.showTarget, let start = columns.first?.index, let end = columns.last?.index {
-                    LineMark(
-                        x: .value("index", start),
-                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                        series: .value("goal", "b")
-                    )
-                    .foregroundStyle(tint)
+                if let goal = store.goal.target, let start = columns.first?.index, let end = columns.last?.index {
+                    if store.showTarget {
+                        LineMark(
+                            x: .value("index", start),
+                            y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                            series: .value("goal", "b")
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
 
-                    LineMark(
-                        x: .value("index", end),
-                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                        series: .value("goal", "b")
-                    )
-                    .foregroundStyle(tint)
+                        LineMark(
+                            x: .value("index", end),
+                            y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                            series: .value("goal", "b")
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
+                    }
+
+                    if store.showRate {
+                        LineMark(
+                            x: .value("index", start),
+                            y: .value("distance", 0),
+                            series: .value("rate", goal.converted(to: .primaryUnit()).value)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
+
+                        LineMark(
+                            x: .value("index", end),
+                            y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                            series: .value("rate", goal.converted(to: .primaryUnit()).value)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
+                    }
                 }
             }
             .chartScrollableAxes([.horizontal])
@@ -125,6 +147,12 @@ struct GoalChartView: View {
                 HStack {
                     Spacer()
                     ChartButton(
+                        title: "Rate",
+                        symbol: "chart.line.uptrend.xyaxis",
+                        selected: $store.showRate.animation()
+                    )
+
+                    ChartButton(
                         title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",
                         selected: $store.showTarget.animation()
@@ -140,10 +168,10 @@ struct GoalChartView: View {
         let min = 0
         let maxValue: Int
         let goalValue: Int
-        if store.showTarget, let goal = store.goal.target?.converted(to: .primaryUnit()) {
+        if showFullRange, let goal = store.goal.target?.converted(to: .primaryUnit()) {
             goalValue = Int(ceil(goal.value))
         } else {
-            goalValue = store.showTarget ? 0 : 20
+            goalValue = showFullRange ? 0 : 20
         }
 
         if let cumulativeDistance = columns.last?.cumulativeDistance {
@@ -152,6 +180,10 @@ struct GoalChartView: View {
             maxValue = goalValue
         }
         return min ... (maxValue + 10)
+    }
+
+    var showFullRange: Bool {
+        store.showTarget || store.showRate
     }
 }
 
