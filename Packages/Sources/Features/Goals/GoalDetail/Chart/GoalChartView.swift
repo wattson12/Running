@@ -86,6 +86,7 @@ struct GoalChartView: View {
                         y: .value("distance", goal.converted(to: .primaryUnit()).value),
                         series: .value("goal", "b")
                     )
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
                     .foregroundStyle(tint)
 
                     LineMark(
@@ -93,6 +94,23 @@ struct GoalChartView: View {
                         y: .value("distance", goal.converted(to: .primaryUnit()).value),
                         series: .value("goal", "b")
                     )
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                    .foregroundStyle(tint)
+
+                    LineMark(
+                        x: .value("index", start),
+                        y: .value("distance", 0),
+                        series: .value("rate", goal.converted(to: .primaryUnit()).value)
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                    .foregroundStyle(tint)
+
+                    LineMark(
+                        x: .value("index", end),
+                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                        series: .value("rate", goal.converted(to: .primaryUnit()).value)
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
                     .foregroundStyle(tint)
                 }
             }
