@@ -80,38 +80,42 @@ struct GoalChartView: View {
                     }
                 }
 
-                if let goal = store.goal.target, store.showTarget, let start = columns.first?.index, let end = columns.last?.index {
-                    LineMark(
-                        x: .value("index", start),
-                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                        series: .value("goal", "b")
-                    )
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
-                    .foregroundStyle(tint)
+                if let goal = store.goal.target, let start = columns.first?.index, let end = columns.last?.index {
+                    if store.showTarget {
+                        LineMark(
+                            x: .value("index", start),
+                            y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                            series: .value("goal", "b")
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
 
-                    LineMark(
-                        x: .value("index", end),
-                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                        series: .value("goal", "b")
-                    )
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
-                    .foregroundStyle(tint)
+                        LineMark(
+                            x: .value("index", end),
+                            y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                            series: .value("goal", "b")
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
+                    }
 
-                    LineMark(
-                        x: .value("index", start),
-                        y: .value("distance", 0),
-                        series: .value("rate", goal.converted(to: .primaryUnit()).value)
-                    )
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
-                    .foregroundStyle(tint)
+                    if store.showRate {
+                        LineMark(
+                            x: .value("index", start),
+                            y: .value("distance", 0),
+                            series: .value("rate", goal.converted(to: .primaryUnit()).value)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
 
-                    LineMark(
-                        x: .value("index", end),
-                        y: .value("distance", goal.converted(to: .primaryUnit()).value),
-                        series: .value("rate", goal.converted(to: .primaryUnit()).value)
-                    )
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
-                    .foregroundStyle(tint)
+                        LineMark(
+                            x: .value("index", end),
+                            y: .value("distance", goal.converted(to: .primaryUnit()).value),
+                            series: .value("rate", goal.converted(to: .primaryUnit()).value)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [1]))
+                        .foregroundStyle(tint)
+                    }
                 }
             }
             .chartScrollableAxes([.horizontal])
@@ -142,6 +146,12 @@ struct GoalChartView: View {
             if store.goal.target != nil {
                 HStack {
                     Spacer()
+                    ChartButton(
+                        title: "Rate",
+                        symbol: "chart.line.uptrend.xyaxis",
+                        selected: $store.showRate.animation()
+                    )
+
                     ChartButton(
                         title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",

@@ -12,13 +12,15 @@ public struct GoalDetailFeature: Reducer {
         var emptyStateRuns: [Run]
 
         @Shared var showTarget: Bool
+        @Shared var showRate: Bool
 
         public init(
             goal: Goal,
             intervalDate: Date? = nil,
             runs: [Run]? = nil,
             emptyStateRuns: [Run] = [],
-            showTarget: Bool = false
+            showTarget: Bool = false,
+            showRate: Bool = false
         ) {
             self.goal = goal
             self.intervalDate = intervalDate
@@ -26,6 +28,7 @@ public struct GoalDetailFeature: Reducer {
             self.emptyStateRuns = emptyStateRuns
 
             _showTarget = .init(wrappedValue: showTarget, .appStorage("show_target_\(goal.period.rawValue)"))
+            _showRate = .init(wrappedValue: showRate, .appStorage("show_rate_\(goal.period.rawValue)"))
         }
 
         var title: String {
