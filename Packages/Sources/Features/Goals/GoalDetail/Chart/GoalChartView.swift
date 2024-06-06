@@ -168,10 +168,10 @@ struct GoalChartView: View {
         let min = 0
         let maxValue: Int
         let goalValue: Int
-        if store.showTarget, let goal = store.goal.target?.converted(to: .primaryUnit()) {
+        if showFullRange, let goal = store.goal.target?.converted(to: .primaryUnit()) {
             goalValue = Int(ceil(goal.value))
         } else {
-            goalValue = store.showTarget ? 0 : 20
+            goalValue = showFullRange ? 0 : 20
         }
 
         if let cumulativeDistance = columns.last?.cumulativeDistance {
@@ -180,6 +180,10 @@ struct GoalChartView: View {
             maxValue = goalValue
         }
         return min ... (maxValue + 10)
+    }
+
+    var showFullRange: Bool {
+        store.showTarget || store.showRate
     }
 }
 
