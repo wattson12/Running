@@ -8,6 +8,7 @@ struct GoalHistory: Equatable, Identifiable {
     let id: Int
     let dateRange: DateRange
     let runs: [Run]
+    let target: Measurement<UnitLength>?
 }
 
 @Reducer
@@ -58,6 +59,8 @@ public struct GoalHistoryFeature {
             print("first run", cachedRuns.first)
             print("last run", cachedRuns.last)
 
+            let target = try! goals.goal(in: state.period).target
+
             var ranges: [DateRange] = []
             var history: [GoalHistory] = []
             guard var range = state.period.startAndEnd(in: calendar, now: date.now) else { return .none }
@@ -85,7 +88,7 @@ public struct GoalHistoryFeature {
                 range = (newRange.start, newRange.end)
 
                 let matchingRuns = try! runningWorkouts.runs(within: .init(period: state.period, target: nil), date: newRange.start)
-                history.append(.init(id: history.count, dateRange: newRange, runs: matchingRuns))
+                history.append(.init(id: history.count, dateRange: newRange, runs: matchingRuns, target: target))
             }
 
             state.history = history
@@ -114,7 +117,13 @@ public struct GoalHistoryView: View {
                         Text(history.dateRange.start, style: .date)
                         Text(history.dateRange.end, style: .date)
                     }
-                    Text(history.runs.distance.fullValue(locale: locale))
+                    HStack {
+                        Text(history.runs.distance.fullValue(locale: locale))
+                        if let target = history.target {
+                            Text("of")
+                            Text(target.fullValue(locale: locale))
+                        }
+                    }
                 }
             }
         }
