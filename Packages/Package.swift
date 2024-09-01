@@ -47,6 +47,7 @@ extension String {
     static let goalList: Self = "GoalList"
     static let editGoal: Self = "EditGoal"
     static let goalDetail: Self = "GoalDetail"
+    static let goalHistory: Self = "GoalHistory"
     
     static let permissions: Self = "Permissions"
 
@@ -55,9 +56,7 @@ extension String {
     static let runDetail: Self = "RunDetail"
     
     static let settings: Self = "Settings"
-    
-    static let history: Self = "History"
-    
+        
     static let program: Self = "Program"
     
     static func feature(_ name: String, in domain: String? = nil) -> Self {
@@ -88,8 +87,8 @@ let package = Package(
         .library(name: .goalList),
         .library(name: .editGoal),
         .library(name: .goalDetail),
+        .library(name: .goalHistory),
         .library(name: .settings),
-        .library(name: .history),
         .library(name: .program),
         .library(name: .repository),
         .library(name: .resources),
@@ -180,7 +179,6 @@ let package = Package(
                 .target(name: .goalList),
                 .target(name: .permissions),
                 .target(name: .settings),
-                .target(name: .history),
                 .target(name: .program),
                 .target(name: .featureFlags),
             ]
@@ -256,8 +254,21 @@ let package = Package(
                 .target(name: .repository),
                 .target(name: .runList),
                 .target(name: .designSystem),
+                .target(name: .goalHistory),
+                .target(name: .featureFlags),
             ],
             path: .feature(.goalDetail, in: .goals)
+        ),
+        .target(
+            name: .goalHistory,
+            dependencies: [
+                .composableArchitecture,
+                .dependencies,
+                .target(name: .model),
+                .target(name: .repository),
+                .target(name: .designSystem),
+            ],
+            path: .feature(.goalHistory, in: .goals)
         ),
         .target(
             name: .settings,
@@ -270,20 +281,6 @@ let package = Package(
                 .target(name: .featureFlags),
             ],
             path: .feature(.settings)
-        ),
-        .target(
-            name: .history,
-            dependencies: [
-                .composableArchitecture,
-                .dependencies,
-                .dependenciesAdditions,
-                .target(name: .goalDetail),
-                .target(name: .designSystem),
-                .target(name: .repository),
-                .target(name: .model),
-                .target(name: .cache),
-            ],
-            path: .feature(.history)
         ),
         .target(
             name: .program,
@@ -375,11 +372,6 @@ let package = Package(
             name: .settings.tests,
             dependencies: [.byName(name: .settings)],
             path: .featureTests(.settings)
-        ),
-        .testTarget(
-            name: .history.tests,
-            dependencies: [.byName(name: .history)],
-            path: .featureTests(.history)
         ),
         .testTarget(
             name: .program.tests,

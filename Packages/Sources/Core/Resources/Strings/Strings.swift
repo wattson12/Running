@@ -227,8 +227,8 @@ public enum L10n {
             /// Cache
             public static let cache = L10n.tr("Localizable", "settings.section.cache", fallback: "Cache")
             public enum BetaFeatures {
-                /// History
-                public static let history = L10n.tr("Localizable", "settings.section.beta_features.history", fallback: "History")
+                /// Goal history
+                public static let goalHistory = L10n.tr("Localizable", "settings.section.beta_features.goal_history", fallback: "Goal history")
                 /// Program
                 public static let program = L10n.tr("Localizable", "settings.section.beta_features.program", fallback: "Program")
                 /// Run detail

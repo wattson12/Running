@@ -14,8 +14,8 @@ public struct SettingsFeature {
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
 
         @Shared(.featureFlag(.runDetail)) var runDetailEnabled: Bool = false
-        @Shared(.featureFlag(FeatureFlagKey.history)) var historyEnabled: Bool = false
         @Shared(.featureFlag(.program)) var programEnabled: Bool = false
+        @Shared(.featureFlag(.goalHistory)) var goalHistoryEnabled: Bool = false
 
         var displayFeatureFlags: Bool { _displayFeatureFlags() }
 

@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DesignSystem
+import GoalHistory
 import Model
 import Repository
 import Resources
@@ -136,6 +137,27 @@ public struct GoalDetailView: View {
                 }
             }
         }
+        .toolbar {
+            if store.goalHistoryEnabled {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(
+                        action: { send(.historyButtonTapped) },
+                        label: { Image(systemName: "clock.arrow.circlepath") }
+                    )
+                }
+            }
+        }
+        .sheet(
+            item: $store.scope(
+                state: \.destination?.history,
+                action: \.destination.history
+            ),
+            content: { goalHistoryStore in
+                NavigationStack {
+                    GoalHistoryView(store: goalHistoryStore)
+                }
+            }
+        )
         .navigationTitle(store.title)
         .onAppear { send(.onAppear) }
         .customTint(store.goal.period.tint)

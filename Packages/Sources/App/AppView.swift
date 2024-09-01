@@ -1,7 +1,6 @@
 import ComposableArchitecture
 import DesignSystem
 import GoalList
-import History
 import Model
 import Permissions
 import Program
@@ -71,18 +70,6 @@ public struct AppView: View {
                     Label(L10n.App.Feature.runs, systemImage: "figure.run")
                 }
                 .tag(AppFeature.State.Tab.runs)
-
-                if let store = store.scope(state: \.history, action: \.history) {
-                    NavigationStack {
-                        HistoryView(
-                            store: store
-                        )
-                    }
-                    .tabItem {
-                        Label(L10n.App.Feature.history, systemImage: "clock.arrow.circlepath")
-                    }
-                    .tag(AppFeature.State.Tab.history)
-                }
 
                 if let store = store.scope(state: \.program, action: \.program) {
                     NavigationStack {

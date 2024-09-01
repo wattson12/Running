@@ -70,8 +70,8 @@
 "settings.section.links.privacy" = "Privacy policy";
 "settings.section.beta_features" = "Beta features";
 "settings.section.beta_features.run_detail" = "Run detail";
-"settings.section.beta_features.history" = "History";
 "settings.section.beta_features.program" = "Program";
+"settings.section.beta_features.goal_history" = "Goal history";
 "settings.section.cache" = "Cache";
 "settings.section.cache.delete_all_runs" = "Delete all runs";
 

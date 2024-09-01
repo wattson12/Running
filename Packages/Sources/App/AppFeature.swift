@@ -4,7 +4,6 @@ import FeatureFlags
 import Foundation
 import GoalList
 import HealthKitServiceInterface
-import History
 import Permissions
 import Program
 import Repository
@@ -24,7 +23,6 @@ public struct AppFeature {
         public enum Tab: Equatable, Hashable {
             case goals
             case runs
-            case history
             case program
         }
 
@@ -33,10 +31,8 @@ public struct AppFeature {
         var tab: Tab
         var runList: RunListFeature.State
         var goalList: GoalListFeature.State
-        var history: HistoryFeature.State?
         var program: PlaceholderProgramFeature.State?
 
-        @Shared(.featureFlag(.history)) var historyEnabled: Bool = false
         @Shared(.featureFlag(.program)) var programEnabled: Bool = false
 
         @Presents var destination: Destination.State?
@@ -46,14 +42,12 @@ public struct AppFeature {
             tab: Tab = .goals,
             runList: RunListFeature.State = .init(),
             goalList: GoalListFeature.State = .init(),
-            history: HistoryFeature.State? = nil,
             destination: Destination.State? = nil
         ) {
             self.permissions = permissions
             self.tab = tab
             self.runList = runList
             self.goalList = goalList
-            self.history = history
             self.destination = destination
         }
 
@@ -62,11 +56,9 @@ public struct AppFeature {
             tab = .goals
             runList = .init()
             goalList = .init()
-            history = nil
         }
 
         mutating func refreshFeatureFlagState() {
-            history = historyEnabled ? .init() : nil
             program = programEnabled ? .init() : nil
         }
     }
@@ -91,7 +83,6 @@ public struct AppFeature {
         case permissions(PermissionsFeature.Action)
         case runList(RunListFeature.Action)
         case goalList(GoalListFeature.Action)
-        case history(HistoryFeature.Action)
         case program(PlaceholderProgramFeature.Action)
         case deepLink(URL)
         case destination(PresentationAction<Destination.Action>)
@@ -117,8 +108,6 @@ public struct AppFeature {
                 return runList(action, state: &state)
             case .goalList:
                 return .none
-            case .history:
-                return .none
             case .program:
                 return .none
             case let .deepLink(url):
@@ -128,7 +117,6 @@ public struct AppFeature {
             }
         }
         .ifLet(\.permissions, action: \.permissions) { PermissionsFeature() }
-        .ifLet(\.history, action: \.history, then: HistoryFeature.init)
         .ifLet(\.program, action: \.program, then: PlaceholderProgramFeature.init)
         .ifLet(\.$destination, action: \.destination)
 
@@ -157,11 +145,8 @@ public struct AppFeature {
                     try await observation.observeWorkouts()
                 },
                 .publisher {
-                    Publishers.Merge(
-                        state.$historyEnabled.publisher.dropFirst(),
-                        state.$programEnabled.publisher.dropFirst()
-                    )
-                    .map { _ in ._internal(.refreshFeatureFlagState) }
+                    state.$programEnabled.publisher.dropFirst()
+                        .map { _ in ._internal(.refreshFeatureFlagState) }
                 }
             )
         case .settingsButtonTapped:
