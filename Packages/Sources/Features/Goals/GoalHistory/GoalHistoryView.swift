@@ -4,17 +4,27 @@ import Model
 import Repository
 import SwiftUI
 
+struct GoalHistory: Equatable, Identifiable {
+    let id: Int
+    let dateRange: DateRange
+    let runs: [Run]
+}
+
 @Reducer
 public struct GoalHistoryFeature {
+    @ObservableState
     public struct State: Equatable {
         let period: Goal.Period
+        var history: [GoalHistory] = []
 
         public init(period: Goal.Period) {
             self.period = period
         }
     }
 
+    @CasePathable
     public enum Action: ViewAction, Equatable {
+        @CasePathable
         public enum View: Equatable {
             case onAppear
         }
@@ -41,9 +51,15 @@ public struct GoalHistoryFeature {
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            guard let cachedRuns = runningWorkouts.allRunningWorkouts.cache(), let firstRun = cachedRuns.first else { return .none }
+            guard let cachedRuns = runningWorkouts.allRunningWorkouts.cache() else { return .none }
+            let sortedRuns = cachedRuns.sorted(by: { $0.startDate < $1.startDate })
+            guard let firstRun = sortedRuns.first else { return .none }
+            print("cached runs", cachedRuns.count)
+            print("first run", cachedRuns.first)
+            print("last run", cachedRuns.last)
 
             var ranges: [DateRange] = []
+            var history: [GoalHistory] = []
             guard var range = state.period.startAndEnd(in: calendar, now: date.now) else { return .none }
             ranges.append(.init(period: state.period, start: range.start, end: range.end))
 
@@ -67,10 +83,12 @@ public struct GoalHistoryFeature {
                 let newRange: DateRange = .init(period: state.period, start: newStart, end: newEnd)
                 ranges.append(newRange)
                 range = (newRange.start, newRange.end)
+
+                let matchingRuns = try! runningWorkouts.runs(within: .init(period: state.period, target: nil), date: newRange.start)
+                history.append(.init(id: history.count, dateRange: newRange, runs: matchingRuns))
             }
 
-            let final = ranges.reversed()
-            print(final)
+            state.history = history
 
             return .none
         }
@@ -81,11 +99,25 @@ public struct GoalHistoryFeature {
 public struct GoalHistoryView: View {
     public let store: StoreOf<GoalHistoryFeature>
 
+    @Environment(\.locale) var locale
+
     public init(store: StoreOf<GoalHistoryFeature>) {
         self.store = store
     }
 
     public var body: some View {
+        List {
+            ForEach(store.history
+            ) { history in
+                VStack {
+                    HStack {
+                        Text(history.dateRange.start, style: .date)
+                        Text(history.dateRange.end, style: .date)
+                    }
+                    Text(history.runs.distance.fullValue(locale: locale))
+                }
+            }
+        }
         Text("Goal History")
             .onAppear { send(.onAppear) }
     }
