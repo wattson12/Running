@@ -1,9 +1,15 @@
 import ComposableArchitecture
 import Foundation
+import GoalHistory
 import Model
 
 @Reducer
 public struct GoalDetailFeature: Reducer {
+    @Reducer(state: .equatable, action: .equatable)
+    public enum Destination {
+        case history(GoalHistoryFeature)
+    }
+
     @ObservableState
     public struct State: Equatable {
         let goal: Goal
@@ -14,13 +20,16 @@ public struct GoalDetailFeature: Reducer {
         @Shared var showTarget: Bool
         @Shared var showRate: Bool
 
+        @Presents var destination: Destination.State?
+
         public init(
             goal: Goal,
             intervalDate: Date? = nil,
             runs: [Run]? = nil,
             emptyStateRuns: [Run] = [],
             showTarget: Bool = false,
-            showRate: Bool = false
+            showRate: Bool = false,
+            destination: Destination.State? = nil
         ) {
             self.goal = goal
             self.intervalDate = intervalDate
@@ -29,6 +38,8 @@ public struct GoalDetailFeature: Reducer {
 
             _showTarget = .init(wrappedValue: showTarget, .appStorage("show_target_\(goal.period.rawValue)"))
             _showRate = .init(wrappedValue: showRate, .appStorage("show_rate_\(goal.period.rawValue)"))
+
+            self.destination = destination
         }
 
         var title: String {
@@ -106,6 +117,7 @@ public struct GoalDetailFeature: Reducer {
         @CasePathable
         public enum View: Equatable {
             case onAppear
+            case historyButtonTapped
         }
 
         @CasePathable
@@ -116,6 +128,7 @@ public struct GoalDetailFeature: Reducer {
         case view(View)
         case _internal(Internal)
         case binding(_ action: BindingAction<State>)
+        case destination(PresentationAction<Destination.Action>)
     }
 
     @Dependency(\.calendar) var calendar
@@ -136,8 +149,11 @@ public struct GoalDetailFeature: Reducer {
                 return _internal(action, state: &state)
             case .binding:
                 return .none
+            case .destination:
+                return .none
             }
         }
+        .ifLet(\.$destination, action: \.destination)
     }
 
     private func view(_ action: Action.View, state: inout State) -> Effect<Action> {
@@ -155,6 +171,8 @@ public struct GoalDetailFeature: Reducer {
                 }
                 await send(._internal(.runsFetched(result)))
             }
+        case .historyButtonTapped:
+            return .none
         }
     }
 

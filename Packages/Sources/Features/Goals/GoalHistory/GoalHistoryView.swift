@@ -7,7 +7,9 @@ public struct GoalHistoryFeature {
         public init() {}
     }
 
-    public enum Action {}
+    public enum Action: Equatable {}
+
+    public init() {}
 
     public var body: some ReducerOf<Self> {
         EmptyReducer()
@@ -16,6 +18,10 @@ public struct GoalHistoryFeature {
 
 public struct GoalHistoryView: View {
     let store: StoreOf<GoalHistoryFeature>
+
+    public init(store: StoreOf<GoalHistoryFeature>) {
+        self.store = store
+    }
 
     public var body: some View {
         Text("Goal History")
