@@ -172,6 +172,7 @@ public struct GoalDetailFeature: Reducer {
                 await send(._internal(.runsFetched(result)))
             }
         case .historyButtonTapped:
+            state.destination = .history(.init(period: state.goal.period))
             return .none
         }
     }

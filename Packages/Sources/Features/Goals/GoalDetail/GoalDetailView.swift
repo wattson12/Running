@@ -156,9 +156,9 @@ public struct GoalDetailView: View {
                 }
             }
         )
-//        .navigationTitle(store.title)
-//        .onAppear { send(.onAppear) }
-//        .customTint(store.goal.period.tint)
+        .navigationTitle(store.title)
+        .onAppear { send(.onAppear) }
+        .customTint(store.goal.period.tint)
     }
 }
 
