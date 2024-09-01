@@ -255,6 +255,7 @@ let package = Package(
                 .target(name: .runList),
                 .target(name: .designSystem),
                 .target(name: .goalHistory),
+                .target(name: .featureFlags),
             ],
             path: .feature(.goalDetail, in: .goals)
         ),

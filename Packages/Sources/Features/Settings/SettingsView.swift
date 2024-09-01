@@ -41,8 +41,8 @@ public struct SettingsView: View {
                         header: Text(L10n.Settings.Section.betaFeatures),
                         content: {
                             Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.runDetailEnabled)
-                            Toggle(L10n.Settings.Section.BetaFeatures.history, isOn: $store.historyEnabled)
                             Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: $store.programEnabled)
+                            Toggle("Goal history", isOn: $store.goalHistoryEnabled)
                         }
                     )
                 }

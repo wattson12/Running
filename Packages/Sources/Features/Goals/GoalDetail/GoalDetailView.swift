@@ -138,11 +138,13 @@ public struct GoalDetailView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(
-                    action: { send(.historyButtonTapped) },
-                    label: { Image(systemName: "clock.arrow.circlepath") }
-                )
+            if store.goalHistoryEnabled {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(
+                        action: { send(.historyButtonTapped) },
+                        label: { Image(systemName: "clock.arrow.circlepath") }
+                    )
+                }
             }
         }
         .sheet(

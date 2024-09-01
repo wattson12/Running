@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import FeatureFlags
 import Foundation
 import GoalHistory
 import Model
@@ -19,6 +20,8 @@ public struct GoalDetailFeature: Reducer {
 
         @Shared var showTarget: Bool
         @Shared var showRate: Bool
+
+        @Shared(.featureFlag(.goalHistory)) var goalHistoryEnabled: Bool = false
 
         @Presents var destination: Destination.State?
 
@@ -172,6 +175,7 @@ public struct GoalDetailFeature: Reducer {
                 await send(._internal(.runsFetched(result)))
             }
         case .historyButtonTapped:
+            guard state.goalHistoryEnabled else { return .none }
             state.destination = .history(.init(period: state.goal.period))
             return .none
         }
