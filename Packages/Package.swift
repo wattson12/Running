@@ -266,7 +266,6 @@ let package = Package(
                 .target(name: .model),
                 .target(name: .repository),
                 .target(name: .designSystem),
-                .target(name: .goalDetail),
             ],
             path: .feature(.goalHistory, in: .goals)
         ),
