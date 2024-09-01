@@ -42,7 +42,7 @@ public struct SettingsView: View {
                         content: {
                             Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.runDetailEnabled)
                             Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: $store.programEnabled)
-                            Toggle("Goal history", isOn: $store.goalHistoryEnabled)
+                            Toggle(L10n.Settings.Section.BetaFeatures.goalHistory, isOn: $store.goalHistoryEnabled)
                         }
                     )
                 }
