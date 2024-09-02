@@ -66,6 +66,9 @@ public struct GoalHistoryFeature {
             guard var range = state.period.startAndEnd(in: calendar, now: date.now) else { return .none }
             ranges.append(.init(period: state.period, start: range.start, end: range.end))
 
+            let matchingRuns = try! runningWorkouts.runs(within: .init(period: state.period, target: nil), date: range.start)
+            history.append(.init(id: history.count, dateRange: .init(period: state.period, start: range.start, end: range.end), runs: matchingRuns, target: target))
+
             while range.end > firstRun.startDate {
                 let offsetComponent: Calendar.Component
                 switch state.period {
