@@ -30,6 +30,15 @@ public struct GoalHistoryView: View {
                     }
                 )
             }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(
+                    action: { send(.closeButtonTapped) },
+                    label: {
+                        Image(systemName: "xmark.circle")
+                    }
+                )
+            }
         }
     }
 }

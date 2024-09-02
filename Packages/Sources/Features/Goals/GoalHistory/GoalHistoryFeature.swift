@@ -8,8 +8,14 @@ import Repository
 public struct GoalHistoryFeature {
     @ObservableState
     public struct State: Equatable {
+        public enum SortMode: Equatable {
+            case date
+            case distance
+        }
+
         let period: Goal.Period
         var history: [GoalHistory] = []
+        var sortMode: SortMode = .date
 
         public init(period: Goal.Period) {
             self.period = period
@@ -70,6 +76,7 @@ public struct GoalHistoryFeature {
         public enum View: Equatable {
             case onAppear
             case closeButtonTapped
+            case setSortMode(State.SortMode)
         }
 
         case view(View)
@@ -95,6 +102,15 @@ public struct GoalHistoryFeature {
             return .none
         case .closeButtonTapped:
             return .run { _ in await dismiss() }
+        case let .setSortMode(mode):
+            state.sortMode = mode
+            switch mode {
+            case .date:
+                state.history = state.history.sorted(by: { $0.dateRange.start < $1.dateRange.start })
+            case .distance:
+                state.history = state.history.sorted(by: { $0.distance < $1.distance })
+            }
+            return .none
         }
     }
 }
