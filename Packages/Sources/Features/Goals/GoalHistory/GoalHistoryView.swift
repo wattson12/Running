@@ -115,31 +115,21 @@ public struct GoalHistoryView: View {
         List {
             ForEach(store.history
             ) { history in
-                VStack {
-                    HStack {
-                        Text(history.dateRange.start, style: .date)
-                        Text(history.dateRange.end, style: .date)
-                    }
-                    HStack {
-                        Text(history.runs.distance.fullValue(locale: locale))
-                        if let target = history.target {
-                            Text("of")
-                            Text(target.fullValue(locale: locale))
-                        }
-                    }
-                }
+                GoalHistoryRow(history: history)
             }
         }
-        Text("Goal History")
-            .onAppear { send(.onAppear) }
+        .navigationTitle(store.period.displayName)
+        .onAppear { send(.onAppear) }
     }
 }
 
 #Preview {
-    GoalHistoryView(
-        store: .init(
-            initialState: .init(period: .yearly),
-            reducer: GoalHistoryFeature.init
+    NavigationStack {
+        GoalHistoryView(
+            store: .init(
+                initialState: .init(period: .yearly),
+                reducer: GoalHistoryFeature.init
+            )
         )
-    )
+    }
 }
