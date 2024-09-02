@@ -106,9 +106,9 @@ public struct GoalHistoryFeature {
             state.sortMode = mode
             switch mode {
             case .date:
-                state.history = state.history.sorted(by: { $0.dateRange.start < $1.dateRange.start })
+                state.history = state.history.sorted(by: { $0.dateRange.start > $1.dateRange.start })
             case .distance:
-                state.history = state.history.sorted(by: { $0.distance < $1.distance })
+                state.history = state.history.sorted(by: { $0.distance > $1.distance })
             }
             return .none
         }
