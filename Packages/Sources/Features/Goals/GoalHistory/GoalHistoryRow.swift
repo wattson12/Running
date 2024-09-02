@@ -26,7 +26,7 @@ struct GoalHistoryRow: View {
             Spacer()
 
             VStack(alignment: .trailing) {
-                Text(history.runs.distance.fullValue(locale: locale))
+                Text(history.distance.fullValue(locale: locale))
                 if let target = history.target {
                     Group {
                         Text("of ") + Text(target.fullValue(locale: locale))
