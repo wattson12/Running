@@ -21,6 +21,54 @@ public struct GoalHistoryFeature {
         public init(period: Goal.Period) {
             self.period = period
         }
+
+        mutating func refreshHistory() {
+            @Dependency(\.repository.runningWorkouts) var runningWorkouts
+            @Dependency(\.repository.goals) var goals
+            @Dependency(\.calendar) var calendar
+            @Dependency(\.date) var date
+
+            guard let cachedRuns = runningWorkouts.allRunningWorkouts.cache() else { return }
+            let sortedRuns = cachedRuns.sorted(by: { $0.startDate < $1.startDate })
+            guard let firstRun = sortedRuns.first else { return }
+
+            guard let target = try? goals.goal(in: period).target else { return }
+
+            var ranges: [DateRange] = []
+            var history: [GoalHistory] = []
+            guard var range = period.startAndEnd(in: calendar, now: date.now) else { return }
+            ranges.append(.init(period: period, start: range.start, end: range.end))
+
+            guard let matchingRuns = try? runningWorkouts.runs(within: .init(period: period, target: nil), date: range.start) else { return }
+            history.append(.init(id: history.count, dateRange: .init(period: period, start: range.start, end: range.end), runs: matchingRuns, target: target))
+
+            while range.end > firstRun.startDate {
+                let offsetComponent: Calendar.Component
+                switch period {
+                case .weekly:
+                    offsetComponent = .weekOfYear
+                case .monthly:
+                    offsetComponent = .month
+                case .yearly:
+                    offsetComponent = .year
+                }
+
+                guard let newStart = calendar.date(byAdding: offsetComponent, value: -1, to: range.start) else {
+                    break
+                }
+                guard newStart <= date.now else { break }
+                guard let newEnd = calendar.date(byAdding: offsetComponent, value: -1, to: range.end) else { break }
+
+                let newRange: DateRange = .init(period: period, start: newStart, end: newEnd)
+                ranges.append(newRange)
+                range = (newRange.start, newRange.end)
+
+                guard let matchingRuns = try? runningWorkouts.runs(within: .init(period: period, target: nil), date: newRange.start) else { break }
+                history.append(.init(id: history.count, dateRange: newRange, runs: matchingRuns, target: target))
+            }
+
+            self.history = history
+        }
     }
 
     @CasePathable
@@ -28,15 +76,13 @@ public struct GoalHistoryFeature {
         @CasePathable
         public enum View: Equatable {
             case onAppear
+            case closeButtonTapped
         }
 
         case view(View)
     }
 
-    @Dependency(\.repository.runningWorkouts) var runningWorkouts
-    @Dependency(\.repository.goals) var goals
-    @Dependency(\.calendar) var calendar
-    @Dependency(\.date) var date
+    @Dependency(\.dismiss) var dismiss
 
     public init() {}
 
@@ -52,51 +98,10 @@ public struct GoalHistoryFeature {
     private func view(_ action: Action.View, state: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
-            guard let cachedRuns = runningWorkouts.allRunningWorkouts.cache() else { return .none }
-            let sortedRuns = cachedRuns.sorted(by: { $0.startDate < $1.startDate })
-            guard let firstRun = sortedRuns.first else { return .none }
-            print("cached runs", cachedRuns.count)
-            print("first run", cachedRuns.first)
-            print("last run", cachedRuns.last)
-
-            let target = try! goals.goal(in: state.period).target
-
-            var ranges: [DateRange] = []
-            var history: [GoalHistory] = []
-            guard var range = state.period.startAndEnd(in: calendar, now: date.now) else { return .none }
-            ranges.append(.init(period: state.period, start: range.start, end: range.end))
-
-            let matchingRuns = try! runningWorkouts.runs(within: .init(period: state.period, target: nil), date: range.start)
-            history.append(.init(id: history.count, dateRange: .init(period: state.period, start: range.start, end: range.end), runs: matchingRuns, target: target))
-
-            while range.end > firstRun.startDate {
-                let offsetComponent: Calendar.Component
-                switch state.period {
-                case .weekly:
-                    offsetComponent = .weekOfYear
-                case .monthly:
-                    offsetComponent = .month
-                case .yearly:
-                    offsetComponent = .year
-                }
-
-                guard let newStart = calendar.date(byAdding: offsetComponent, value: -1, to: range.start) else {
-                    break
-                }
-                guard newStart <= date.now else { break }
-                guard let newEnd = calendar.date(byAdding: offsetComponent, value: -1, to: range.end) else { break }
-
-                let newRange: DateRange = .init(period: state.period, start: newStart, end: newEnd)
-                ranges.append(newRange)
-                range = (newRange.start, newRange.end)
-
-                let matchingRuns = try! runningWorkouts.runs(within: .init(period: state.period, target: nil), date: newRange.start)
-                history.append(.init(id: history.count, dateRange: newRange, runs: matchingRuns, target: target))
-            }
-
-            state.history = history
-
+            state.refreshHistory()
             return .none
+        case .closeButtonTapped:
+            return .run { _ in await dismiss() }
         }
     }
 }
@@ -104,8 +109,6 @@ public struct GoalHistoryFeature {
 @ViewAction(for: GoalHistoryFeature.self)
 public struct GoalHistoryView: View {
     public let store: StoreOf<GoalHistoryFeature>
-
-    @Environment(\.locale) var locale
 
     public init(store: StoreOf<GoalHistoryFeature>) {
         self.store = store
@@ -120,6 +123,16 @@ public struct GoalHistoryView: View {
         }
         .navigationTitle(store.period.displayName)
         .onAppear { send(.onAppear) }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(
+                    action: { send(.closeButtonTapped) },
+                    label: {
+                        Image(systemName: "xmark.circle")
+                    }
+                )
+            }
+        }
     }
 }
 
