@@ -16,7 +16,7 @@ extension DateRange {
 public extension DateFormatter {
     static var weekHistorySubtitle: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM ''yy"
+        formatter.dateFormat = "''yy"
         return formatter
     }
 }
