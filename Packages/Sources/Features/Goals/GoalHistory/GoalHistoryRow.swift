@@ -16,7 +16,7 @@ extension DateRange {
 public extension DateFormatter {
     static var weekHistorySubtitle: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "''yy"
+        formatter.dateFormat = "yyyy"
         return formatter
     }
 }
@@ -29,13 +29,16 @@ struct GoalHistoryRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(history.dateRange.dateForHistory, formatter: DateFormatter.rangeTitle(for: history.dateRange.period))
-                    .font(.title)
-
                 if history.dateRange.period == .weekly {
-                    Text(history.dateRange.dateForHistory, formatter: DateFormatter.weekHistorySubtitle)
+                    Text(history.dateRange.dateForHistory, formatter: DateFormatter.rangeTitle(for: history.dateRange.period))
+                        .font(.title)
+                        + Text(" ") +
+                        Text(history.dateRange.dateForHistory, formatter: DateFormatter.weekHistorySubtitle)
                         .font(.body)
                         .foregroundStyle(.secondary)
+                } else {
+                    Text(history.dateRange.dateForHistory, formatter: DateFormatter.rangeTitle(for: history.dateRange.period))
+                        .font(.title)
                 }
             }
 
