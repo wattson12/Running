@@ -39,7 +39,7 @@ extension NSPersistentContainer {
 }
 
 @DependencyClient
-public struct CoreDataStack {
+public struct CoreDataStack: @unchecked Sendable {
     var _newContext: () -> NSManagedObjectContext = { .init(concurrencyType: .privateQueueConcurrencyType) }
 
     init(

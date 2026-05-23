@@ -5,7 +5,7 @@ import Model
 import Repository
 
 @Reducer
-public struct GoalHistoryFeature {
+public struct GoalHistoryFeature: Sendable {
     @ObservableState
     public struct State: Equatable {
         public enum SortMode: Equatable {

@@ -3,10 +3,10 @@ import Foundation
 import XCTestDynamicOverlay
 
 extension HealthKitRunningWorkouts {
-    static var previewValue: HealthKitRunningWorkouts = .init(
+    static let previewValue: HealthKitRunningWorkouts = .init(
         allRunningWorkouts: { [] },
         detail: { _ in .init(locations: [], samples: []) }
     )
 
-    static var testValue: HealthKitRunningWorkouts = .init()
+    static let testValue: HealthKitRunningWorkouts = .init()
 }

@@ -2,10 +2,10 @@ import Foundation
 import XCTestDynamicOverlay
 
 extension HealthKitObservation {
-    static var previewValue: HealthKitObservation = .init(
+    static let previewValue: HealthKitObservation = .init(
         enableBackgroundDelivery: {},
         observeWorkouts: {}
     )
 
-    static var testValue: HealthKitObservation = .init()
+    static let testValue: HealthKitObservation = .init()
 }

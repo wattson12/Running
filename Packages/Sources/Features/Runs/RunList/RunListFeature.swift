@@ -39,7 +39,7 @@ public struct RunState: Identifiable, Equatable {
 }
 
 @Reducer
-public struct RunListFeature {
+public struct RunListFeature: Sendable {
     @Reducer(state: .equatable, action: .equatable)
     public enum Destination {
         case detail(RunDetailFeature)

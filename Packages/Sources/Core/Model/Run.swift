@@ -1,7 +1,7 @@
 import Dependencies
 import Foundation
 
-public struct Run: Equatable, Hashable, Identifiable, Codable {
+public struct Run: Equatable, Hashable, Identifiable, Codable, Sendable {
     public var id: UUID
     public var startDate: Date
     public var distance: Measurement<UnitLength>

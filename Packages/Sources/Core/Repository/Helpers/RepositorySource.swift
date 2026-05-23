@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RepositorySource<Input, Model>: Sendable {
+public struct RepositorySource<Input: Sendable, Model: Sendable>: Sendable {
     public var _cache: @Sendable (Input) -> Model?
     public var _remote: @Sendable (Input) async throws -> Model
 

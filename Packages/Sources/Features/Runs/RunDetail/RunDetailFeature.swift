@@ -4,7 +4,7 @@ import Model
 import Repository
 
 @Reducer
-public struct RunDetailFeature {
+public struct RunDetailFeature: Sendable {
     @ObservableState
     public struct State: Equatable {
         var run: Run

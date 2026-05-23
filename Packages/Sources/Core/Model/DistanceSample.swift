@@ -1,6 +1,6 @@
 import Foundation
 
-public struct DistanceSample: Equatable, Hashable, Codable {
+public struct DistanceSample: Equatable, Hashable, Codable, Sendable {
     public let startDate: Date
     public let distance: Measurement<UnitLength>
 

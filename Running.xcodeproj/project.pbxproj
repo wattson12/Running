@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2208D9732FC1F71600F627A1 /* Perception in Frameworks */ = {isa = PBXBuildFile; productRef = 2208D9722FC1F71600F627A1 /* Perception */; };
+		2208D9752FC1F71600F627A1 /* PerceptionCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2208D9742FC1F71600F627A1 /* PerceptionCore */; };
 		5B197B6A2AB7745B00C6EF47 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B197B692AB7745B00C6EF47 /* Launch Screen.storyboard */; };
 		5B4F7DFA29B9375F002BDE4B /* App in Frameworks */ = {isa = PBXBuildFile; productRef = 5B4F7DF929B9375F002BDE4B /* App */; };
 		5B5FE8D82AA11EAD0075B88A /* HealthKitServiceLive in Frameworks */ = {isa = PBXBuildFile; productRef = 5B5FE8D72AA11EAD0075B88A /* HealthKitServiceLive */; };
@@ -126,6 +128,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2208D9752FC1F71600F627A1 /* PerceptionCore in Frameworks */,
+				2208D9732FC1F71600F627A1 /* Perception in Frameworks */,
 				5B4F7DFA29B9375F002BDE4B /* App in Frameworks */,
 				5B8774382A5CA8F40007DD66 /* HealthKitServiceLive in Frameworks */,
 			);
@@ -301,6 +305,8 @@
 			packageProductDependencies = (
 				5B4F7DF929B9375F002BDE4B /* App */,
 				5B8774372A5CA8F40007DD66 /* HealthKitServiceLive */,
+				2208D9722FC1F71600F627A1 /* Perception */,
+				2208D9742FC1F71600F627A1 /* PerceptionCore */,
 			);
 			productName = RunningStats;
 			productReference = 5BF5A3C629AB7D8D00A53ACA /* Running.app */;
@@ -314,7 +320,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					5BC6424C2ACA0D2C004F10AC = {
 						CreatedOnToolsVersion = 15.0;
@@ -338,6 +344,8 @@
 			mainGroup = 5BF5A3BD29AB7D8D00A53ACA;
 			packageReferences = (
 				5BC642622ACA0F74004F10AC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				2208D9712FC1F71600F627A1 /* XCRemoteSwiftPackageReference "swift-perception" */,
+				2208D9762FC1F74900F627A1 /* XCRemoteSwiftPackageReference "swift-syntax" */,
 			);
 			productRefGroup = 5BF5A3C729AB7D8D00A53ACA /* Products */;
 			projectDirPath = "";
@@ -434,7 +442,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RunningDebug/Preview Content\"";
-				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -456,7 +463,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -470,7 +477,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RunningDebug/Preview Content\"";
-				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -491,7 +497,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.samwatts.RunningDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -504,7 +510,6 @@
 				CODE_SIGN_ENTITLEMENTS = GoalWidget/GoalWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GoalWidget/Info.plist;
@@ -526,7 +531,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -539,7 +544,6 @@
 				CODE_SIGN_ENTITLEMENTS = GoalWidget/GoalWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GoalWidget/Info.plist;
@@ -560,7 +564,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -600,6 +604,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -622,8 +627,10 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.3;
 			};
 			name = Debug;
 		};
@@ -662,6 +669,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -677,8 +685,10 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.3;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -686,14 +696,12 @@
 		5BF5A3D529AB7D8E00A53ACA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Running/Running.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Running/Preview Content\"";
-				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Running/Info.plist;
@@ -707,7 +715,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26;
 				IS_TESTFLIGHT_BUILD = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -720,8 +728,10 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -729,14 +739,12 @@
 		5BF5A3D629AB7D8E00A53ACA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Running/Running.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Running/Preview Content\"";
-				DEVELOPMENT_TEAM = 9B4L4655ZF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Running/Info.plist;
@@ -750,7 +758,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26;
 				IS_TESTFLIGHT_BUILD = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -763,8 +771,10 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -811,6 +821,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2208D9712FC1F71600F627A1 /* XCRemoteSwiftPackageReference "swift-perception" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-perception";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.10;
+			};
+		};
+		2208D9762FC1F74900F627A1 /* XCRemoteSwiftPackageReference "swift-syntax" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-syntax";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 603.0.1;
+			};
+		};
 		5BC642622ACA0F74004F10AC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:pointfreeco/swift-composable-architecture.git";
@@ -818,10 +844,22 @@
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.2.0;
 			};
+			traits = (
+			);
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2208D9722FC1F71600F627A1 /* Perception */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2208D9712FC1F71600F627A1 /* XCRemoteSwiftPackageReference "swift-perception" */;
+			productName = Perception;
+		};
+		2208D9742FC1F71600F627A1 /* PerceptionCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2208D9712FC1F71600F627A1 /* XCRemoteSwiftPackageReference "swift-perception" */;
+			productName = PerceptionCore;
+		};
 		5B4F7DF929B9375F002BDE4B /* App */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = App;

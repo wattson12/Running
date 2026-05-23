@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RepositoryInterface {
+public struct RepositoryInterface: Sendable {
     public var goals: Goals
     public var permissions: Permissions
     public var runningWorkouts: RunningWorkouts

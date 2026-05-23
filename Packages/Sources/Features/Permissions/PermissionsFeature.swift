@@ -3,7 +3,7 @@ import Foundation
 import Model
 
 @Reducer
-public struct PermissionsFeature {
+public struct PermissionsFeature: Sendable {
     public struct Empty: Equatable {
         init(_ _: Void) {}
     }
@@ -24,16 +24,16 @@ public struct PermissionsFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction {
         @CasePathable
-        public enum View: Equatable {
+        public enum View {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
         @CasePathable
-        public enum Internal: Equatable {
-            case requestPermissionsCompleted(TaskResult<Empty>)
+        public enum Internal {
+            case requestPermissionsCompleted(Result<Empty, Error>)
             case authorizationRequestStatusCompleted(TaskResult<AuthorizationRequestStatus>)
         }
 
@@ -71,7 +71,7 @@ public struct PermissionsFeature {
             return validatePermissions(state: &state)
         case .requestPermissionsButtonTapped:
             return .run { send in
-                let result = await TaskResult { try await permissions.requestAuthorization() }
+                let result = await Result { try await permissions.requestAuthorization() }
                 await send(._internal(.requestPermissionsCompleted(result.map(Empty.init))))
             }
         }

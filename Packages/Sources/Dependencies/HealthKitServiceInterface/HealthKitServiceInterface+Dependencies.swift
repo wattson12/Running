@@ -2,14 +2,14 @@ import Dependencies
 import Foundation
 
 public enum HealthKitServiceInterfaceDependencyKey: TestDependencyKey {
-    public static var previewValue: HealthKitServiceInterface = .init(
+    public static let previewValue: HealthKitServiceInterface = .init(
         permissions: .previewValue,
         runningWorkouts: .previewValue,
         support: .previewValue,
         observation: .previewValue
     )
 
-    public static var testValue: HealthKitServiceInterface = .init(
+    public static let testValue: HealthKitServiceInterface = .init(
         permissions: .testValue,
         runningWorkouts: .testValue,
         support: .testValue,

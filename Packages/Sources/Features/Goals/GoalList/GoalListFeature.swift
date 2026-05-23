@@ -24,7 +24,7 @@ struct GoalRow: Identifiable, Equatable {
 }
 
 @Reducer
-public struct GoalListFeature {
+public struct GoalListFeature: Sendable {
     @Reducer(state: .equatable, action: .equatable)
     public enum Destination {
         case editGoal(EditGoalFeature)

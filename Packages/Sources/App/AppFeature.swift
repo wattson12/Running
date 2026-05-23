@@ -12,7 +12,7 @@ import Settings
 import SwiftUI
 
 @Reducer
-public struct AppFeature {
+public struct AppFeature: Sendable {
     @Reducer(state: .equatable, action: .equatable)
     public enum Destination {
         case settings(SettingsFeature)
@@ -64,9 +64,9 @@ public struct AppFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction {
         @CasePathable
-        public enum View: Equatable {
+        public enum View {
             case onAppear
             case settingsButtonTapped
             case updateTab(State.Tab)
@@ -74,7 +74,7 @@ public struct AppFeature {
         }
 
         @CasePathable
-        public enum Internal: Equatable {
+        public enum Internal {
             case refreshFeatureFlagState
         }
 

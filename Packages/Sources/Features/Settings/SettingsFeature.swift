@@ -6,7 +6,7 @@ import FeatureFlags
 import Foundation
 
 @Reducer
-public struct SettingsFeature {
+public struct SettingsFeature: Sendable {
     @ObservableState
     public struct State: Equatable {
         var versionNumber: String = ""

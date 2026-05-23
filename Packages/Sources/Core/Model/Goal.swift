@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Goal: Equatable {
+public struct Goal: Equatable, Sendable {
     public enum Period: String, Equatable, Sendable, Hashable, CaseIterable {
         case weekly
         case monthly

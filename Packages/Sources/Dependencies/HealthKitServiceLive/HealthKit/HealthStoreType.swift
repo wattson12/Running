@@ -1,8 +1,9 @@
 import Foundation
 import HealthKit
 import XCTestDynamicOverlay
+import ConcurrencyExtras
 
-protocol HealthStoreType {
+protocol HealthStoreType: Sendable {
     func statusForAuthorizationRequest(
         toShare typesToShare: Set<HKSampleType>,
         read typesToRead: Set<HKObjectType>
@@ -17,25 +18,25 @@ protocol HealthStoreType {
 }
 
 struct MockHealthStoreType: HealthStoreType {
-    var _statusForAuthorizationRequest: (Set<HKSampleType>, Set<HKObjectType>) async throws -> HKAuthorizationRequestStatus = unimplemented()
+    let _statusForAuthorizationRequest: LockIsolated<@Sendable (Set<HKSampleType>, Set<HKObjectType>) async throws -> HKAuthorizationRequestStatus> = .init(unimplemented())
     func statusForAuthorizationRequest(
         toShare typesToShare: Set<HKSampleType>,
         read typesToRead: Set<HKObjectType>
     ) async throws -> HKAuthorizationRequestStatus {
-        try await _statusForAuthorizationRequest(typesToShare, typesToRead)
+        try await _statusForAuthorizationRequest.value(typesToShare, typesToRead)
     }
 
-    var _requestAuthorization: (Set<HKSampleType>, Set<HKObjectType>) async throws -> Void = unimplemented()
+    let _requestAuthorization: LockIsolated< @Sendable (Set<HKSampleType>, Set<HKObjectType>) async throws -> Void> = .init(unimplemented())
     func requestAuthorization(
         toShare typesToShare: Set<HKSampleType>,
         read typesToRead: Set<HKObjectType>
     ) async throws {
-        try await _requestAuthorization(typesToShare, typesToRead)
+        try await _requestAuthorization.value(typesToShare, typesToRead)
     }
 
-    static var _isHealthDataAvailable: () -> Bool = unimplemented()
+    static let _isHealthDataAvailable: LockIsolated<@Sendable () -> Bool> = .init(unimplemented(placeholder: false))
     static func isHealthDataAvailable() -> Bool {
-        _isHealthDataAvailable()
+        _isHealthDataAvailable.value()
     }
 }
 

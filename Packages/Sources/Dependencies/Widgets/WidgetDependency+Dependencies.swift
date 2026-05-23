@@ -3,9 +3,9 @@ import Foundation
 import XCTestDynamicOverlay
 
 enum WidgetDependencyDependencyKey: TestDependencyKey {
-    static var testValue: WidgetDependency = .init()
+    static let testValue: WidgetDependency = .init()
 
-    static var previewValue: WidgetDependency = .init(
+    static let previewValue: WidgetDependency = .init(
         reloadTimelines: { _ in },
         reloadAllTimelines: {}
     )

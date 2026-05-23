@@ -3,7 +3,7 @@ import Foundation
 import HealthKitServiceInterface
 
 extension HealthKitServiceInterfaceDependencyKey: DependencyKey {
-    public static var liveValue: HealthKitServiceInterface = .init(
+    public static let liveValue: HealthKitServiceInterface = .init(
         permissions: .live(),
         runningWorkouts: .live(),
         support: .live(),

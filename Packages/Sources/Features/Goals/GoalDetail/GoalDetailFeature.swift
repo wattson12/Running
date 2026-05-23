@@ -5,7 +5,7 @@ import GoalHistory
 import Model
 
 @Reducer
-public struct GoalDetailFeature: Reducer {
+public struct GoalDetailFeature: Sendable {
     @Reducer(state: .equatable, action: .equatable)
     public enum Destination {
         case history(GoalHistoryFeature)

@@ -2,6 +2,7 @@ import Foundation
 import Resources
 import SwiftUI
 
+@MainActor
 public extension Goal.Period {
     var tint: Color {
         switch self {

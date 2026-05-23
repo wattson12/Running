@@ -1,6 +1,6 @@
 import Foundation
 
-public struct FeatureFlagKey {
+public struct FeatureFlagKey: Sendable {
     public let name: String
 
     public init(name: String) {
