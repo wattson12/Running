@@ -35,6 +35,7 @@ public struct SettingsFeature: Sendable {
         public enum View: Sendable {
             case onAppear
             case deleteAllRunsTapped
+            case dismissButtonTapped
         }
 
         case view(View)
@@ -46,6 +47,8 @@ public struct SettingsFeature: Sendable {
     @Dependency(\.coreData) var coreData
 
     public init() {}
+    
+    @Dependency(\.dismiss) var dismiss
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -77,6 +80,8 @@ public struct SettingsFeature: Sendable {
                     try context.save()
                 }
             }
+        case .dismissButtonTapped:
+            return .run { _ in await dismiss() }
         }
     }
 }

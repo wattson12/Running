@@ -56,6 +56,16 @@ public struct SettingsView: View {
             }
             .buttonStyle(.plain)
             .navigationTitle(L10n.App.Feature.settings)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(
+                        action: { send(.dismissButtonTapped) },
+                        label: {
+                            Image(systemName: "x.circle")
+                        }
+                    )
+                }
+            }
             .onAppear { send(.onAppear) }
         }
     }
