@@ -63,7 +63,7 @@ public extension CoreDataStack {
 }
 
 public extension CoreDataStack {
-    func performWork<T>(_ work: (NSManagedObjectContext) throws -> T) throws -> T {
+    func performWork<T>(_ work: @Sendable (NSManagedObjectContext) throws -> T) throws -> T {
         let context = _newContext()
 
         return try context.performAndWait {

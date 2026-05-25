@@ -57,7 +57,8 @@ struct EditGoalFeatureTests {
             period: .weekly,
             target: .init(value: 150, unit: .kilometers)
         )
-        await store.receive(.delegate(.goalUpdated(updatedGoal)))
+        
+        await store.receive(\.delegate.goalUpdated, updatedGoal)
     }
 
     @Test func clearingExistingGoalFlow() async throws {
@@ -82,7 +83,7 @@ struct EditGoalFeatureTests {
         }
 
         await store.send(.view(.clearButtonTapped))
-        await store.receive(.delegate(.goalCleared(.weekly)))
+        await store.receive(\.delegate.goalCleared, .weekly)
     }
 
     @Test func settingNewGoalFlow() async throws {
@@ -127,6 +128,7 @@ struct EditGoalFeatureTests {
             period: .weekly,
             target: .init(value: 150, unit: .kilometers)
         )
-        await store.receive(.delegate(.goalUpdated(updatedGoal)))
+        
+        await store.receive(\.delegate.goalUpdated, updatedGoal)
     }
 }

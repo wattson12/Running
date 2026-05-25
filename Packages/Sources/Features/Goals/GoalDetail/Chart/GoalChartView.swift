@@ -149,13 +149,13 @@ struct GoalChartView: View {
                     ChartButton(
                         title: "Rate",
                         symbol: "chart.line.uptrend.xyaxis",
-                        selected: $store.showRate.animation()
+                        selected: Binding(store.$showRate)
                     )
 
                     ChartButton(
                         title: L10n.Goals.Detail.Chart.targetButton,
                         symbol: "target",
-                        selected: $store.showTarget.animation()
+                        selected: Binding(store.$showTarget)
                     )
                 }
                 .padding(.horizontal, 16)

@@ -6,22 +6,22 @@ import SwiftUI
 @Reducer
 struct DebugAppFeature: Reducer {
     @ObservableState
-    enum State: Equatable {
+    enum State: Equatable, Sendable {
         case initial
         case permissionRequired
         case runs(DebugRunListFeature.State)
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
         @CasePathable
-        enum Internal: Equatable {
+        enum Internal: Sendable {
             case permissionsFetched(TaskResult<AuthorizationRequestStatus>)
             case permissionsRequested(TaskResult<Bool>)
         }
@@ -44,12 +44,7 @@ struct DebugAppFeature: Reducer {
                 return .none
             }
         }
-
-        Scope(
-            state: /State.runs,
-            action: /Action.runs,
-            child: DebugRunListFeature.init
-        )
+        .ifCaseLet(\.runs, action: \.runs, then: DebugRunListFeature.init)
     }
 
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {

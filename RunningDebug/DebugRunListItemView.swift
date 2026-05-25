@@ -18,16 +18,16 @@ struct DebugRunListItemFeature: Reducer {
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
             case cachedButtonTapped
             case remoteButtonTapped
         }
 
         @CasePathable
-        enum Internal: Equatable {
+        enum Internal: Sendable {
             case detailFetched(TaskResult<WorkoutDetail>)
             case runDetailFetched(TaskResult<Run>)
         }

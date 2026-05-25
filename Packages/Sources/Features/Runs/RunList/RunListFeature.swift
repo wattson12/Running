@@ -12,7 +12,7 @@ extension String {
 }
 
 @dynamicMemberLookup
-public struct RunState: Identifiable, Equatable {
+public struct RunState: Identifiable, Equatable, Sendable {
     let run: Run
     let relativeStartDate: String
 
@@ -33,20 +33,23 @@ public struct RunState: Identifiable, Equatable {
         run.id
     }
 
-    subscript<T>(dynamicMember keyPath: KeyPath<Run, T>) -> T {
+    public subscript<T>(dynamicMember keyPath: KeyPath<Run, T>) -> T {
         run[keyPath: keyPath]
     }
 }
 
+extension RunListFeature.Destination.State: Equatable, Sendable {}
+extension RunListFeature.Destination.Action: Sendable {}
+
 @Reducer
 public struct RunListFeature: Sendable {
-    @Reducer(state: .equatable, action: .equatable)
+    @Reducer
     public enum Destination {
         case detail(RunDetailFeature)
     }
 
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         var runs: IdentifiedArrayOf<RunState> = []
         var isInitialImport: Bool = false
         var isLoading: Bool = false
@@ -73,20 +76,20 @@ public struct RunListFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case runTapped(Run)
         }
 
         @CasePathable
-        public enum Internal: Equatable {
+        public enum Internal: Sendable {
             case runsFetched(TaskResult<[Run]>)
         }
 
         @CasePathable
-        public enum Delegate: Equatable {
+        public enum Delegate: Sendable {
             case runsRefreshed
         }
 

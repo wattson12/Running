@@ -4,13 +4,13 @@ import Model
 
 @Reducer
 public struct PermissionsFeature: Sendable {
-    public struct Empty: Equatable {
+    public struct Empty: Equatable, Sendable {
         init(_ _: Void) {}
     }
 
     @ObservableState
-    public struct State: Equatable {
-        public enum InnerState: Int, Equatable {
+    public struct State: Equatable, Sendable {
+        public enum InnerState: Int, Equatable, Sendable {
             case initial
             case requestPermissions
             case healthKitNotAvailable
@@ -24,21 +24,21 @@ public struct PermissionsFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View {
+        public enum View: Sendable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
         @CasePathable
-        public enum Internal {
+        public enum Internal: Sendable {
             case requestPermissionsCompleted(Result<Empty, Error>)
             case authorizationRequestStatusCompleted(TaskResult<AuthorizationRequestStatus>)
         }
 
         @CasePathable
-        public enum Delegate: Equatable {
+        public enum Delegate: Sendable {
             case permissionsAvailable
         }
 

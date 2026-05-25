@@ -7,8 +7,8 @@ import Repository
 @Reducer
 public struct GoalHistoryFeature: Sendable {
     @ObservableState
-    public struct State: Equatable {
-        public enum SortMode: Equatable {
+    public struct State: Equatable, Sendable {
+        public enum SortMode: Equatable, Sendable {
             case date
             case distance
         }
@@ -71,9 +71,9 @@ public struct GoalHistoryFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: ViewAction, Equatable {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case closeButtonTapped
             case setSortMode(State.SortMode)

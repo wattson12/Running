@@ -3,12 +3,12 @@ import SwiftUI
 
 @Reducer
 public struct PlaceholderProgramFeature {
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         public init() {}
     }
 
-    public enum Action: Equatable, ViewAction {
-        public enum View: Equatable {}
+    public enum Action: ViewAction, Sendable {
+        public enum View: Sendable {}
         case view(View)
     }
 

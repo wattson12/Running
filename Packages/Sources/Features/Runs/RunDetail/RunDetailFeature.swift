@@ -6,7 +6,7 @@ import Repository
 @Reducer
 public struct RunDetailFeature: Sendable {
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         var run: Run
         var isLoading: Bool
 
@@ -29,19 +29,19 @@ public struct RunDetailFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
         }
 
         @CasePathable
-        public enum Internal: Equatable {
+        public enum Internal: Sendable {
             case runDetailFetched(TaskResult<Run>)
         }
 
         @CasePathable
-        public enum Delegate: Equatable {
+        public enum Delegate: Sendable {
             case runDetailFetched(Run)
         }
 

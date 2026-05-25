@@ -8,7 +8,7 @@ import Foundation
 @Reducer
 public struct SettingsFeature: Sendable {
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         var versionNumber: String = ""
         var buildNumber: String = ""
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
@@ -30,9 +30,9 @@ public struct SettingsFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: Equatable, BindableAction, ViewAction {
+    public enum Action: BindableAction, ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case deleteAllRunsTapped
         }

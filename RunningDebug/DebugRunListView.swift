@@ -7,20 +7,20 @@ import SwiftUI
 @Reducer
 struct DebugRunListFeature: Reducer {
     @ObservableState
-    struct State: Equatable {
+    struct State: Equatable, Sendable {
         var runs: IdentifiedArrayOf<DebugRunListItemFeature.State> = []
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
             case cancelButtonTapped
         }
 
         @CasePathable
-        enum Internal: Equatable {
+        enum Internal: Sendable {
             case runsFetched(TaskResult<[Run]>)
             case runFetched(Run)
         }

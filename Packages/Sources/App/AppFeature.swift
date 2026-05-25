@@ -11,16 +11,19 @@ import RunList
 import Settings
 import SwiftUI
 
+extension AppFeature.Destination.State: Equatable, Sendable {}
+extension AppFeature.Destination.Action: Sendable {}
+
 @Reducer
 public struct AppFeature: Sendable {
-    @Reducer(state: .equatable, action: .equatable)
+    @Reducer
     public enum Destination {
         case settings(SettingsFeature)
     }
 
     @ObservableState
-    public struct State: Equatable {
-        public enum Tab: Equatable, Hashable {
+    public struct State: Equatable, Sendable {
+        public enum Tab: Equatable, Hashable, Sendable {
             case goals
             case runs
             case program
@@ -64,9 +67,9 @@ public struct AppFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View {
+        public enum View: Sendable {
             case onAppear
             case settingsButtonTapped
             case updateTab(State.Tab)
@@ -74,7 +77,7 @@ public struct AppFeature: Sendable {
         }
 
         @CasePathable
-        public enum Internal {
+        public enum Internal: Sendable {
             case refreshFeatureFlagState
         }
 
@@ -122,13 +125,13 @@ public struct AppFeature: Sendable {
 
         Scope(
             state: \.runList,
-            action: /Action.runList,
+            action: \.runList,
             child: RunListFeature.init
         )
 
         Scope(
             state: \.goalList,
-            action: /Action.goalList,
+            action: \.goalList,
             child: GoalListFeature.init
         )
     }

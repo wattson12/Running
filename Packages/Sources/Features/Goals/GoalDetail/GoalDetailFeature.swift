@@ -4,15 +4,18 @@ import Foundation
 import GoalHistory
 import Model
 
+extension GoalDetailFeature.Destination.State: Equatable, Sendable {}
+extension GoalDetailFeature.Destination.Action: Sendable {}
+
 @Reducer
 public struct GoalDetailFeature: Sendable {
-    @Reducer(state: .equatable, action: .equatable)
+    @Reducer
     public enum Destination {
         case history(GoalHistoryFeature)
     }
 
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         let goal: Goal
         let intervalDate: Date?
         var runs: [Run]?
@@ -116,15 +119,15 @@ public struct GoalDetailFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction, BindableAction {
+    public enum Action: ViewAction, BindableAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case historyButtonTapped
         }
 
         @CasePathable
-        public enum Internal: Equatable {
+        public enum Internal: Sendable {
             case runsFetched(TaskResult<[Run]>)
         }
 

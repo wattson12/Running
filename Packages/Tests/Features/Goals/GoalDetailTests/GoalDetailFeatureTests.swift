@@ -72,7 +72,7 @@ struct GoalDetailFeatureTests {
         // setup on appearance
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.runsFetched(.failure(failure))))
+        await store.receive(\._internal.runsFetched.failure)
     }
 
     @Test func emptyRunsWithinGoalFlow() async throws {
@@ -106,7 +106,7 @@ struct GoalDetailFeatureTests {
             )
         }
 
-        await store.receive(._internal(.runsFetched(.success([]))))
+        await store.receive(\._internal.runsFetched.success, [])
     }
 
     @Test func totalDurationIsCorrectWhenRunsAreNil() {

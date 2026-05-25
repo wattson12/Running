@@ -23,16 +23,19 @@ struct GoalRow: Identifiable, Equatable {
     }
 }
 
+extension GoalListFeature.Destination.State: Equatable, Sendable {}
+extension GoalListFeature.Destination.Action: Sendable {}
+
 @Reducer
 public struct GoalListFeature: Sendable {
-    @Reducer(state: .equatable, action: .equatable)
+    @Reducer
     public enum Destination {
         case editGoal(EditGoalFeature)
         case detail(GoalDetailFeature)
     }
 
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         var weeklyGoal: Goal?
         var weeklyRuns: [Run] = []
         var yearlyGoal: Goal?
@@ -180,9 +183,9 @@ public struct GoalListFeature: Sendable {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case goalTapped(Goal)
             case editTapped(Goal)

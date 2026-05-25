@@ -26,11 +26,11 @@ struct RunDetailFeatureTests {
             $0.isLoading = true
         }
 
-        await store.receive(._internal(.runDetailFetched(.success(initialRun))))
+        await store.receive(\._internal.runDetailFetched.success, initialRun)
 
-        await store.receive(.delegate(.runDetailFetched(initialRun)))
+        await store.receive(\.delegate.runDetailFetched, initialRun)
 
-        await store.receive(._internal(.runDetailFetched(.success(runWithDetail)))) {
+        await store.receive(\._internal.runDetailFetched.success, runWithDetail) {
             $0.isLoading = false
             $0.splits = [
                 Split(
@@ -53,7 +53,7 @@ struct RunDetailFeatureTests {
             $0.run = runWithDetail
         }
 
-        await store.receive(.delegate(.runDetailFetched(runWithDetail)))
+        await store.receive(\.delegate.runDetailFetched, runWithDetail)
     }
 
     @Test func runIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
@@ -72,7 +72,7 @@ struct RunDetailFeatureTests {
 
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.runDetailFetched(.success(initialRun)))) {
+        await store.receive(\._internal.runDetailFetched.success, initialRun) {
             $0.splits = [
                 Split(
                     distance: "1",
@@ -85,13 +85,13 @@ struct RunDetailFeatureTests {
             ]
         }
 
-        await store.receive(.delegate(.runDetailFetched(initialRun)))
+        await store.receive(\.delegate.runDetailFetched, initialRun)
 
-        await store.receive(._internal(.runDetailFetched(.success(updatedRun)))) {
+        await store.receive(\._internal.runDetailFetched.success, updatedRun) {
             $0.run = updatedRun
         }
 
-        await store.receive(.delegate(.runDetailFetched(updatedRun)))
+        await store.receive(\.delegate.runDetailFetched, updatedRun)
     }
 
     @Test func failedDetailFetchClearsLoadingState() async throws {
