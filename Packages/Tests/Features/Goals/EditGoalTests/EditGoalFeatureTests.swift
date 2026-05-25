@@ -2,11 +2,13 @@ import ComposableArchitecture
 @testable import EditGoal
 import Model
 import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class EditGoalFeatureTests: XCTestCase {
-    @MainActor
-    func testEditingExistingGoalFlow() async throws {
+@MainActor
+@Suite
+struct EditGoalFeatureTests {
+    @Test func editingExistingGoalFlow() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: .init(value: 100, unit: .kilometers)
@@ -58,8 +60,7 @@ final class EditGoalFeatureTests: XCTestCase {
         await store.receive(.delegate(.goalUpdated(updatedGoal)))
     }
 
-    @MainActor
-    func testClearingExistingGoalFlow() async throws {
+    @Test func clearingExistingGoalFlow() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: .init(value: 100, unit: .kilometers)
@@ -84,8 +85,7 @@ final class EditGoalFeatureTests: XCTestCase {
         await store.receive(.delegate(.goalCleared(.weekly)))
     }
 
-    @MainActor
-    func testSettingNewGoalFlow() async throws {
+    @Test func settingNewGoalFlow() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: nil

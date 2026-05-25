@@ -3,10 +3,12 @@ import HealthKit
 import HealthKitServiceInterface
 import Model
 @testable import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class Run_ConversionTests: XCTestCase {
-    func testRunIsNilWhenWorkoutContainsNoDistanceStatistics() {
+@Suite
+struct Run_ConversionTests {
+    @Test func runIsNilWhenWorkoutContainsNoDistanceStatistics() {
         let workout = MockWorkoutType(
             uuid: .init(),
             startDate: .init(timeIntervalSince1970: .random(in: 1 ..< 1_000_000)),
@@ -15,10 +17,10 @@ final class Run_ConversionTests: XCTestCase {
         )
 
         let sut: Model.Run? = .init(model: workout)
-        XCTAssertNil(sut)
+        #expect(sut == nil)
     }
 
-    func testRunIsNilWhenWorkoutDistanceStatisticsHasNoSumQuantity() {
+    @Test func runIsNilWhenWorkoutDistanceStatisticsHasNoSumQuantity() {
         let workout = MockWorkoutType(
             uuid: .init(),
             startDate: .init(timeIntervalSince1970: .random(in: 1 ..< 1_000_000)),
@@ -29,10 +31,10 @@ final class Run_ConversionTests: XCTestCase {
         )
 
         let sut: Model.Run? = .init(model: workout)
-        XCTAssertNil(sut)
+        #expect(sut == nil)
     }
 
-    func testRunIsCreatedCorrectlyFromModelWithDistanceQuantity() throws {
+    @Test func runIsCreatedCorrectlyFromModelWithDistanceQuantity() throws {
         let meters: Double = .random(in: 1 ..< 10000)
         let quantity: HKQuantity = .init(unit: .meter(), doubleValue: meters)
 
@@ -45,15 +47,14 @@ final class Run_ConversionTests: XCTestCase {
             ]
         )
 
-        let sut: Model.Run = try XCTUnwrap(.init(model: workout))
-        XCTAssertEqual(sut.id, workout.uuid)
-        XCTAssertEqual(sut.startDate, workout.startDate)
-        XCTAssertEqual(sut.distance, .init(value: meters, unit: .meters))
-        XCTAssertEqual(sut.duration, .init(value: workout.duration, unit: .seconds))
-        XCTAssertNil(sut.detail)
+        let sut: Model.Run = try #require(.init(model: workout))
+        #expect(sut.id == workout.uuid)
+        #expect(sut.startDate == workout.startDate)
+        #expect(sut.distance == .init(value: meters, unit: .meters))
+        #expect(sut.duration == .init(value: workout.duration, unit: .seconds))
     }
 
-    func testConversionFromCachedRun() throws {
+    @Test func conversionFromCachedRun() throws {
         let id: UUID = .init()
         let startDate: Date = .init(timeIntervalSince1970: .random(in: 1 ..< 1_000_000))
         let distance: Double = .random(in: 1 ..< 10000)
@@ -85,23 +86,23 @@ final class Run_ConversionTests: XCTestCase {
             cached.detail = runDetail
 
             let sut: Model.Run = .init(entity: cached, includeDetail: true)
-            XCTAssertEqual(sut.id, id)
-            XCTAssertEqual(sut.startDate, startDate)
-            XCTAssertEqual(sut.distance, .init(value: distance, unit: .meters))
-            XCTAssertEqual(sut.duration, .init(value: duration, unit: .seconds))
+            #expect(sut.id == id)
+            #expect(sut.startDate == startDate)
+            #expect(sut.distance == .init(value: distance, unit: .meters))
+            #expect(sut.duration == .init(value: duration, unit: .seconds))
 
-            let detail = try XCTUnwrap(sut.detail)
-            XCTAssertEqual(detail.locations.count, 1)
-            let location = try XCTUnwrap(detail.locations.first)
-            XCTAssertEqual(location.coordinate.latitude, cached.detail?.locations.first?.latitude)
-            XCTAssertEqual(location.coordinate.longitude, cached.detail?.locations.first?.longitude)
-            XCTAssertEqual(location.altitude.converted(to: .meters).value, cached.detail?.locations.first?.altitude)
-            XCTAssertEqual(location.timestamp, cached.detail?.locations.first?.timestamp)
+            let detail = try #require(sut.detail)
+            #expect(detail.locations.count == 1)
+            let location = try #require(detail.locations.first)
+            #expect(location.coordinate.latitude == cached.detail?.locations.first?.latitude)
+            #expect(location.coordinate.longitude == cached.detail?.locations.first?.longitude)
+            #expect(location.altitude.converted(to: .meters).value == cached.detail?.locations.first?.altitude)
+            #expect(location.timestamp == cached.detail?.locations.first?.timestamp)
 
-            XCTAssertEqual(detail.distanceSamples.count, 1)
-            let sample = try XCTUnwrap(detail.distanceSamples.first)
-            XCTAssertEqual(sample.distance.converted(to: .meters).value, cached.detail?.distanceSamples.first?.distance)
-            XCTAssertEqual(sample.startDate, cached.detail?.distanceSamples.first?.startDate)
+            #expect(detail.distanceSamples.count == 1)
+            let sample = try #require(detail.distanceSamples.first)
+            #expect(sample.distance.converted(to: .meters).value == cached.detail?.distanceSamples.first?.distance)
+            #expect(sample.startDate == cached.detail?.distanceSamples.first?.startDate)
         }
     }
 }

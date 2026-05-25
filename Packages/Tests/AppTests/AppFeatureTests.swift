@@ -5,11 +5,13 @@ import FeatureFlags
 import RunList
 import SwiftUI
 import Widgets
-import XCTest
+import Testing
+import Foundation
 
-final class AppFeatureTests: XCTestCase {
-    @MainActor
-    func testRunListIsRefreshedOnAppearance() async throws {
+@MainActor
+@Suite
+struct AppFeatureTests {
+    @Test func runListIsRefreshedOnAppearance() async throws {
         let store = TestStore(
             initialState: .init(),
             reducer: AppFeature.init,
@@ -37,8 +39,7 @@ final class AppFeatureTests: XCTestCase {
         await store.receive(\.runList.delegate.runsRefreshed)
     }
 
-    @MainActor
-    func testRunListRunsRefreshedDelegateRefreshesGoalList() async throws {
+    @Test func runListRunsRefreshedDelegateRefreshesGoalList() async throws {
         let store = TestStore(
             initialState: .init(),
             reducer: AppFeature.init,
@@ -73,8 +74,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testPermissionsStateIsClearedOncePermissionsAreAvailable() async throws {
+    @Test func permissionsStateIsClearedOncePermissionsAreAvailable() async throws {
         let store = TestStore(
             initialState: .init(
                 permissions: .init(state: .initial),
@@ -89,8 +89,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testDeepLinkHandlingForGoalsDeepLink() async throws {
+    @Test func deepLinkHandlingForGoalsDeepLink() async throws {
         let store = TestStore(
             initialState: .init(
                 permissions: .init(state: .initial),
@@ -101,14 +100,13 @@ final class AppFeatureTests: XCTestCase {
             reducer: AppFeature.init
         )
 
-        let url: URL = try XCTUnwrap(URL(string: "running://_/goals/weekly"))
+        let url: URL = try #require(URL(string: "running://_/goals/weekly"))
         await store.send(.deepLink(url)) {
             $0.tab = .goals
         }
     }
 
-    @MainActor
-    func testDeepLinkHandlingForRunsDeepLink() async throws {
+    @Test func deepLinkHandlingForRunsDeepLink() async throws {
         let store = TestStore(
             initialState: .init(
                 permissions: .init(state: .initial),
@@ -119,13 +117,12 @@ final class AppFeatureTests: XCTestCase {
             reducer: AppFeature.init
         )
 
-        let url: URL = try XCTUnwrap(URL(string: "running://_/runs"))
+        let url: URL = try #require(URL(string: "running://_/runs"))
         await store.send(.deepLink(url)) {
             $0.tab = .runs
         }
     }
 
-    @MainActor
     func testRunListIsRefresheOnScenePhaseChangeToActive() async throws {
         let store = TestStore(
             initialState: .init(),

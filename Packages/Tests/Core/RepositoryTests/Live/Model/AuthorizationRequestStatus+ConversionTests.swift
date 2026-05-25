@@ -1,19 +1,21 @@
 import HealthKit
 import Model
 @testable import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class AuthorizationRequestStatus_ConversionTests: XCTestCase {
-    func testAuthorizationRequestStatusConversion() {
-        let inputs: [(HKAuthorizationRequestStatus, AuthorizationRequestStatus, UInt)] = [
-            (.unknown, .unknown, #line),
-            (.shouldRequest, .shouldRequest, #line),
-            (.unnecessary, .requested, #line),
+@Suite
+struct AuthorizationRequestStatus_ConversionTests {
+    @Test func authorizationRequestStatusConversion() {
+        let inputs: [(HKAuthorizationRequestStatus, AuthorizationRequestStatus, SourceLocation)] = [
+            (.unknown, .unknown, #_sourceLocation),
+            (.shouldRequest, .shouldRequest, #_sourceLocation),
+            (.unnecessary, .requested, #_sourceLocation),
         ]
 
-        for (status, expected, line) in inputs {
+        for (status, expected, sourceLocation) in inputs {
             let sut = AuthorizationRequestStatus(model: status)
-            XCTAssertEqual(sut, expected, line: line)
+            #expect(sut == expected, sourceLocation: sourceLocation)
         }
     }
 }

@@ -1,10 +1,12 @@
 import Dependencies
 import HealthKitServiceInterface
 @testable import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class Support_Live: XCTestCase {
-    func testIsHealthKitDataAvailableUsesCorrectFunctionFromHealthKitService() async throws {
+@Suite
+struct Support_Live {
+    @Test func isHealthKitDataAvailableUsesCorrectFunctionFromHealthKitService() async throws {
         let available: Bool = .random()
         let sut: Support = withDependencies {
             $0.healthKit.support._isHealthKitDataAvailable = { available }
@@ -13,6 +15,6 @@ final class Support_Live: XCTestCase {
         }
 
         let isAvailable = sut.isHealthKitDataAvailable()
-        XCTAssertEqual(isAvailable, available)
+        #expect(isAvailable == available)
     }
 }

@@ -2,11 +2,13 @@ import ComposableArchitecture
 import Model
 import Repository
 @testable import RunDetail
-import XCTest
+import Testing
+import Foundation
 
-final class RunDetailFeatureTests: XCTestCase {
-    @MainActor
-    func testRunIsFetchedWithLoadingStateIfRunHasNoDetail() async throws {
+@MainActor
+@Suite
+struct RunDetailFeatureTests {
+    @Test func runIsFetchedWithLoadingStateIfRunHasNoDetail() async throws {
         let initialRun: Run = .mock(detail: nil)
         let runWithDetail: Run = .mock(detail: .mock())
 
@@ -54,8 +56,7 @@ final class RunDetailFeatureTests: XCTestCase {
         await store.receive(.delegate(.runDetailFetched(runWithDetail)))
     }
 
-    @MainActor
-    func testRunIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
+    @Test func runIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
         let initialRun: Run = .mock(detail: .mock())
         let updatedRun: Run = .mock(detail: .mock())
 
@@ -93,8 +94,7 @@ final class RunDetailFeatureTests: XCTestCase {
         await store.receive(.delegate(.runDetailFetched(updatedRun)))
     }
 
-    @MainActor
-    func testFailedDetailFetchClearsLoadingState() async throws {
+    @Test func failedDetailFetchClearsLoadingState() async throws {
         let store = TestStore(
             initialState: .init(
                 run: .mock(),

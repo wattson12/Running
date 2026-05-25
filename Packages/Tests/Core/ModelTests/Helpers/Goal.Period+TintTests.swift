@@ -1,20 +1,22 @@
 @testable import Model
 import Resources
 import SwiftUI
-import XCTest
+import Testing
+import Foundation
 
 @MainActor
-final class Goal_Period_TintTests: XCTestCase {
-    func testTintColorIsCorrectForEachPeriod() {
-        let inputs: [(Goal.Period, Color, UInt)] = [
-            (.weekly, Color(asset: Asset.blue), #line),
-            (.monthly, Color(asset: Asset.purple), #line),
-            (.yearly, Color(asset: Asset.green), #line),
+@Suite
+struct Goal_Period_TintTests {
+    @Test func tintColorIsCorrectForEachPeriod() {
+        let inputs: [(Goal.Period, Color, SourceLocation)] = [
+            (.weekly, Color(asset: Asset.blue), #_sourceLocation),
+            (.monthly, Color(asset: Asset.purple), #_sourceLocation),
+            (.yearly, Color(asset: Asset.green), #_sourceLocation),
         ]
 
-        for (period, expected, line) in inputs {
+        for (period, expected, location) in inputs {
             let sut = period.tint
-            XCTAssertEqual(sut, expected, line: line)
+            #expect(sut == expected, sourceLocation: location)
         }
     }
 }

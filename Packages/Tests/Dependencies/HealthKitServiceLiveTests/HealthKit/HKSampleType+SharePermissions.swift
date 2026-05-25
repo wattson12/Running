@@ -1,9 +1,10 @@
 import HealthKit
 @testable import HealthKitServiceLive
-import XCTest
+import Testing
+import Foundation
 
-final class HKSampleType_SharePermissions: XCTestCase {
-    func testSharePermissionsAreCorrect() {
-        XCTAssertEqual(Set<HKSampleType>.sharePermissions, [])
+struct HKSampleType_SharePermissions {
+    @Test func sharePermissionsAreCorrect() {
+        #expect(Set<HKSampleType>.sharePermissions == [])
     }
 }

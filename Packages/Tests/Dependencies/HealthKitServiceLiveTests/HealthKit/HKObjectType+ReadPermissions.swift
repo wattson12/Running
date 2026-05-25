@@ -1,9 +1,11 @@
 import HealthKit
 @testable import HealthKitServiceLive
-import XCTest
+import Testing
+import Foundation
 
-final class HKObjectType_ReadPermissions: XCTestCase {
-    func testReadPermissionsAreCorrect() {
+@Suite
+struct HKObjectType_ReadPermissions {
+    @Test func readPermissionsAreCorrect() {
         let expectedPermissions: Set<HKObjectType> = [
             .workoutType(),
             HKSeriesType.activitySummaryType(),
@@ -11,6 +13,6 @@ final class HKObjectType_ReadPermissions: XCTestCase {
             HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
         ]
 
-        XCTAssertEqual(Set<HKObjectType>.readPermissions, expectedPermissions)
+        #expect(Set<HKObjectType>.readPermissions == expectedPermissions)
     }
 }

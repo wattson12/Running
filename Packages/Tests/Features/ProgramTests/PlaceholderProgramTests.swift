@@ -1,3 +1,5 @@
-import XCTest
+import Testing
+import Foundation
 
-final class PlaceholderProgramTests: XCTestCase {}
+@Suite
+struct PlaceholderProgramTests {}

@@ -1,21 +1,22 @@
 @testable import HealthKitServiceInterface
-import XCTest
+import Testing
+import Foundation
 
-final class PermissionsTests: XCTestCase {
-    func testAuthorizationRequestStatusPublicHelper() async throws {
+struct PermissionsTests {
+    @Test func authorizationRequestStatusPublicHelper() async throws {
         let sut: HealthKitPermissions = .init(
             authorizationRequestStatus: { .shouldRequest },
-            requestAuthorization: { XCTFail() }
+            requestAuthorization: { Issue.record() }
         )
 
         let status = try await sut.authorizationRequestStatus()
-        XCTAssertEqual(status, .shouldRequest)
+        #expect(status == .shouldRequest)
     }
 
-    func testRequestAuthorizationPublicHelper() async throws {
+    @Test func requestAuthorizationPublicHelper() async throws {
         let sut: HealthKitPermissions = .init(
             authorizationRequestStatus: {
-                XCTFail()
+                Issue.record()
                 return .unknown
             },
             requestAuthorization: {}

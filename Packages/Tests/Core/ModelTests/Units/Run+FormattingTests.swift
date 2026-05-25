@@ -1,8 +1,10 @@
 @testable import Model
-import XCTest
+import Testing
+import Foundation
 
-final class Run_FormattingTests: XCTestCase {
-    func testFormattedPaceIsCorrectForMetricLocale() {
+@Suite
+struct Run_FormattingTests {
+    @Test func formattedPaceIsCorrectForMetricLocale() {
         let run: Run = .mock(
             distance: .init(value: 5.67, unit: .kilometers),
             duration: .init(value: 27.89, unit: .minutes)
@@ -11,10 +13,10 @@ final class Run_FormattingTests: XCTestCase {
         let locale: Locale = .init(identifier: "en_AU")
 
         let sut = run.formattedPace(locale: locale)
-        XCTAssertEqual(sut, "4:55 / km")
+        #expect(sut == "4:55 / km")
     }
 
-    func testFormattedPaceIsCorrectForNonMetricLocale() {
+    @Test func formattedPaceIsCorrectForNonMetricLocale() {
         let run: Run = .mock(
             distance: .init(value: 5.67, unit: .miles),
             duration: .init(value: 27.89, unit: .minutes)
@@ -23,6 +25,6 @@ final class Run_FormattingTests: XCTestCase {
         let locale: Locale = .init(identifier: "en_GB")
 
         let sut = run.formattedPace(locale: locale)
-        XCTAssertEqual(sut, "4:55 / mi")
+        #expect(sut == "4:55 / mi")
     }
 }

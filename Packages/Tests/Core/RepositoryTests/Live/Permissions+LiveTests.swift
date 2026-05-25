@@ -2,10 +2,12 @@ import Dependencies
 import HealthKitServiceInterface
 import Model
 @testable import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class Permissions_LiveTests: XCTestCase {
-    func testAuthorizationRequestStatusUsesCorrectFunctionFromHealthKitService() async throws {
+@MainActor
+struct Permissions_LiveTests {
+    @Test func authorizationRequestStatusUsesCorrectFunctionFromHealthKitService() async throws {
         let sut: Permissions = withDependencies {
             $0.healthKit.permissions._authorizationRequestStatus = { .shouldRequest }
         } operation: {
@@ -13,21 +15,21 @@ final class Permissions_LiveTests: XCTestCase {
         }
 
         let status = try await sut.authorizationRequestStatus()
-        XCTAssertEqual(status, .shouldRequest)
+        #expect(status == .shouldRequest)
     }
 
-    func testRequestAuthorizationUsesCorrectFunctionFromHealthKitService() async throws {
-        let requestAuthorizationCalled: ActorIsolated<Bool> = .init(false)
+    @Test func requestAuthorizationUsesCorrectFunctionFromHealthKitService() async throws {
+        let requestAuthorizationCalled: LockIsolated<Bool> = .init(false)
         let sut: Permissions = withDependencies {
             $0.healthKit.permissions._requestAuthorization = {
-                await requestAuthorizationCalled.setValue(true)
+                requestAuthorizationCalled.setValue(true)
             }
         } operation: {
             .live()
         }
 
         try await sut.requestAuthorization()
-        let requestAuthorizationCalledValue = await requestAuthorizationCalled.value
-        XCTAssert(requestAuthorizationCalledValue)
+        let requestAuthorizationCalledValue = requestAuthorizationCalled.value
+        #expect(requestAuthorizationCalledValue == true)
     }
 }

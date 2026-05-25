@@ -3,10 +3,12 @@ import Dependencies
 import Model
 @testable import Repository
 import SwiftData
-import XCTest
+import Testing
+import Foundation
 
-final class Goals_LiveTests: XCTestCase {
-    func testGoalInPeriodWhenGoalDoesNotExist() throws {
+@Suite
+struct Goals_LiveTests {
+    @Test func goalInPeriodWhenGoalDoesNotExist() throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
         let sut: Goals = withDependencies {
@@ -16,11 +18,11 @@ final class Goals_LiveTests: XCTestCase {
         }
 
         let goal = try sut.goal(in: .weekly)
-        XCTAssertEqual(goal.period, .weekly)
-        XCTAssertNil(goal.target)
+        #expect(goal.period == .weekly)
+        #expect(goal.target == nil)
     }
 
-    func testGoalInPeriodWhenGoalExists() throws {
+    @Test func goalInPeriodWhenGoalExists() throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
         let target: Double = .random(in: 1 ..< 10000)
@@ -39,11 +41,11 @@ final class Goals_LiveTests: XCTestCase {
         }
 
         let goal = try sut.goal(in: .weekly)
-        XCTAssertEqual(goal.period, .weekly)
-        XCTAssertEqual(goal.target, .init(value: target, unit: .meters))
+        #expect(goal.period == .weekly)
+        #expect(goal.target == .init(value: target, unit: .meters))
     }
 
-    func testUpdateGoalSetsNewTargetValueCorrectly() throws {
+    @Test func updateGoalSetsNewTargetValueCorrectly() throws {
         let coreData: CoreDataStack = .stack(inMemory: true)
 
         try coreData.performWork { context in
@@ -69,6 +71,6 @@ final class Goals_LiveTests: XCTestCase {
         try sut.update(goal: updatedGoal)
 
         let modifiedGoal = try sut.goal(in: .weekly)
-        XCTAssertEqual(modifiedGoal.target, updatedGoal.target)
+        #expect(modifiedGoal.target == updatedGoal.target)
     }
 }
