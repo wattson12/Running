@@ -85,7 +85,7 @@ public struct RunListFeature: Sendable {
 
         @CasePathable
         public enum Internal: Sendable {
-            case runsFetched(TaskResult<[Run]>)
+            case runsFetched(Result<[Run], Error>)
         }
 
         @CasePathable

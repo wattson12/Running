@@ -128,7 +128,7 @@ public struct GoalDetailFeature: Sendable {
 
         @CasePathable
         public enum Internal: Sendable {
-            case runsFetched(TaskResult<[Run]>)
+            case runsFetched(Result<[Run], Error>)
         }
 
         case view(View)
@@ -171,7 +171,7 @@ public struct GoalDetailFeature: Sendable {
             }
 
             return .run { [goal = state.goal, intervalDate = state.intervalDate] send in
-                let result = await TaskResult {
+                let result = await Result {
                     _ = try await runningWorkouts.allRunningWorkouts.remote()
                     return try runningWorkouts.runs(within: goal, date: intervalDate)
                 }

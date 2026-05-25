@@ -21,7 +21,7 @@ struct DebugRunListFeature: Reducer {
 
         @CasePathable
         enum Internal: Sendable {
-            case runsFetched(TaskResult<[Run]>)
+            case runsFetched(Result<[Run], Error>)
             case runFetched(Run)
         }
 
@@ -55,7 +55,7 @@ struct DebugRunListFeature: Reducer {
 //                    print(run.uuid, run.stats(for: .init(.distanceWalkingRunning))?.sumQuantity()?.doubleValue(for: .meter()) as Any)
                 ////                    await send(._internal(.runFetched(run)))
 //                }
-                let result = await TaskResult {
+                let result = await Result {
                     try await runningWorkouts.allRunningWorkouts.remote()
                 }
                 await send(._internal(.runsFetched(result)))

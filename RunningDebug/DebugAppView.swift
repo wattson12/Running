@@ -22,8 +22,8 @@ struct DebugAppFeature: Reducer {
 
         @CasePathable
         enum Internal: Sendable {
-            case permissionsFetched(TaskResult<AuthorizationRequestStatus>)
-            case permissionsRequested(TaskResult<Bool>)
+            case permissionsFetched(Result<AuthorizationRequestStatus, Error>)
+            case permissionsRequested(Result<Bool, Error>)
         }
 
         case view(View)
@@ -51,14 +51,14 @@ struct DebugAppFeature: Reducer {
         switch action {
         case .onAppear:
             return .run { send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await permissions.authorizationRequestStatus()
                 }
                 await send(._internal(.permissionsFetched(result)))
             }
         case .requestPermissionsButtonTapped:
             return .run { send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await permissions.requestAuthorization()
                     return true
                 }

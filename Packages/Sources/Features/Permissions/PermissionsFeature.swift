@@ -34,7 +34,7 @@ public struct PermissionsFeature: Sendable {
         @CasePathable
         public enum Internal: Sendable {
             case requestPermissionsCompleted(Result<Empty, Error>)
-            case authorizationRequestStatusCompleted(TaskResult<AuthorizationRequestStatus>)
+            case authorizationRequestStatusCompleted(Result<AuthorizationRequestStatus, Error>)
         }
 
         @CasePathable
@@ -104,7 +104,7 @@ public struct PermissionsFeature: Sendable {
         }
 
         return .run { send in
-            let result = await TaskResult { try await permissions.authorizationRequestStatus() }
+            let result = await Result { try await permissions.authorizationRequestStatus() }
             await send(._internal(.authorizationRequestStatusCompleted(result)))
         }
     }

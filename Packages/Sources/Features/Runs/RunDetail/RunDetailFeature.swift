@@ -37,7 +37,7 @@ public struct RunDetailFeature: Sendable {
 
         @CasePathable
         public enum Internal: Sendable {
-            case runDetailFetched(TaskResult<Run>)
+            case runDetailFetched(Result<Run, Error>)
         }
 
         @CasePathable
@@ -78,7 +78,7 @@ public struct RunDetailFeature: Sendable {
                     await send(._internal(.runDetailFetched(.success(cachedRun))))
                 }
 
-                let result = await TaskResult { try await runningWorkouts.detail(for: id) }
+                let result = await Result { try await runningWorkouts.detail(for: id) }
                 await send(._internal(.runDetailFetched(result)))
             }
         }

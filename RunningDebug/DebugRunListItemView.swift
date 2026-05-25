@@ -28,8 +28,8 @@ struct DebugRunListItemFeature: Reducer {
 
         @CasePathable
         enum Internal: Sendable {
-            case detailFetched(TaskResult<WorkoutDetail>)
-            case runDetailFetched(TaskResult<Run>)
+            case detailFetched(Result<WorkoutDetail, Error>)
+            case runDetailFetched(Result<Run, Error>)
         }
 
         case view(View)
@@ -58,7 +58,7 @@ struct DebugRunListItemFeature: Reducer {
             guard !state.isLoading else { return .none }
             state.isLoading = true
             return .run { [id = state.run.id] send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await repository.detail(for: id)
                 }
                 await send(._internal(.runDetailFetched(result)))
@@ -66,7 +66,7 @@ struct DebugRunListItemFeature: Reducer {
         case .remoteButtonTapped:
             state.isLoading = true
             return .run { [id = state.run.id] send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await healthKit.detail(for: id)
                 }
                 await send(._internal(.detailFetched(result)))
