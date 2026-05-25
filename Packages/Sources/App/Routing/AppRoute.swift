@@ -1,7 +1,7 @@
 import Foundation
 import GoalList
 import Model
-import URLRouting
+@preconcurrency import URLRouting
 
 enum AppRoute: Equatable {
     case goals(GoalListRoute)

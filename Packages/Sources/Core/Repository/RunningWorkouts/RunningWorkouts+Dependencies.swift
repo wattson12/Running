@@ -60,7 +60,7 @@ extension RunningWorkouts {
         )
     }
 
-    static var previewValue: RunningWorkouts = .mock(runs: .allRuns)
+    static let previewValue: RunningWorkouts = .mock(runs: .allRuns)
 
-    static var testValue: RunningWorkouts = .init()
+    static let testValue: RunningWorkouts = .init()
 }

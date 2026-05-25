@@ -1,13 +1,15 @@
 import Model
 @testable import RunDetail
-import XCTest
+import Testing
+import Foundation
 
-final class DistanceSample_SplitsTests: XCTestCase {
-    func testSplitsFromMockData() throws {
+@Suite
+struct DistanceSample_SplitsTests {
+    @Test func splitsFromMockData() throws {
         let run: Run = .content("long_run")
-        let detail = try XCTUnwrap(run.detail)
+        let detail = try #require(run.detail)
         let splits = detail.distanceSamples.splits(locale: .init(identifier: "en_AU"))
 
-        XCTAssertEqual(splits.count, 11)
+        #expect(splits.count == 11)
     }
 }

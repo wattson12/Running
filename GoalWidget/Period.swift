@@ -7,8 +7,8 @@ enum Period: String, CaseIterable, AppEnum {
     case monthly
     case yearly
 
-    public static var typeDisplayRepresentation: TypeDisplayRepresentation = "Goal Period"
-    public static var caseDisplayRepresentations: [Period: DisplayRepresentation] = [
+    public static let typeDisplayRepresentation: TypeDisplayRepresentation = "Goal Period"
+    public static let caseDisplayRepresentations: [Period: DisplayRepresentation] = [
         .weekly: "Weekly",
         .monthly: "Monthly",
         .yearly: "Yearly",

@@ -3,13 +3,13 @@ import Foundation
 import Model
 
 @DependencyClient
-public struct Goals {
-    public var _goal: (Goal.Period) throws -> Goal
-    public var _updateGoal: (Goal) throws -> Void
+public struct Goals: Sendable {
+    public var _goal: @Sendable (Goal.Period) throws -> Goal
+    public var _updateGoal: @Sendable (Goal) throws -> Void
 
     public init(
-        goal: @escaping (Goal.Period) throws -> Goal,
-        updateGoal: @escaping (Goal) throws -> Void
+        goal: @escaping @Sendable (Goal.Period) throws -> Goal,
+        updateGoal: @escaping @Sendable (Goal) throws -> Void
     ) {
         _goal = goal
         _updateGoal = updateGoal

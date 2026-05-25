@@ -5,9 +5,11 @@ import HealthKit
 import HealthKitServiceInterface
 import Model
 @testable import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class RunningWorkouts_LiveTests: XCTestCase {
+@MainActor
+struct RunningWorkouts_LiveTests {
     @MainActor
     func testCachedRunningWorkoutsReturnsNilWhenThereAreNoRuns() {
         let sut: RunningWorkouts = withDependencies {
@@ -16,7 +18,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
             .live()
         }
 
-        XCTAssertNil(sut.allRunningWorkouts.cache())
+        #expect(sut.allRunningWorkouts.cache() == nil)
     }
 
     @MainActor
@@ -44,8 +46,8 @@ final class RunningWorkouts_LiveTests: XCTestCase {
             .live()
         }
 
-        let cachedRuns = try XCTUnwrap(sut.allRunningWorkouts.cache())
-        XCTAssertEqual(cachedRuns.count, cacheRunCount)
+        let cachedRuns = try #require(sut.allRunningWorkouts.cache())
+        #expect(cachedRuns.count == cacheRunCount)
     }
 
     @MainActor
@@ -67,13 +69,13 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         }
 
         let remoteRuns = try await sut.allRunningWorkouts.remote()
-        XCTAssertEqual(remoteRuns.count, healthKitRuns.count)
+        #expect(remoteRuns.count == healthKitRuns.count)
 
         let fetchedRuns = try coreData.performWork { context in
             let fetchRequest = Cache.RunEntity.makeFetchRequest()
             return try context.count(for: fetchRequest)
         }
-        XCTAssertEqual(fetchedRuns, remoteRuns.count)
+        #expect(fetchedRuns == remoteRuns.count)
     }
 
     @MainActor
@@ -126,12 +128,12 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         try coreData.performWork { context in
             let fetchedRuns = try context.fetch(Cache.RunEntity.makeFetchRequest())
 
-            let updatedRun = try XCTUnwrap(fetchedRuns.first)
-            XCTAssertEqual(updatedRun.distance, distance * 1000)
-            XCTAssertEqual(updatedRun.duration, duration * 60)
+            let updatedRun = try #require(fetchedRuns.first)
+            #expect(updatedRun.distance == distance * 1000)
+            #expect(updatedRun.duration == duration * 60)
 
-            let firstRun = try XCTUnwrap(allRuns.first)
-            XCTAssertNil(firstRun.detail)
+            let firstRun = try #require(allRuns.first)
+            #expect(firstRun.detail == nil)
         }
     }
 
@@ -180,7 +182,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         let fetchedRunsCount = try coreData.performWork { context in
             try context.count(for: Cache.RunEntity.makeFetchRequest())
         }
-        XCTAssertEqual(fetchedRunsCount, 1)
+        #expect(fetchedRunsCount == 1)
     }
 
     @MainActor
@@ -201,7 +203,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         } operation: {
             try sut.runs(within: goal)
         }
-        XCTAssert(remoteRuns.isEmpty)
+        #expect(remoteRuns.isEmpty == true)
     }
 
     @MainActor
@@ -251,7 +253,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
         } operation: {
             try sut.runs(within: goal)
         }
-        XCTAssertEqual(remoteRuns.count, 1)
+        #expect(remoteRuns.count == 1)
     }
 
     @MainActor
@@ -268,7 +270,7 @@ final class RunningWorkouts_LiveTests: XCTestCase {
             let detail = try await sut.detail(for: .init())
             XCTFail("Unexpected success: \(detail)")
         } catch {
-            XCTAssertEqual(error as NSError, healthKitError)
+            #expect(error as NSError == healthKitError)
         }
     }
 
@@ -335,15 +337,15 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
         let run = try await sut.detail(for: id)
 
-        XCTAssertEqual(run.detail?.locations.count, 1)
-        XCTAssertEqual(run.detail?.locations.first?.coordinate.latitude, locations.first?.coordinate.latitude)
-        XCTAssertEqual(run.detail?.locations.first?.coordinate.longitude, locations.first?.coordinate.longitude)
-        XCTAssertEqual(run.detail?.locations.first?.altitude.converted(to: .meters).value, locations.first?.altitude)
-        XCTAssertEqual(run.detail?.locations.first?.timestamp, locations.first?.timestamp)
+        #expect(run.detail?.locations.count == 1)
+        #expect(run.detail?.locations.first?.coordinate.latitude == locations.first?.coordinate.latitude)
+        #expect(run.detail?.locations.first?.coordinate.longitude == locations.first?.coordinate.longitude)
+        #expect(run.detail?.locations.first?.altitude.converted(to: .meters).value == locations.first?.altitude)
+        #expect(run.detail?.locations.first?.timestamp == locations.first?.timestamp)
 
-        XCTAssertEqual(run.detail?.distanceSamples.count, 1)
-        XCTAssertEqual(run.detail?.distanceSamples.first?.distance.converted(to: .meters).value, samples.first?.sumQuantity.doubleValue(for: .meter()))
-        XCTAssertEqual(run.detail?.distanceSamples.first?.startDate, samples.first?.startDate)
+        #expect(run.detail?.distanceSamples.count == 1)
+        #expect(run.detail?.distanceSamples.first?.distance.converted(to: .meters).value == samples.first?.sumQuantity.doubleValue(for: .meter()))
+        #expect(run.detail?.distanceSamples.first?.startDate == samples.first?.startDate)
     }
 
     @MainActor
@@ -406,9 +408,9 @@ final class RunningWorkouts_LiveTests: XCTestCase {
 
             let savedRuns = try context.fetch(fetchRequest)
 
-            let savedRun = try XCTUnwrap(savedRuns.first)
-            XCTAssertEqual(savedRun.detail?.locations.count, locationCount)
-            XCTAssertEqual(savedRun.detail?.distanceSamples.count, sampleCount)
+            let savedRun = try #require(savedRuns.first)
+            #expect(savedRun.detail?.locations.count == locationCount)
+            #expect(savedRun.detail?.distanceSamples.count == sampleCount)
         }
     }
 }

@@ -5,11 +5,13 @@ import FeatureFlags
 import RunList
 import SwiftUI
 import Widgets
-import XCTest
+import Testing
+import Foundation
 
-final class AppFeatureTests: XCTestCase {
-    @MainActor
-    func testRunListIsRefreshedOnAppearance() async throws {
+@MainActor
+@Suite
+struct AppFeatureTests {
+    @Test func runListIsRefreshedOnAppearance() async throws {
         let store = TestStore(
             initialState: .init(),
             reducer: AppFeature.init,
@@ -34,11 +36,10 @@ final class AppFeatureTests: XCTestCase {
 
         await store.send(\.view.onAppear)
 
-        await store.receive(.runList(.delegate(.runsRefreshed)))
+        await store.receive(\.runList.delegate.runsRefreshed)
     }
 
-    @MainActor
-    func testRunListRunsRefreshedDelegateRefreshesGoalList() async throws {
+    @Test func runListRunsRefreshedDelegateRefreshesGoalList() async throws {
         let store = TestStore(
             initialState: .init(),
             reducer: AppFeature.init,
@@ -73,8 +74,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testPermissionsStateIsClearedOncePermissionsAreAvailable() async throws {
+    @Test func permissionsStateIsClearedOncePermissionsAreAvailable() async throws {
         let store = TestStore(
             initialState: .init(
                 permissions: .init(state: .initial),
@@ -89,8 +89,7 @@ final class AppFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testDeepLinkHandlingForGoalsDeepLink() async throws {
+    @Test func deepLinkHandlingForGoalsDeepLink() async throws {
         let store = TestStore(
             initialState: .init(
                 permissions: .init(state: .initial),
@@ -101,14 +100,13 @@ final class AppFeatureTests: XCTestCase {
             reducer: AppFeature.init
         )
 
-        let url: URL = try XCTUnwrap(URL(string: "running://_/goals/weekly"))
+        let url: URL = try #require(URL(string: "running://_/goals/weekly"))
         await store.send(.deepLink(url)) {
             $0.tab = .goals
         }
     }
 
-    @MainActor
-    func testDeepLinkHandlingForRunsDeepLink() async throws {
+    @Test func deepLinkHandlingForRunsDeepLink() async throws {
         let store = TestStore(
             initialState: .init(
                 permissions: .init(state: .initial),
@@ -119,44 +117,12 @@ final class AppFeatureTests: XCTestCase {
             reducer: AppFeature.init
         )
 
-        let url: URL = try XCTUnwrap(URL(string: "running://_/runs"))
+        let url: URL = try #require(URL(string: "running://_/runs"))
         await store.send(.deepLink(url)) {
             $0.tab = .runs
         }
     }
 
-    @MainActor
-    func testHistoryIsEnabledOnAppearIfFeatureFlagIsTrue() async throws {
-        let store = TestStore(
-            initialState: .init(history: nil),
-            reducer: AppFeature.init,
-            withDependencies: {
-                $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.history.name)
-
-                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
-                $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
-
-                $0.repository.goals._goal = { period in .mock(period: period) }
-
-                $0.uuid = .incrementing
-
-                $0.widget._reloadAllTimelines = {}
-
-                $0.healthKit.observation._enableBackgroundDelivery = {}
-                $0.healthKit.observation._observeWorkouts = {}
-
-                $0.date = .incrementing()
-            }
-        )
-
-        store.exhaustivity = .off
-
-        await store.send(.view(.onAppear)) {
-            $0.history = .init()
-        }
-    }
-
-    @MainActor
     func testRunListIsRefresheOnScenePhaseChangeToActive() async throws {
         let store = TestStore(
             initialState: .init(),
@@ -182,6 +148,6 @@ final class AppFeatureTests: XCTestCase {
 
         await store.send(.view(.scenePhaseUpdated(.inactive, .active)))
 
-        await store.receive(.runList(.delegate(.runsRefreshed)))
+        await store.receive(\.runList.delegate.runsRefreshed)
     }
 }

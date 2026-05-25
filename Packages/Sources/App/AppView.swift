@@ -136,7 +136,7 @@ public struct AppView: View {
 }
 
 extension [Run] {
-    static var initialRuns: [Run] = [
+    static let initialRuns: [Run] = [
         .mock(
             distance: .init(
                 value: 20,

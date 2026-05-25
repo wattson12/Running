@@ -39,7 +39,7 @@ extension NSPersistentContainer {
 }
 
 @DependencyClient
-public struct CoreDataStack {
+public struct CoreDataStack: @unchecked Sendable {
     var _newContext: () -> NSManagedObjectContext = { .init(concurrencyType: .privateQueueConcurrencyType) }
 
     init(
@@ -63,7 +63,7 @@ public extension CoreDataStack {
 }
 
 public extension CoreDataStack {
-    func performWork<T>(_ work: (NSManagedObjectContext) throws -> T) throws -> T {
+    func performWork<T>(_ work: @Sendable (NSManagedObjectContext) throws -> T) throws -> T {
         let context = _newContext()
 
         return try context.performAndWait {

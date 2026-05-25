@@ -3,9 +3,9 @@ import Foundation
 import XCTestDynamicOverlay
 
 extension HealthKitSupport {
-    static var previewValue: HealthKitSupport = .init(
+    static let previewValue: HealthKitSupport = .init(
         isHealthKitDataAvailable: { true }
     )
 
-    static var testValue: HealthKitSupport = .init()
+    static let testValue: HealthKitSupport = .init()
 }

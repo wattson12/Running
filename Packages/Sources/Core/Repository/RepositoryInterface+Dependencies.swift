@@ -3,14 +3,14 @@ import Model
 import XCTestDynamicOverlay
 
 public enum RepositoryInterfaceDependencyKey: TestDependencyKey {
-    public static var previewValue: RepositoryInterface = .init(
+    public static let previewValue: RepositoryInterface = .init(
         goals: .previewValue,
         permissions: .previewValue,
         runningWorkouts: .previewValue,
         support: .previewValue
     )
 
-    public static var testValue: RepositoryInterface = .init(
+    public static let testValue: RepositoryInterface = .init(
         goals: .testValue,
         permissions: .testValue,
         runningWorkouts: .testValue,

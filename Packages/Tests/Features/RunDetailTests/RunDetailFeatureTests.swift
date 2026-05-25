@@ -2,11 +2,13 @@ import ComposableArchitecture
 import Model
 import Repository
 @testable import RunDetail
-import XCTest
+import Testing
+import Foundation
 
-final class RunDetailFeatureTests: XCTestCase {
-    @MainActor
-    func testRunIsFetchedWithLoadingStateIfRunHasNoDetail() async throws {
+@MainActor
+@Suite
+struct RunDetailFeatureTests {
+    @Test func runIsFetchedWithLoadingStateIfRunHasNoDetail() async throws {
         let initialRun: Run = .mock(detail: nil)
         let runWithDetail: Run = .mock(detail: .mock())
 
@@ -24,11 +26,11 @@ final class RunDetailFeatureTests: XCTestCase {
             $0.isLoading = true
         }
 
-        await store.receive(._internal(.runDetailFetched(.success(initialRun))))
+        await store.receive(\._internal.runDetailFetched.success, initialRun)
 
-        await store.receive(.delegate(.runDetailFetched(initialRun)))
+        await store.receive(\.delegate.runDetailFetched, initialRun)
 
-        await store.receive(._internal(.runDetailFetched(.success(runWithDetail)))) {
+        await store.receive(\._internal.runDetailFetched.success, runWithDetail) {
             $0.isLoading = false
             $0.splits = [
                 Split(
@@ -51,11 +53,10 @@ final class RunDetailFeatureTests: XCTestCase {
             $0.run = runWithDetail
         }
 
-        await store.receive(.delegate(.runDetailFetched(runWithDetail)))
+        await store.receive(\.delegate.runDetailFetched, runWithDetail)
     }
 
-    @MainActor
-    func testRunIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
+    @Test func runIsFetchedWithoutLoadingStateIfRunHasDetail() async throws {
         let initialRun: Run = .mock(detail: .mock())
         let updatedRun: Run = .mock(detail: .mock())
 
@@ -71,7 +72,7 @@ final class RunDetailFeatureTests: XCTestCase {
 
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.runDetailFetched(.success(initialRun)))) {
+        await store.receive(\._internal.runDetailFetched.success, initialRun) {
             $0.splits = [
                 Split(
                     distance: "1",
@@ -84,17 +85,16 @@ final class RunDetailFeatureTests: XCTestCase {
             ]
         }
 
-        await store.receive(.delegate(.runDetailFetched(initialRun)))
+        await store.receive(\.delegate.runDetailFetched, initialRun)
 
-        await store.receive(._internal(.runDetailFetched(.success(updatedRun)))) {
+        await store.receive(\._internal.runDetailFetched.success, updatedRun) {
             $0.run = updatedRun
         }
 
-        await store.receive(.delegate(.runDetailFetched(updatedRun)))
+        await store.receive(\.delegate.runDetailFetched, updatedRun)
     }
 
-    @MainActor
-    func testFailedDetailFetchClearsLoadingState() async throws {
+    @Test func failedDetailFetchClearsLoadingState() async throws {
         let store = TestStore(
             initialState: .init(
                 run: .mock(),

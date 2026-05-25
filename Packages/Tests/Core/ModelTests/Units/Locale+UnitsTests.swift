@@ -1,72 +1,74 @@
 @testable import Model
-import XCTest
+import Testing
+import Foundation
 
-final class Locale_UnitsTests: XCTestCase {
-    func testPrimaryUnitIsCorrectForLocalesWithMetricMeasurementSystem() {
+@Suite
+struct Locale_UnitsTests {
+    @Test func primaryUnitIsCorrectForLocalesWithMetricMeasurementSystem() {
         let locale = Locale(identifier: "en_AU")
-        XCTAssertEqual(locale.measurementSystem, .metric)
+        #expect(locale.measurementSystem == .metric)
 
-        XCTAssertEqual(locale.primaryUnit, .kilometers)
+        #expect(locale.primaryUnit == .kilometers)
     }
 
-    func testPrimaryUnitIsCorrectForLocalesWithUKMeasurementSystem() {
+    @Test func primaryUnitIsCorrectForLocalesWithUKMeasurementSystem() {
         let locale = Locale(identifier: "en_GB")
-        XCTAssertEqual(locale.measurementSystem, .uk)
+        #expect(locale.measurementSystem == .uk)
 
-        XCTAssertEqual(locale.primaryUnit, .miles)
+        #expect(locale.primaryUnit == .miles)
     }
 
-    func testPrimaryUnitIsCorrectForLocalesWithUSMeasurementSystem() {
+    @Test func primaryUnitIsCorrectForLocalesWithUSMeasurementSystem() {
         let locale = Locale(identifier: "en_US")
-        XCTAssertEqual(locale.measurementSystem, .us)
+        #expect(locale.measurementSystem == .us)
 
-        XCTAssertEqual(locale.primaryUnit, .miles)
+        #expect(locale.primaryUnit == .miles)
     }
 
-    func testSecondaryUnitIsCorrectForLocalesWithMetricMeasurementSystem() {
+    @Test func secondaryUnitIsCorrectForLocalesWithMetricMeasurementSystem() {
         let locale = Locale(identifier: "en_AU")
-        XCTAssertEqual(locale.measurementSystem, .metric)
+        #expect(locale.measurementSystem == .metric)
 
-        XCTAssertEqual(locale.secondaryUnit, .meters)
+        #expect(locale.secondaryUnit == .meters)
     }
 
-    func testSecondaryUnitIsCorrectForLocalesWithUKMeasurementSystem() {
+    @Test func secondaryUnitIsCorrectForLocalesWithUKMeasurementSystem() {
         let locale = Locale(identifier: "en_GB")
-        XCTAssertEqual(locale.measurementSystem, .uk)
+        #expect(locale.measurementSystem == .uk)
 
-        XCTAssertEqual(locale.secondaryUnit, .feet)
+        #expect(locale.secondaryUnit == .feet)
     }
 
-    func testSecondaryUnitIsCorrectForLocalesWithUSMeasurementSystem() {
+    @Test func secondaryUnitIsCorrectForLocalesWithUSMeasurementSystem() {
         let locale = Locale(identifier: "en_US")
-        XCTAssertEqual(locale.measurementSystem, .us)
+        #expect(locale.measurementSystem == .us)
 
-        XCTAssertEqual(locale.secondaryUnit, .feet)
+        #expect(locale.secondaryUnit == .feet)
     }
 
-    func testUnitLengthPrimaryUnitHelperIsCorrect() {
-        let inputs: [(Locale, UnitLength, UInt)] = [
-            (.init(identifier: "en_AU"), .kilometers, #line),
-            (.init(identifier: "en_GB"), .miles, #line),
-            (.init(identifier: "en_US"), .miles, #line),
+    @Test func unitLengthPrimaryUnitHelperIsCorrect() {
+        let inputs: [(Locale, UnitLength, SourceLocation)] = [
+            (.init(identifier: "en_AU"), .kilometers, #_sourceLocation),
+            (.init(identifier: "en_GB"), .miles, #_sourceLocation),
+            (.init(identifier: "en_US"), .miles, #_sourceLocation),
         ]
 
-        for (locale, expected, line) in inputs {
+        for (locale, expected, sourceLocation) in inputs {
             let sut: UnitLength = .primaryUnit(locale: locale)
-            XCTAssertEqual(sut, expected, line: line)
+            #expect(sut == expected, sourceLocation: sourceLocation)
         }
     }
 
-    func testUnitLengthSecondaryUnitHelperIsCorrect() {
-        let inputs: [(Locale, UnitLength, UInt)] = [
-            (.init(identifier: "en_AU"), .meters, #line),
-            (.init(identifier: "en_GB"), .feet, #line),
-            (.init(identifier: "en_US"), .feet, #line),
+    @Test func unitLengthSecondaryUnitHelperIsCorrect() {
+        let inputs: [(Locale, UnitLength, SourceLocation)] = [
+            (.init(identifier: "en_AU"), .meters, #_sourceLocation),
+            (.init(identifier: "en_GB"), .feet, #_sourceLocation),
+            (.init(identifier: "en_US"), .feet, #_sourceLocation),
         ]
 
-        for (locale, expected, line) in inputs {
+        for (locale, expected, sourceLocation) in inputs {
             let sut: UnitLength = .secondaryUnit(locale: locale)
-            XCTAssertEqual(sut, expected, line: line)
+            #expect(sut == expected, sourceLocation: sourceLocation)
         }
     }
 }

@@ -1,5 +1,5 @@
 import Foundation
-import HealthKit
+@preconcurrency import HealthKit
 import HealthKitServiceInterface
 
 extension HealthKitPermissions {

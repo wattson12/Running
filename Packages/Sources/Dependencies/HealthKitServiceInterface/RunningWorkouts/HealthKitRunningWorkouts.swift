@@ -3,7 +3,7 @@ import DependenciesMacros
 import Foundation
 import HealthKit
 
-public struct WorkoutDetail: Equatable {
+public struct WorkoutDetail: Equatable, Sendable {
     public let locations: [CLLocation]
     public let samples: [HKCumulativeQuantitySample]
 

@@ -7,21 +7,21 @@ import SwiftUI
 @Reducer
 struct DebugRunListFeature: Reducer {
     @ObservableState
-    struct State: Equatable {
+    struct State: Equatable, Sendable {
         var runs: IdentifiedArrayOf<DebugRunListItemFeature.State> = []
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
             case cancelButtonTapped
         }
 
         @CasePathable
-        enum Internal: Equatable {
-            case runsFetched(TaskResult<[Run]>)
+        enum Internal: Sendable {
+            case runsFetched(Result<[Run], Error>)
             case runFetched(Run)
         }
 
@@ -55,7 +55,7 @@ struct DebugRunListFeature: Reducer {
 //                    print(run.uuid, run.stats(for: .init(.distanceWalkingRunning))?.sumQuantity()?.doubleValue(for: .meter()) as Any)
                 ////                    await send(._internal(.runFetched(run)))
 //                }
-                let result = await TaskResult {
+                let result = await Result {
                     try await runningWorkouts.allRunningWorkouts.remote()
                 }
                 await send(._internal(.runsFetched(result)))

@@ -6,9 +6,9 @@ import FeatureFlags
 import Foundation
 
 @Reducer
-public struct SettingsFeature {
+public struct SettingsFeature: Sendable {
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         var versionNumber: String = ""
         var buildNumber: String = ""
         var acknowledgements: IdentifiedArrayOf<Acknowledgement> = .acknowledgements
@@ -30,11 +30,12 @@ public struct SettingsFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, BindableAction, ViewAction {
+    public enum Action: BindableAction, ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case deleteAllRunsTapped
+            case dismissButtonTapped
         }
 
         case view(View)
@@ -46,6 +47,8 @@ public struct SettingsFeature {
     @Dependency(\.coreData) var coreData
 
     public init() {}
+    
+    @Dependency(\.dismiss) var dismiss
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -77,6 +80,8 @@ public struct SettingsFeature {
                     try context.save()
                 }
             }
+        case .dismissButtonTapped:
+            return .run { _ in await dismiss() }
         }
     }
 }

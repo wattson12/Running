@@ -6,7 +6,7 @@ import Repository
 @Reducer
 public struct EditGoalFeature {
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         let period: Goal.Period
         let initialGoal: Goal
 
@@ -22,9 +22,9 @@ public struct EditGoalFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case targetUpdated(String)
             case validateTarget
@@ -33,7 +33,7 @@ public struct EditGoalFeature {
         }
 
         @CasePathable
-        public enum Delegate: Equatable {
+        public enum Delegate: Sendable {
             case goalUpdated(Goal)
             case goalCleared(Goal.Period)
         }

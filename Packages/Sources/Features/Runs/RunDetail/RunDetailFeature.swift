@@ -4,9 +4,9 @@ import Model
 import Repository
 
 @Reducer
-public struct RunDetailFeature {
+public struct RunDetailFeature: Sendable {
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         var run: Run
         var isLoading: Bool
 
@@ -29,19 +29,19 @@ public struct RunDetailFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
         }
 
         @CasePathable
-        public enum Internal: Equatable {
-            case runDetailFetched(TaskResult<Run>)
+        public enum Internal: Sendable {
+            case runDetailFetched(Result<Run, Error>)
         }
 
         @CasePathable
-        public enum Delegate: Equatable {
+        public enum Delegate: Sendable {
             case runDetailFetched(Run)
         }
 
@@ -78,7 +78,7 @@ public struct RunDetailFeature {
                     await send(._internal(.runDetailFetched(.success(cachedRun))))
                 }
 
-                let result = await TaskResult { try await runningWorkouts.detail(for: id) }
+                let result = await Result { try await runningWorkouts.detail(for: id) }
                 await send(._internal(.runDetailFetched(result)))
             }
         }

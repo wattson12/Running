@@ -110,7 +110,7 @@ extension HealthKitRunningWorkouts {
         private static func locations(in store: HKHealthStore, for route: HKWorkoutRoute?) async throws -> [CLLocation] {
             guard let route else { return [] }
             return try await withCheckedThrowingContinuation { continuation in
-                var allLocations: [CLLocation] = []
+                let allLocations: LockIsolated<[CLLocation]> = .init([])
                 let query = HKWorkoutRouteQuery(route: route) { _, locations, done, error in
 
                     if let error {
@@ -123,10 +123,10 @@ extension HealthKitRunningWorkouts {
                         return
                     }
 
-                    allLocations.append(contentsOf: locations)
+                    allLocations.withValue { $0.append(contentsOf: locations) }
 
                     if done {
-                        continuation.resume(returning: allLocations)
+                        continuation.resume(returning: allLocations.value)
                     }
                 }
 

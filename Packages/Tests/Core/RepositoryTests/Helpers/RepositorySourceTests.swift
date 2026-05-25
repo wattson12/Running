@@ -1,43 +1,43 @@
 @testable import Repository
-import XCTest
+import Testing
+import Foundation
 
-final class RepositorySourceTests: XCTestCase {
-    @MainActor
-    func testCacheHelperReturnsCorrectValue() {
+@MainActor
+@Suite
+struct RepositorySourceTests {
+    @Test func cacheHelperReturnsCorrectValue() {
         let cacheInput: Int = .random(in: 1 ..< 10000)
         let cacheResult: Int = .random(in: 1 ..< 10000)
 
         let sut: RepositorySource<Int, Int> = .init(
             cache: {
-                XCTAssertEqual($0, cacheInput)
+                #expect($0 == cacheInput)
                 return cacheResult
             },
             remote: { _ in .random(in: 1 ..< 10000) }
         )
 
         let response = sut.cache(input: cacheInput)
-        XCTAssertEqual(response, cacheResult)
+        #expect(response == cacheResult)
     }
 
-    @MainActor
-    func testRemoteHelperReturnsCorrectValue() async throws {
+    @Test func remoteHelperReturnsCorrectValue() async throws {
         let remoteInput: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
         let sut: RepositorySource<Int, Int> = .init(
             cache: { _ in nil },
             remote: {
-                XCTAssertEqual($0, remoteInput)
+                #expect($0 == remoteInput)
                 return remoteResult
             }
         )
 
         let response = try await sut.remote(input: remoteInput)
-        XCTAssertEqual(response, remoteResult)
+        #expect(response == remoteResult)
     }
 
-    @MainActor
-    func testRemoteHelperForwardsErrorOnFailure() async throws {
+    @Test func remoteHelperForwardsErrorOnFailure() async throws {
         let remoteError: NSError = .init(domain: #fileID, code: #line)
 
         let sut: RepositorySource<Int, Int> = .init(
@@ -47,25 +47,24 @@ final class RepositorySourceTests: XCTestCase {
 
         do {
             let response = try await sut.remote(input: .random(in: 1 ..< 10000))
-            XCTFail("Unexpected success: \(response)")
+            Issue.record("Unexpected success: \(response)")
         } catch {
-            XCTAssertEqual(error as NSError, remoteError)
+            #expect(error as NSError == remoteError)
         }
     }
 
-    @MainActor
-    func testStreamWhenCacheIsAvailable() async throws {
+    @Test func streamWhenCacheIsAvailable() async throws {
         let input: Int = .random(in: 1 ..< 10000)
         let cacheResult: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
         let sut: RepositorySource<Int, Int> = .init(
             cache: {
-                XCTAssertEqual($0, input)
+                #expect($0 == input)
                 return cacheResult
             },
             remote: {
-                XCTAssertEqual($0, input)
+                #expect($0 == input)
                 return remoteResult
             }
         )
@@ -75,11 +74,10 @@ final class RepositorySourceTests: XCTestCase {
             values.append(value)
         }
 
-        XCTAssertEqual(values, [cacheResult, remoteResult])
+        #expect(values == [cacheResult, remoteResult])
     }
 
-    @MainActor
-    func testStreamWhenNoCacheIsAvailable() async throws {
+    @Test func streamWhenNoCacheIsAvailable() async throws {
         let input: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
@@ -93,11 +91,10 @@ final class RepositorySourceTests: XCTestCase {
             values.append(value)
         }
 
-        XCTAssertEqual(values, [remoteResult])
+        #expect(values == [remoteResult])
     }
 
-    @MainActor
-    func testStreamWhenRemoteRequestFails() async throws {
+    @Test func streamWhenRemoteRequestFails() async throws {
         let input: Int = .random(in: 1 ..< 10000)
         let remoteError: NSError = .init(domain: #fileID, code: #line)
 
@@ -111,17 +108,16 @@ final class RepositorySourceTests: XCTestCase {
             for try await value in sut.stream(input: input) {
                 values.append(value)
             }
-            XCTFail("Unexpected successful response(s): \(values)")
+            Issue.record("Unexpected successful response(s): \(values)")
 
         } catch {
-            XCTAssertEqual(error as NSError, remoteError)
+            #expect(error as NSError == remoteError)
         }
 
-        XCTAssertEqual(values, [])
+        #expect(values == [])
     }
 
-    @MainActor
-    func testCacheOrRemoteWhenCacheIsPresent() async throws {
+    @Test func cacheOrRemoteWhenCacheIsPresent() async throws {
         let cacheResult: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
@@ -131,11 +127,10 @@ final class RepositorySourceTests: XCTestCase {
         )
 
         let result = try await sut.cacheOrRemote()
-        XCTAssertEqual(result, cacheResult)
+        #expect(result == cacheResult)
     }
 
-    @MainActor
-    func testCacheOrRemoteWhenCacheIsNotPresent() async throws {
+    @Test func cacheOrRemoteWhenCacheIsNotPresent() async throws {
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
         let sut: RepositorySource<Void, Int> = .init(
@@ -144,11 +139,10 @@ final class RepositorySourceTests: XCTestCase {
         )
 
         let result = try await sut.cacheOrRemote()
-        XCTAssertEqual(result, remoteResult)
+        #expect(result == remoteResult)
     }
 
-    @MainActor
-    func testVoidInputHelpers() async throws {
+    @Test func voidInputHelpers() async throws {
         let cacheResult: Int = .random(in: 1 ..< 10000)
         let remoteResult: Int = .random(in: 1 ..< 10000)
 
@@ -157,15 +151,15 @@ final class RepositorySourceTests: XCTestCase {
             remote: { remoteResult }
         )
 
-        XCTAssertEqual(sut.cache(), cacheResult)
+        #expect(sut.cache() == cacheResult)
         let remote = try await sut.remote()
-        XCTAssertEqual(remote, remoteResult)
+        #expect(remote == remoteResult)
 
         var values: [Int] = []
         for try await value in sut.stream() {
             values.append(value)
         }
 
-        XCTAssertEqual(values, [cacheResult, remoteResult])
+        #expect(values == [cacheResult, remoteResult])
     }
 }

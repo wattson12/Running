@@ -5,18 +5,18 @@ import SwiftUI
 
 @Reducer
 struct UpdatedGoalPreviewWrapperFeature {
-    struct State: Equatable {
+    struct State: Equatable, Sendable {
         var goalList: GoalListFeature.State
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
         }
 
-        enum Internal: Equatable {
+        enum Internal: Sendable {
             case refreshGoals
         }
 
@@ -40,7 +40,7 @@ struct UpdatedGoalPreviewWrapperFeature {
                 return .none
             }
         }
-        Scope(state: \.goalList, action: /Action.goalList, child: GoalListFeature.init)
+        Scope(state: \.goalList, action: \.goalList, child: GoalListFeature.init)
     }
 
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {

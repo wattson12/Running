@@ -4,15 +4,18 @@ import Foundation
 import GoalHistory
 import Model
 
+extension GoalDetailFeature.Destination.State: Equatable, Sendable {}
+extension GoalDetailFeature.Destination.Action: Sendable {}
+
 @Reducer
-public struct GoalDetailFeature: Reducer {
-    @Reducer(state: .equatable, action: .equatable)
+public struct GoalDetailFeature: Sendable {
+    @Reducer
     public enum Destination {
         case history(GoalHistoryFeature)
     }
 
     @ObservableState
-    public struct State: Equatable {
+    public struct State: Equatable, Sendable {
         let goal: Goal
         let intervalDate: Date?
         var runs: [Run]?
@@ -116,16 +119,16 @@ public struct GoalDetailFeature: Reducer {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction, BindableAction {
+    public enum Action: ViewAction, BindableAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case historyButtonTapped
         }
 
         @CasePathable
-        public enum Internal: Equatable {
-            case runsFetched(TaskResult<[Run]>)
+        public enum Internal: Sendable {
+            case runsFetched(Result<[Run], Error>)
         }
 
         case view(View)
@@ -168,7 +171,7 @@ public struct GoalDetailFeature: Reducer {
             }
 
             return .run { [goal = state.goal, intervalDate = state.intervalDate] send in
-                let result = await TaskResult {
+                let result = await Result {
                     _ = try await runningWorkouts.allRunningWorkouts.remote()
                     return try runningWorkouts.runs(within: goal, date: intervalDate)
                 }

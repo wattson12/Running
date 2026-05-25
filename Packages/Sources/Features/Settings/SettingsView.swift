@@ -40,9 +40,9 @@ public struct SettingsView: View {
                     Section(
                         header: Text(L10n.Settings.Section.betaFeatures),
                         content: {
-                            Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: $store.runDetailEnabled)
-                            Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: $store.programEnabled)
-                            Toggle(L10n.Settings.Section.BetaFeatures.goalHistory, isOn: $store.goalHistoryEnabled)
+                            Toggle(L10n.Settings.Section.BetaFeatures.runDetail, isOn: Binding(store.$runDetailEnabled))
+                            Toggle(L10n.Settings.Section.BetaFeatures.program, isOn: Binding(store.$programEnabled))
+                            Toggle(L10n.Settings.Section.BetaFeatures.goalHistory, isOn: Binding(store.$goalHistoryEnabled))
                         }
                     )
                 }
@@ -56,6 +56,16 @@ public struct SettingsView: View {
             }
             .buttonStyle(.plain)
             .navigationTitle(L10n.App.Feature.settings)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(
+                        action: { send(.dismissButtonTapped) },
+                        label: {
+                            Image(systemName: "x.circle")
+                        }
+                    )
+                }
+            }
             .onAppear { send(.onAppear) }
         }
     }

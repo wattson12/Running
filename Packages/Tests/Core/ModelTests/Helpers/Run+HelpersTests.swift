@@ -1,8 +1,9 @@
 @testable import Model
-import XCTest
+import Testing
+import Foundation
 
-final class Run_HelpersTests: XCTestCase {
-    func testDistanceCalculationForCollectionOfRunsIsCorrect() {
+struct Run_HelpersTests {
+    @Test func distanceCalculationForCollectionOfRunsIsCorrect() {
         let distances: [Double] = [
             .random(in: 1 ..< 10000),
             .random(in: 1 ..< 10000),
@@ -25,6 +26,6 @@ final class Run_HelpersTests: XCTestCase {
             .mock(distance: .init(value: $0, unit: .kilometers))
         }
 
-        XCTAssertEqual(runs.distance, .init(value: sum, unit: .kilometers))
+        #expect(runs.distance == .init(value: sum, unit: .kilometers))
     }
 }

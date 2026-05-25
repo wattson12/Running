@@ -3,14 +3,14 @@ import Foundation
 import Model
 
 @Reducer
-public struct PermissionsFeature {
-    public struct Empty: Equatable {
+public struct PermissionsFeature: Sendable {
+    public struct Empty: Equatable, Sendable {
         init(_ _: Void) {}
     }
 
     @ObservableState
-    public struct State: Equatable {
-        public enum InnerState: Int, Equatable {
+    public struct State: Equatable, Sendable {
+        public enum InnerState: Int, Equatable, Sendable {
             case initial
             case requestPermissions
             case healthKitNotAvailable
@@ -24,21 +24,21 @@ public struct PermissionsFeature {
     }
 
     @CasePathable
-    public enum Action: Equatable, ViewAction {
+    public enum Action: ViewAction, Sendable {
         @CasePathable
-        public enum View: Equatable {
+        public enum View: Sendable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
         @CasePathable
-        public enum Internal: Equatable {
-            case requestPermissionsCompleted(TaskResult<Empty>)
-            case authorizationRequestStatusCompleted(TaskResult<AuthorizationRequestStatus>)
+        public enum Internal: Sendable {
+            case requestPermissionsCompleted(Result<Empty, Error>)
+            case authorizationRequestStatusCompleted(Result<AuthorizationRequestStatus, Error>)
         }
 
         @CasePathable
-        public enum Delegate: Equatable {
+        public enum Delegate: Sendable {
             case permissionsAvailable
         }
 
@@ -71,7 +71,7 @@ public struct PermissionsFeature {
             return validatePermissions(state: &state)
         case .requestPermissionsButtonTapped:
             return .run { send in
-                let result = await TaskResult { try await permissions.requestAuthorization() }
+                let result = await Result { try await permissions.requestAuthorization() }
                 await send(._internal(.requestPermissionsCompleted(result.map(Empty.init))))
             }
         }
@@ -104,7 +104,7 @@ public struct PermissionsFeature {
         }
 
         return .run { send in
-            let result = await TaskResult { try await permissions.authorizationRequestStatus() }
+            let result = await Result { try await permissions.authorizationRequestStatus() }
             await send(._internal(.authorizationRequestStatusCompleted(result)))
         }
     }

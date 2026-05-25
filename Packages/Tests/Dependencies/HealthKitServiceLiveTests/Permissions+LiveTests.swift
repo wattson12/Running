@@ -1,22 +1,24 @@
 import HealthKit
 import HealthKitServiceInterface
 @testable import HealthKitServiceLive
-import XCTest
+import Testing
+import Foundation
 
-final class Permissions_LiveTests: XCTestCase {
-    func testAuthorizationRequestStatus() async throws {
+@Suite
+struct Permissions_LiveTests {
+    @Test func authorizationRequestStatus() async throws {
         let possibleStatus: [HKAuthorizationRequestStatus] = [
             .shouldRequest,
             .unknown,
             .unnecessary,
         ]
 
-        let expectedStatus: HKAuthorizationRequestStatus = try XCTUnwrap(possibleStatus.randomElement())
+        let expectedStatus: HKAuthorizationRequestStatus = try #require(possibleStatus.randomElement())
 
         let store = MockHealthStoreType(
             _statusForAuthorizationRequest: { share, read in
-                XCTAssertEqual(share, .sharePermissions)
-                XCTAssertEqual(read, .readPermissions)
+                #expect(share == .sharePermissions)
+                #expect(read == .readPermissions)
                 return expectedStatus
             }
         )
@@ -24,23 +26,22 @@ final class Permissions_LiveTests: XCTestCase {
         let sut: HealthKitPermissions = .live(store: store)
 
         let status = try await sut.authorizationRequestStatus()
-        XCTAssertEqual(status, expectedStatus)
+        #expect(status == expectedStatus)
     }
 
-    func testRequestAuthorization() async throws {
-        let expectation = expectation(description: "requestAuthorization called")
-        let store = MockHealthStoreType(
-            _requestAuthorization: { share, read in
-                XCTAssertEqual(share, .sharePermissions)
-                XCTAssertEqual(read, .readPermissions)
-                expectation.fulfill()
-            }
-        )
-
-        let sut: HealthKitPermissions = .live(store: store)
-
-        try await sut.requestAuthorization()
-
-        await fulfillment(of: [expectation])
+    @Test func requestAuthorization() async throws {
+        try await confirmation { expectation in
+            let store = MockHealthStoreType(
+                _requestAuthorization: { share, read in
+                    #expect(share == .sharePermissions)
+                    #expect(read == .readPermissions)
+                    expectation()
+                }
+            )
+            
+            let sut: HealthKitPermissions = .live(store: store)
+            
+            try await sut.requestAuthorization()
+        }
     }
 }

@@ -1,23 +1,24 @@
 import Foundation
 import Model
 import XCTestDynamicOverlay
+import ConcurrencyExtras
 
 extension Goals {
     public static func mock(goals: [Goal]) -> Goals {
-        var goals = goals
+        let goals = LockIsolated(goals)
 
         return .init(
             goal: { period in
-                goals.first(where: { $0.period == period })!
+                goals.value.first(where: { $0.period == period })!
             },
             updateGoal: { goal in
-                guard let index = goals.firstIndex(where: { $0.period == goal.period }) else { return }
-                goals[index] = goal
+                guard let index = goals.value.firstIndex(where: { $0.period == goal.period }) else { return }
+                goals.withValue { $0[index] = goal }
             }
         )
     }
 
-    static var previewValue: Goals = .mock(
+    static let previewValue: Goals = .mock(
         goals: [
             .init(period: .weekly, target: .init(value: 50, unit: .kilometers)),
             .init(period: .monthly, target: nil),
@@ -25,5 +26,5 @@ extension Goals {
         ]
     )
 
-    static var testValue: Goals = .init()
+    static let testValue: Goals = .init()
 }

@@ -18,18 +18,18 @@ struct DebugRunListItemFeature: Reducer {
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
             case cachedButtonTapped
             case remoteButtonTapped
         }
 
         @CasePathable
-        enum Internal: Equatable {
-            case detailFetched(TaskResult<WorkoutDetail>)
-            case runDetailFetched(TaskResult<Run>)
+        enum Internal: Sendable {
+            case detailFetched(Result<WorkoutDetail, Error>)
+            case runDetailFetched(Result<Run, Error>)
         }
 
         case view(View)
@@ -58,7 +58,7 @@ struct DebugRunListItemFeature: Reducer {
             guard !state.isLoading else { return .none }
             state.isLoading = true
             return .run { [id = state.run.id] send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await repository.detail(for: id)
                 }
                 await send(._internal(.runDetailFetched(result)))
@@ -66,7 +66,7 @@ struct DebugRunListItemFeature: Reducer {
         case .remoteButtonTapped:
             state.isLoading = true
             return .run { [id = state.run.id] send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await healthKit.detail(for: id)
                 }
                 await send(._internal(.detailFetched(result)))

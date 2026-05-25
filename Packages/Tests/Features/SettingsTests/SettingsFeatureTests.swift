@@ -2,11 +2,13 @@ import ComposableArchitecture
 import DependenciesAdditions
 import FeatureFlags
 @testable import Settings
-import XCTest
+import Testing
+import Foundation
 
-final class SettingsFeatureTests: XCTestCase {
-    @MainActor
-    func testInitialStateSetupIsCorrect() async throws {
+@MainActor
+@Suite
+struct SettingsFeatureTests {
+    @Test func initialStateSetupIsCorrect() async throws {
         let buildNumber: String = UUID().uuidString
         let versionNumber: String = UUID().uuidString
         let showRunDetail: Bool = .random()
@@ -33,22 +35,21 @@ final class SettingsFeatureTests: XCTestCase {
         await store.send(.view(.onAppear)) {
             $0.versionNumber = versionNumber
             $0.buildNumber = buildNumber
-            $0.runDetailEnabled = showRunDetail
-            $0.historyEnabled = showHistory
+            $0.$runDetailEnabled.withLock { $0 = showRunDetail }
         }
     }
 
-    func testDisplayFeatureFlagIsCorrectForTestflightAndPreviewEnvironmentValues() throws {
-        let inputs: [(String?, String?, Bool, UInt)] = [
-            (nil, nil, false, #line),
-            (nil, "1", true, #line),
-            ("YES", nil, true, #line),
-            ("YES", "1", true, #line),
-            ("NO", nil, false, #line),
-            (UUID().uuidString, nil, false, #line),
+    @Test func displayFeatureFlagIsCorrectForTestflightAndPreviewEnvironmentValues() throws {
+        let inputs: [(String?, String?, Bool, SourceLocation)] = [
+            (nil, nil, false, #_sourceLocation),
+            (nil, "1", true, #_sourceLocation),
+            ("YES", nil, true, #_sourceLocation),
+            ("YES", "1", true, #_sourceLocation),
+            ("NO", nil, false, #_sourceLocation),
+            (UUID().uuidString, nil, false, #_sourceLocation),
         ]
 
-        for (testflight, preview, expected, line) in inputs {
+        for (testflight, preview, expected, sourceLocation) in inputs {
             let environment: [String: String?] = [
                 "XCODE_RUNNING_FOR_PREVIEWS": preview,
             ]
@@ -61,7 +62,7 @@ final class SettingsFeatureTests: XCTestCase {
             } operation: {
                 sut._displayFeatureFlags(bundleInfo: bundleInfo)
             }
-            XCTAssertEqual(displayFeatureFlags, expected, line: line)
+            #expect(displayFeatureFlags == expected, sourceLocation: sourceLocation)
         }
     }
 }

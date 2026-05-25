@@ -1,9 +1,9 @@
 import XCTestDynamicOverlay
 
 extension Support {
-    static var previewValue: Support = .init(
+    static let previewValue: Support = .init(
         isHealthKitDataAvailable: { true }
     )
 
-    static var testValue: Support = .init()
+    static let testValue: Support = .init()
 }

@@ -1,14 +1,15 @@
 @testable import HealthKitServiceInterface
-import XCTest
+import Testing
+import Foundation
 
-final class SupportTests: XCTestCase {
-    func testIsHealthKitDataAvailablePublicHelper() {
+struct SupportTests {
+    @Test func isHealthKitDataAvailablePublicHelper() {
         let isAvailable: Bool = .random()
         let sut: HealthKitSupport = .init(
             isHealthKitDataAvailable: { isAvailable }
         )
 
         let available = sut.isHealthKitDataAvailable()
-        XCTAssertEqual(available, isAvailable)
+        #expect(available == isAvailable)
     }
 }

@@ -6,11 +6,13 @@ import GoalDetail
 import Model
 import Repository
 import Widgets
-import XCTest
+import Testing
+import Foundation
 
-final class GoalListFeatureTests: XCTestCase {
-    @MainActor
-    func testGoalsPopulatedHappyPath() async throws {
+@MainActor
+@Suite
+struct GoalListFeatureTests {
+    @Test func goalsPopulatedHappyPath() async throws {
         let weeklyRun: Run = .mock()
         let monthlyRun: Run = .mock()
         let yearlyRun: Run = .mock()
@@ -89,8 +91,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testGoalsPopulatedWhenSomeGoalsHaveNoRuns() async throws {
+    @Test func goalsPopulatedWhenSomeGoalsHaveNoRuns() async throws {
         let weeklyRun: Run = .mock()
         let yearlyRun: Run = .mock()
         let runs: [Goal.Period: [Run]] = [
@@ -167,8 +168,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testGoalsPopulatedWhenFetchingSomeGoalsFails() async throws {
+    @Test func goalsPopulatedWhenFetchingSomeGoalsFails() async throws {
         let weeklyRun: Run = .mock()
         let yearlyRun: Run = .mock()
         let runs: [Goal.Period: [Run]] = [
@@ -240,8 +240,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testDestinationIsCorrectWhenTappingGoalWithTarget() async throws {
+    @Test func destinationIsCorrectWhenTappingGoalWithTarget() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: .init(value: 100, unit: .kilometers)
@@ -259,8 +258,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testDestinationIsCorrectWhenTappingGoalWithoutTarget() async throws {
+    @Test func destinationIsCorrectWhenTappingGoalWithoutTarget() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: nil
@@ -278,8 +276,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testDestinationIsCorrectWhenEditGoalTapped() async throws {
+    @Test func destinationIsCorrectWhenEditGoalTapped() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: .init(value: 100, unit: .kilometers)
@@ -297,8 +294,7 @@ final class GoalListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testEdiyGoalGoalUpdatedDelegateUpdatesStateAndCacheForWeeklyGoal() async throws {
+    @Test func editGoalGoalUpdatedDelegateUpdatesStateAndCacheForWeeklyGoal() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: .init(value: 1, unit: .kilometers)
@@ -311,9 +307,6 @@ final class GoalListFeatureTests: XCTestCase {
                 unit: .kilometers
             )
         )
-
-        let updateGoalCalled = expectation(description: "udpateGoal called")
-        let reloadTimelinesCalled = expectation(description: "reload timelines called")
 
         let store = TestStore(
             initialState: .init(
@@ -323,12 +316,9 @@ final class GoalListFeatureTests: XCTestCase {
             reducer: GoalListFeature.init,
             withDependencies: {
                 $0.repository.goals._updateGoal = {
-                    XCTAssertEqual($0, updatedGoal)
-                    updateGoalCalled.fulfill()
+                    #expect($0 == updatedGoal)
                 }
-                $0.widget._reloadAllTimelines = {
-                    reloadTimelinesCalled.fulfill()
-                }
+                $0.widget._reloadAllTimelines = {}
             }
         )
 
@@ -337,12 +327,9 @@ final class GoalListFeatureTests: XCTestCase {
             $0.refreshRows()
             $0.destination = nil
         }
-
-        await fulfillment(of: [updateGoalCalled, reloadTimelinesCalled])
     }
 
-    @MainActor
-    func testEdiyGoalGoalUpdatedDelegateUpdatesStateAndCacheForMonthlyGoal() async throws {
+    @Test func editGoalGoalUpdatedDelegateUpdatesStateAndCacheForMonthlyGoal() async throws {
         let goal: Goal = .mock(
             period: .monthly,
             target: .init(value: 1, unit: .kilometers)
@@ -356,8 +343,6 @@ final class GoalListFeatureTests: XCTestCase {
             )
         )
 
-        let updateGoalCalled = expectation(description: "udpateGoal called")
-
         let store = TestStore(
             initialState: .init(
                 monthlyGoal: goal,
@@ -366,8 +351,7 @@ final class GoalListFeatureTests: XCTestCase {
             reducer: GoalListFeature.init,
             withDependencies: {
                 $0.repository.goals._updateGoal = {
-                    XCTAssertEqual($0, updatedGoal)
-                    updateGoalCalled.fulfill()
+                    #expect($0 == updatedGoal)
                 }
                 $0.widget._reloadAllTimelines = {}
             }
@@ -378,12 +362,9 @@ final class GoalListFeatureTests: XCTestCase {
             $0.refreshRows()
             $0.destination = nil
         }
-
-        await fulfillment(of: [updateGoalCalled])
     }
 
-    @MainActor
-    func testEdiyGoalGoalUpdatedDelegateUpdatesStateAndCacheForYearlyGoal() async throws {
+    @Test func editGoalGoalUpdatedDelegateUpdatesStateAndCacheForYearlyGoal() async throws {
         let goal: Goal = .mock(
             period: .yearly,
             target: .init(value: 1, unit: .kilometers)
@@ -397,8 +378,6 @@ final class GoalListFeatureTests: XCTestCase {
             )
         )
 
-        let updateGoalCalled = expectation(description: "udpateGoal called")
-
         let store = TestStore(
             initialState: .init(
                 yearlyGoal: goal,
@@ -407,8 +386,7 @@ final class GoalListFeatureTests: XCTestCase {
             reducer: GoalListFeature.init,
             withDependencies: {
                 $0.repository.goals._updateGoal = {
-                    XCTAssertEqual($0, updatedGoal)
-                    updateGoalCalled.fulfill()
+                    #expect($0 == updatedGoal)
                 }
                 $0.widget._reloadAllTimelines = {}
             }
@@ -419,12 +397,9 @@ final class GoalListFeatureTests: XCTestCase {
             $0.refreshRows()
             $0.destination = nil
         }
-
-        await fulfillment(of: [updateGoalCalled])
     }
 
-    @MainActor
-    func testEditGoalGoalClearedDelegateUpdatesStateAndCacheForWeeklyGoal() async throws {
+    @Test func editGoalGoalClearedDelegateUpdatesStateAndCacheForWeeklyGoal() async throws {
         let goal: Goal = .mock(
             period: .weekly,
             target: .init(value: 1, unit: .kilometers)
@@ -435,8 +410,6 @@ final class GoalListFeatureTests: XCTestCase {
             target: nil
         )
 
-        let updateGoalCalled = expectation(description: "udpateGoal called")
-
         let store = TestStore(
             initialState: .init(
                 weeklyGoal: goal,
@@ -445,8 +418,7 @@ final class GoalListFeatureTests: XCTestCase {
             reducer: GoalListFeature.init,
             withDependencies: {
                 $0.repository.goals._updateGoal = {
-                    XCTAssertEqual($0, updatedGoal)
-                    updateGoalCalled.fulfill()
+                    #expect($0 == updatedGoal)
                 }
                 $0.widget._reloadAllTimelines = {}
             }
@@ -457,12 +429,9 @@ final class GoalListFeatureTests: XCTestCase {
             $0.refreshRows()
             $0.destination = nil
         }
-
-        await fulfillment(of: [updateGoalCalled])
     }
 
-    @MainActor
-    func testEdiyGoalGoalClearedDelegateUpdatesStateAndCacheForMonthlyGoal() async throws {
+    @Test func editGoalGoalClearedDelegateUpdatesStateAndCacheForMonthlyGoal() async throws {
         let goal: Goal = .mock(
             period: .monthly,
             target: .init(value: 1, unit: .kilometers)
@@ -473,8 +442,6 @@ final class GoalListFeatureTests: XCTestCase {
             target: nil
         )
 
-        let updateGoalCalled = expectation(description: "udpateGoal called")
-
         let store = TestStore(
             initialState: .init(
                 monthlyGoal: goal,
@@ -483,8 +450,7 @@ final class GoalListFeatureTests: XCTestCase {
             reducer: GoalListFeature.init,
             withDependencies: {
                 $0.repository.goals._updateGoal = {
-                    XCTAssertEqual($0, updatedGoal)
-                    updateGoalCalled.fulfill()
+                    #expect($0 == updatedGoal)
                 }
                 $0.widget._reloadAllTimelines = {}
             }
@@ -495,12 +461,9 @@ final class GoalListFeatureTests: XCTestCase {
             $0.refreshRows()
             $0.destination = nil
         }
-
-        await fulfillment(of: [updateGoalCalled])
     }
 
-    @MainActor
-    func testEdiyGoalGoalClearedDelegateUpdatesStateAndCacheForYearlyGoal() async throws {
+    @Test func editGoalGoalClearedDelegateUpdatesStateAndCacheForYearlyGoal() async throws {
         let goal: Goal = .mock(
             period: .yearly,
             target: .init(value: 1, unit: .kilometers)
@@ -511,9 +474,9 @@ final class GoalListFeatureTests: XCTestCase {
             target: nil
         )
 
-        let updateGoalCalled = expectation(description: "udpateGoal called")
-        let reloadTimelinesCalled = expectation(description: "reload timelines called")
-
+        let updateGoalCalled = LockIsolated<Bool>(false)
+        let reloadTimelinesCalled =  LockIsolated<Bool>(false)
+        
         let store = TestStore(
             initialState: .init(
                 yearlyGoal: goal,
@@ -522,11 +485,11 @@ final class GoalListFeatureTests: XCTestCase {
             reducer: GoalListFeature.init,
             withDependencies: {
                 $0.repository.goals._updateGoal = {
-                    XCTAssertEqual($0, updatedGoal)
-                    updateGoalCalled.fulfill()
+                    #expect($0 == updatedGoal)
+                    updateGoalCalled.setValue(true)
                 }
                 $0.widget._reloadAllTimelines = {
-                    reloadTimelinesCalled.fulfill()
+                    reloadTimelinesCalled.setValue(true)
                 }
             }
         )
@@ -537,11 +500,11 @@ final class GoalListFeatureTests: XCTestCase {
             $0.destination = nil
         }
 
-        await fulfillment(of: [updateGoalCalled, reloadTimelinesCalled])
+        #expect(updateGoalCalled.value)
+        #expect(reloadTimelinesCalled.value)
     }
 
-    @MainActor
-    func testDeepLinkHandling() {
+    @Test func deepLinkHandling() {
         let weekly: Goal = .mock(
             period: .weekly,
             target: .init(
@@ -573,36 +536,35 @@ final class GoalListFeatureTests: XCTestCase {
         )
 
         sut.handleDeepLink(route: .weekly(nil))
-        XCTAssertEqual(sut.destination, .detail(.init(goal: weekly)))
+        #expect(sut.destination == .detail(.init(goal: weekly)))
 
         sut.destination = nil
 
         sut.handleDeepLink(route: .monthly(nil))
-        XCTAssertEqual(sut.destination, .detail(.init(goal: monthly)))
+        #expect(sut.destination == .detail(.init(goal: monthly)))
 
         sut.destination = nil
 
         sut.handleDeepLink(route: .yearly(nil))
-        XCTAssertEqual(sut.destination, .detail(.init(goal: yearly)))
+        #expect(sut.destination == .detail(.init(goal: yearly)))
 
         sut.destination = nil
 
         sut.handleDeepLink(route: .weekly(.edit))
-        XCTAssertEqual(sut.destination, .editGoal(.init(goal: weekly)))
+        #expect(sut.destination == .editGoal(.init(goal: weekly)))
 
         sut.destination = nil
 
         sut.handleDeepLink(route: .monthly(.edit))
-        XCTAssertEqual(sut.destination, .editGoal(.init(goal: monthly)))
+        #expect(sut.destination == .editGoal(.init(goal: monthly)))
 
         sut.destination = nil
 
         sut.handleDeepLink(route: .yearly(.edit))
-        XCTAssertEqual(sut.destination, .editGoal(.init(goal: yearly)))
+        #expect(sut.destination == .editGoal(.init(goal: yearly)))
     }
 
-    @MainActor
-    func testDeepLinkHandlingWhenGoalIsNotFound() {
+    @Test func deepLinkHandlingWhenGoalIsNotFound() {
         var sut: GoalListFeature.State = .init(
             weeklyGoal: nil,
             monthlyGoal: nil,
@@ -610,12 +572,12 @@ final class GoalListFeatureTests: XCTestCase {
         )
 
         sut.handleDeepLink(route: .weekly(nil))
-        XCTAssertNil(sut.destination)
+        #expect(sut.destination == nil)
 
         sut.handleDeepLink(route: .monthly(nil))
-        XCTAssertNil(sut.destination)
+        #expect(sut.destination == nil)
 
         sut.handleDeepLink(route: .yearly(nil))
-        XCTAssertNil(sut.destination)
+        #expect(sut.destination == nil)
     }
 }

@@ -6,24 +6,24 @@ import SwiftUI
 @Reducer
 struct DebugAppFeature: Reducer {
     @ObservableState
-    enum State: Equatable {
+    enum State: Equatable, Sendable {
         case initial
         case permissionRequired
         case runs(DebugRunListFeature.State)
     }
 
     @CasePathable
-    enum Action: Equatable, ViewAction {
+    enum Action: ViewAction, Sendable {
         @CasePathable
-        enum View: Equatable {
+        enum View: Sendable {
             case onAppear
             case requestPermissionsButtonTapped
         }
 
         @CasePathable
-        enum Internal: Equatable {
-            case permissionsFetched(TaskResult<AuthorizationRequestStatus>)
-            case permissionsRequested(TaskResult<Bool>)
+        enum Internal: Sendable {
+            case permissionsFetched(Result<AuthorizationRequestStatus, Error>)
+            case permissionsRequested(Result<Bool, Error>)
         }
 
         case view(View)
@@ -44,26 +44,21 @@ struct DebugAppFeature: Reducer {
                 return .none
             }
         }
-
-        Scope(
-            state: /State.runs,
-            action: /Action.runs,
-            child: DebugRunListFeature.init
-        )
+        .ifCaseLet(\.runs, action: \.runs, then: DebugRunListFeature.init)
     }
 
     private func view(_ action: Action.View, state _: inout State) -> EffectOf<Self> {
         switch action {
         case .onAppear:
             return .run { send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await permissions.authorizationRequestStatus()
                 }
                 await send(._internal(.permissionsFetched(result)))
             }
         case .requestPermissionsButtonTapped:
             return .run { send in
-                let result = await TaskResult {
+                let result = await Result {
                     try await permissions.requestAuthorization()
                     return true
                 }

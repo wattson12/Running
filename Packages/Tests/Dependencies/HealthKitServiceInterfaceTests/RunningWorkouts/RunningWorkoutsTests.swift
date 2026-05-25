@@ -1,9 +1,11 @@
 @testable import HealthKitServiceInterface
-import XCTest
+import Testing
+import Foundation
 import XCTestDynamicOverlay
 
-final class RunningWorkoutsTests: XCTestCase {
-    func testAllRunningWorkoutsPublicHelper() async throws {
+@Suite
+struct RunningWorkoutsTests {
+    @Test func allRunningWorkoutsPublicHelper() async throws {
         let workouts: [MockWorkoutType] = [
             .init(
                 duration: .random(in: 1 ..< 100),
@@ -22,6 +24,6 @@ final class RunningWorkoutsTests: XCTestCase {
 
         let allRunningWorkouts = try await sut.allRunningWorkouts()
         let allMockRunningWorkouts = allRunningWorkouts.compactMap { $0 as? MockWorkoutType }
-        XCTAssertEqual(allMockRunningWorkouts, workouts)
+        #expect(allMockRunningWorkouts == workouts)
     }
 }

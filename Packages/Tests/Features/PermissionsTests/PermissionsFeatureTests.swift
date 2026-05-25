@@ -1,11 +1,13 @@
 import ComposableArchitecture
 import Model
 @testable import Permissions
-import XCTest
+import Testing
+import Foundation
 
-final class PermissionsFeatureTests: XCTestCase {
-    @MainActor
-    func testFlowWithPermissionsAlreadyAccepted() async throws {
+@MainActor
+@Suite
+struct PermissionsFeatureTests {
+    @Test func flowWithPermissionsAlreadyAccepted() async throws {
         let store = TestStore(
             initialState: .init(state: .initial),
             reducer: PermissionsFeature.init,
@@ -18,13 +20,12 @@ final class PermissionsFeatureTests: XCTestCase {
 
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.authorizationRequestStatusCompleted(.success(.requested))))
-
-        await store.receive(.delegate(.permissionsAvailable))
+        await store.receive(\._internal.authorizationRequestStatusCompleted.success, .requested)
+        
+        await store.receive(\.delegate.permissionsAvailable)
     }
 
-    @MainActor
-    func testPermissionRequestHappyPath() async throws {
+    @Test func permissionRequestHappyPath() async throws {
         let store = TestStore(
             initialState: .init(state: .initial),
             reducer: PermissionsFeature.init,
@@ -32,10 +33,10 @@ final class PermissionsFeatureTests: XCTestCase {
                 $0.repository.support._isHealthKitDataAvailable = { true }
                 $0.repository.permissions._requestAuthorization = {}
 
-                let firstStatusCall: ActorIsolated<Bool> = .init(true)
+                let firstStatusCall: LockIsolated<Bool> = .init(true)
                 $0.repository.permissions._authorizationRequestStatus = {
-                    let isFirstCall = await firstStatusCall.value
-                    await firstStatusCall.setValue(false)
+                    let isFirstCall = firstStatusCall.value
+                    firstStatusCall.setValue(false)
                     if isFirstCall {
                         return .shouldRequest
                     } else {
@@ -48,22 +49,21 @@ final class PermissionsFeatureTests: XCTestCase {
         // setup state on appearance
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.authorizationRequestStatusCompleted(.success(.shouldRequest)))) {
+        await store.receive(\._internal.authorizationRequestStatusCompleted.success, .shouldRequest) {
             $0.state = .requestPermissions
         }
 
         // user taps request
         await store.send(.view(.requestPermissionsButtonTapped))
 
-        await store.receive(._internal(.requestPermissionsCompleted(.success(.init(())))))
+        await store.receive(\._internal.requestPermissionsCompleted.success)
 
-        await store.receive(._internal(.authorizationRequestStatusCompleted(.success(.requested))))
+        await store.receive(\._internal.authorizationRequestStatusCompleted.success, .requested)
 
-        await store.receive(.delegate(.permissionsAvailable))
+        await store.receive(\.delegate.permissionsAvailable)
     }
 
-    @MainActor
-    func testFlowWithHealthKitUnavailable() async throws {
+    @Test func flowWithHealthKitUnavailable() async throws {
         let store = TestStore(
             initialState: .init(state: .initial),
             reducer: PermissionsFeature.init,

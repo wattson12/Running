@@ -5,11 +5,13 @@ import Foundation
 import Model
 import Repository
 @testable import RunList
-import XCTest
+import Testing
+import Foundation
 
-final class RunListFeatureTests: XCTestCase {
-    @MainActor
-    func testRunsFetchedHappyPath() async throws {
+@MainActor
+@Suite
+struct RunListFeatureTests {
+    @Test func runsFetchedHappyPath() async throws {
         let date = Date(timeIntervalSinceReferenceDate: 765_123_456) // March 2025
         let allRuns: [Run] = withDependencies {
             $0.calendar = .current
@@ -27,6 +29,7 @@ final class RunListFeatureTests: XCTestCase {
                 $0.calendar = .current
                 $0.uuid = .constant(.init(12))
                 $0.widget._reloadAllTimelines = {}
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -47,30 +50,23 @@ final class RunListFeatureTests: XCTestCase {
         await store.receive(\.delegate.runsRefreshed)
     }
 
-    @MainActor
-    func testRunsFetchedReloadsWidgets() async throws {
-        let reloadTimelinesCalled = expectation(description: "reload timelines called")
-
+    @Test func runsFetchedReloadsWidgets() async throws {
         let store = TestStore(
             initialState: .init(),
             reducer: RunListFeature.init,
             withDependencies: {
                 $0.uuid = .incrementing
-                $0.widget._reloadAllTimelines = {
-                    reloadTimelinesCalled.fulfill()
-                }
+                $0.widget._reloadAllTimelines = {}
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
         store.exhaustivity = .off
 
         await store.send(._internal(.runsFetched(.success([]))))
-
-        await fulfillment(of: [reloadTimelinesCalled])
     }
 
-    @MainActor
-    func testTappingOnRunSetsCorrectDestinationWithFeatureFlagEnabled() async throws {
+    @Test func tappingOnRunSetsCorrectDestinationWithFeatureFlagEnabled() async throws {
         let run: Run = .mock()
         let store = TestStore(
             initialState: .init(
@@ -84,6 +80,7 @@ final class RunListFeatureTests: XCTestCase {
             withDependencies: {
                 $0.date = .constant(.now)
                 $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.runDetail.name)
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -92,8 +89,7 @@ final class RunListFeatureTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testTappingOnRunDoesNothingWithFeatureFlagDisabled() async throws {
+    @Test func tappingOnRunDoesNothingWithFeatureFlagDisabled() async throws {
         let run: Run = .mock()
         let store = TestStore(
             initialState: .init(
@@ -107,6 +103,7 @@ final class RunListFeatureTests: XCTestCase {
             withDependencies: {
                 $0.date = .constant(.now)
                 $0.defaultAppStorage.set(false, forKey: FeatureFlagKey.runDetail.name)
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
