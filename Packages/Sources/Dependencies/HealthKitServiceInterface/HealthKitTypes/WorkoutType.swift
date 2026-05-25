@@ -14,7 +14,7 @@ extension HKWorkout: WorkoutType {
     }
 }
 
-public struct MockWorkoutType: WorkoutType, Equatable {
+public struct MockWorkoutType: WorkoutType, Equatable, Sendable {
     public var uuid: UUID
     public var startDate: Date
     public var duration: TimeInterval

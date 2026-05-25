@@ -8,7 +8,7 @@ final class Support_LiveTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
 
-        MockHealthStoreType._isHealthDataAvailable = unimplemented()
+        MockHealthStoreType._isHealthDataAvailable.setValue(unimplemented(placeholder: false))
     }
 
     func testIsHealthDataAvailable() {
@@ -16,7 +16,7 @@ final class Support_LiveTests: XCTestCase {
 
         let sut: HealthKitSupport = .live(storeType: MockHealthStoreType.self)
 
-        MockHealthStoreType._isHealthDataAvailable = { isAvailable }
+        MockHealthStoreType._isHealthDataAvailable.setValue({ isAvailable })
 
         XCTAssertEqual(sut.isHealthKitDataAvailable(), isAvailable)
     }

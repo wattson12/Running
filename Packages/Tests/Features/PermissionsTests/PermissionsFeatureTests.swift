@@ -18,9 +18,9 @@ final class PermissionsFeatureTests: XCTestCase {
 
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.authorizationRequestStatusCompleted(.success(.requested))))
-
-        await store.receive(.delegate(.permissionsAvailable))
+        await store.receive(\._internal.authorizationRequestStatusCompleted.success, .requested)
+        
+        await store.receive(\.delegate.permissionsAvailable)
     }
 
     @MainActor
@@ -48,18 +48,18 @@ final class PermissionsFeatureTests: XCTestCase {
         // setup state on appearance
         await store.send(.view(.onAppear))
 
-        await store.receive(._internal(.authorizationRequestStatusCompleted(.success(.shouldRequest)))) {
+        await store.receive(\._internal.authorizationRequestStatusCompleted.success, .shouldRequest) {
             $0.state = .requestPermissions
         }
 
         // user taps request
         await store.send(.view(.requestPermissionsButtonTapped))
 
-        await store.receive(._internal(.requestPermissionsCompleted(.success(.init(())))))
+        await store.receive(\._internal.requestPermissionsCompleted.success)
 
-        await store.receive(._internal(.authorizationRequestStatusCompleted(.success(.requested))))
+        await store.receive(\._internal.authorizationRequestStatusCompleted.success, .requested)
 
-        await store.receive(.delegate(.permissionsAvailable))
+        await store.receive(\.delegate.permissionsAvailable)
     }
 
     @MainActor

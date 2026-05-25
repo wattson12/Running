@@ -34,7 +34,6 @@ final class SettingsFeatureTests: XCTestCase {
             $0.versionNumber = versionNumber
             $0.buildNumber = buildNumber
             $0.runDetailEnabled = showRunDetail
-            $0.historyEnabled = showHistory
         }
     }
 

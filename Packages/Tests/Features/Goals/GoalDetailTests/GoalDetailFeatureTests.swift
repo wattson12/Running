@@ -31,6 +31,7 @@ final class GoalDetailFeatureTests: XCTestCase {
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _, _ in runs }
                 $0.uuid = .incrementing
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -63,6 +64,7 @@ final class GoalDetailFeatureTests: XCTestCase {
                     throw failure
                 }
                 $0.uuid = .incrementing
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -90,6 +92,7 @@ final class GoalDetailFeatureTests: XCTestCase {
                 $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
                 $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
                 $0.uuid = .constant(.init(1))
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 

@@ -1,7 +1,7 @@
 import Foundation
 import HealthKit
 
-public protocol StatisticsType {
+public protocol StatisticsType: Sendable {
     func sumQuantity() -> HKQuantity?
 }
 

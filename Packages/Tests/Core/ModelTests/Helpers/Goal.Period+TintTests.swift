@@ -3,6 +3,7 @@ import Resources
 import SwiftUI
 import XCTest
 
+@MainActor
 final class Goal_Period_TintTests: XCTestCase {
     func testTintColorIsCorrectForEachPeriod() {
         let inputs: [(Goal.Period, Color, UInt)] = [

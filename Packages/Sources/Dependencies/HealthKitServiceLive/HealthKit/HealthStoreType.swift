@@ -18,7 +18,7 @@ protocol HealthStoreType: Sendable {
 }
 
 struct MockHealthStoreType: HealthStoreType {
-    let _statusForAuthorizationRequest: LockIsolated<@Sendable (Set<HKSampleType>, Set<HKObjectType>) async throws -> HKAuthorizationRequestStatus> = .init(unimplemented())
+    let _statusForAuthorizationRequest: LockIsolated<@Sendable (Set<HKSampleType>, Set<HKObjectType>) async throws -> HKAuthorizationRequestStatus>
     func statusForAuthorizationRequest(
         toShare typesToShare: Set<HKSampleType>,
         read typesToRead: Set<HKObjectType>
@@ -26,7 +26,7 @@ struct MockHealthStoreType: HealthStoreType {
         try await _statusForAuthorizationRequest.value(typesToShare, typesToRead)
     }
 
-    let _requestAuthorization: LockIsolated< @Sendable (Set<HKSampleType>, Set<HKObjectType>) async throws -> Void> = .init(unimplemented())
+    let _requestAuthorization: LockIsolated< @Sendable (Set<HKSampleType>, Set<HKObjectType>) async throws -> Void>
     func requestAuthorization(
         toShare typesToShare: Set<HKSampleType>,
         read typesToRead: Set<HKObjectType>
@@ -38,6 +38,15 @@ struct MockHealthStoreType: HealthStoreType {
     static func isHealthDataAvailable() -> Bool {
         _isHealthDataAvailable.value()
     }
+    
+    init(
+        _statusForAuthorizationRequest: @Sendable @escaping (Set<HKSampleType>, Set<HKObjectType>) async throws -> HKAuthorizationRequestStatus = unimplemented(),
+        _requestAuthorization: @Sendable @escaping (Set<HKSampleType>, Set<HKObjectType>) async throws -> Void = unimplemented()
+    ) {
+        self._statusForAuthorizationRequest = .init(_statusForAuthorizationRequest)
+        self._requestAuthorization = .init(_requestAuthorization)
+    }
+
 }
 
 extension HKHealthStore: HealthStoreType {}

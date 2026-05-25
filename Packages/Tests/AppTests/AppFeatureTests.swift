@@ -34,7 +34,7 @@ final class AppFeatureTests: XCTestCase {
 
         await store.send(\.view.onAppear)
 
-        await store.receive(.runList(.delegate(.runsRefreshed)))
+        await store.receive(\.runList.delegate.runsRefreshed)
     }
 
     @MainActor
@@ -126,37 +126,6 @@ final class AppFeatureTests: XCTestCase {
     }
 
     @MainActor
-    func testHistoryIsEnabledOnAppearIfFeatureFlagIsTrue() async throws {
-        let store = TestStore(
-            initialState: .init(history: nil),
-            reducer: AppFeature.init,
-            withDependencies: {
-                $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.history.name)
-
-                $0.repository.runningWorkouts._allRunningWorkouts = { .mock(value: []) }
-                $0.repository.runningWorkouts._runsWithinGoal = { _, _ in [] }
-
-                $0.repository.goals._goal = { period in .mock(period: period) }
-
-                $0.uuid = .incrementing
-
-                $0.widget._reloadAllTimelines = {}
-
-                $0.healthKit.observation._enableBackgroundDelivery = {}
-                $0.healthKit.observation._observeWorkouts = {}
-
-                $0.date = .incrementing()
-            }
-        )
-
-        store.exhaustivity = .off
-
-        await store.send(.view(.onAppear)) {
-            $0.history = .init()
-        }
-    }
-
-    @MainActor
     func testRunListIsRefresheOnScenePhaseChangeToActive() async throws {
         let store = TestStore(
             initialState: .init(),
@@ -182,6 +151,6 @@ final class AppFeatureTests: XCTestCase {
 
         await store.send(.view(.scenePhaseUpdated(.inactive, .active)))
 
-        await store.receive(.runList(.delegate(.runsRefreshed)))
+        await store.receive(\.runList.delegate.runsRefreshed)
     }
 }

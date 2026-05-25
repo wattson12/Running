@@ -27,6 +27,7 @@ final class RunListFeatureTests: XCTestCase {
                 $0.calendar = .current
                 $0.uuid = .constant(.init(12))
                 $0.widget._reloadAllTimelines = {}
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -59,6 +60,7 @@ final class RunListFeatureTests: XCTestCase {
                 $0.widget._reloadAllTimelines = {
                     reloadTimelinesCalled.fulfill()
                 }
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -84,6 +86,7 @@ final class RunListFeatureTests: XCTestCase {
             withDependencies: {
                 $0.date = .constant(.now)
                 $0.defaultAppStorage.set(true, forKey: FeatureFlagKey.runDetail.name)
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
@@ -107,6 +110,7 @@ final class RunListFeatureTests: XCTestCase {
             withDependencies: {
                 $0.date = .constant(.now)
                 $0.defaultAppStorage.set(false, forKey: FeatureFlagKey.runDetail.name)
+                $0.appStorageKeyFormatWarningEnabled = false
             }
         )
 
